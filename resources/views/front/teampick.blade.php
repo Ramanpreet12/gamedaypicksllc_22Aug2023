@@ -448,12 +448,13 @@
                     },
                     success: function(resp) {
                         let url = "payment";
+                        let coupon_url = "coupon";
                         if (resp.status == false) {
                             Swal.fire({
                                 // title: 'Please subscribe first ?',
                                 icon: 'warning',
                                 showCancelButton: true,
-                                html: `Please <a href="${url}">Subscribe!</a> To pick the team`
+                                html: `Please <a href="${url}">Subscribe!</a> or <a href="${coupon_url}">use the coupon !</a> To pick the team`
 
                             });
                         } else {

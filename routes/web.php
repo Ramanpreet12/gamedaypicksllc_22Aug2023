@@ -38,6 +38,7 @@ use App\Http\Controllers\Backend\ContactController;
 use App\Http\Controllers\Backend\StaticPageController;
 use App\Http\Controllers\Backend\ReviewsController;
 use App\Http\Controllers\Backend\GeneralSettingController;
+use App\Http\Controllers\Backend\CouponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +51,7 @@ use App\Http\Controllers\Backend\GeneralSettingController;
 |
 */
 
- //wolf page 
+ //wolf page
  Route::get('craftsman-wanted', [HomeController::class, 'wolfPage'])->name('craftsman-wanted');
  Route::post('store/craftman_visitors', [HomeController::class, 'storeCraftmanVisitors'])->name('store/craftman_visitors');
 
@@ -60,13 +61,13 @@ Route::post('store/visitors', [HomeController::class, 'store_visitor'])->name('s
     //gameday pick score card counter (clinet change from score_count to getinthegame)
     Route::get('landing', [HomeController::class, 'landing'])->name('landing');
 Route::middleware('visitors')->group(function() {
-    
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('dark-mode-switcher', [DarkModeController::class, 'switch'])->name('dark-mode-switcher');
 Route::get('color-scheme-switcher/{color_scheme}', [ColorSchemeController::class, 'switch'])->name('color-scheme-switcher');
- 
+
 //user Routes
 Route::middleware('guest')->group(function() {
 Route::get('register',[AuthController::class,'userRegister'])->name('register');
@@ -105,12 +106,16 @@ Route::post('clover_charge', [StripeController::class, 'clover_charge'])->name('
 //     return view('front.payment.success');
 // })->name('success-message');
 
+
+//redirect on coupon page from dashboard team pick page
+Route::match(['get' , 'post'] , 'coupon',[StripeController::class, 'couponPage'])->name('coupon');
+
 Route::match(['get','post'],'forget_password',[AuthController::class,'forgotPassword'])->name('forget_password');
 Route::match(['get','post'],'change_password',[AuthController::class,'changePassword'])->name('change_password');
 
 //pick a team for user
 Route::middleware(['auth' , 'user'])->group(function() {
-    
+
 Route::get('payment', [StripeController::class, 'stripe'])->name('payment');
 Route::post('payment/store', [StripeController::class, 'stripePost'])->name('payment.store');
 
@@ -142,7 +147,7 @@ Route::post('news_alerts',[HomeController::class,'news_alerts'])->name('news_ale
  //visitors middleware ends here
 
 //admin routes
- 
+
 Route::prefix('admin')->group(function() {
     Route::get('login', [AuthController::class, 'loginView'])->name('admin/login.index');
     Route::post('login', [AuthController::class, 'login'])->name('admin/login');
@@ -163,7 +168,7 @@ Route::prefix('admin')->middleware([ 'isAdmin'])->group(function() {
     Route::get('Userdetails/{id}', [UserController::class, 'user_datails'])->name('admin/Userdetails/{id}');
     Route::get('UserPaymentdetails/{id}', [UserController::class, 'userPayment_datails'])->name('admin/UserPaymentdetails/{id}');
     Route::get('PaymentInvoice/{id}', [UserController::class, 'payment_invoice'])->name('admin/PaymentInvoice');
-  
+
 
     // Route::get('user_data', [UserController::class, 'user_data'])->name('admin/user_data');
       //fixtures
@@ -174,7 +179,7 @@ Route::prefix('admin')->middleware([ 'isAdmin'])->group(function() {
     Route::post('add_scores/{id}',[ScoreboardController::class, 'add_scores']);
     Route::match(['get', 'post'], 'add_scores/{id}',[ScoreboardController::class, 'add_scores']);
 
-    //results declare by admin 
+    //results declare by admin
     // Route::get('teams/result' ,[FixtureController::class , 'teamResult_index'] )->name('admin/teams/result');
     // Route::match(['get', 'post'], 'team_result/edit/{id}',[FixtureController::class, 'edit_teamResult'])->name('admin/team_result/edit');
     Route::get('teams/result' ,[TeamResultController::class , 'index'] )->name('admin/teams/result');
@@ -195,7 +200,7 @@ Route::prefix('admin')->middleware([ 'isAdmin'])->group(function() {
     Route::resources([
         'season' => SeasonController::class,
     ]);
-    
+
      //add teams
      Route::resources([
         'team' => TeamController::class,
@@ -227,10 +232,14 @@ Route::prefix('admin')->middleware([ 'isAdmin'])->group(function() {
             'contact' => ContactController::class,
         ]);
 
+
+        //Coupons management
+        Route::resources(['coupons'=> CouponController::class]);
+
     //website setting
     //menu setting
     Route::resources(['menu' => MenuController::class]);
- 
+
 
     //general management
     // Route::match(['get' , 'post'] , 'general', [GeneralController::class , 'general'])->name('admin/general');
@@ -246,12 +255,12 @@ Route::prefix('admin')->middleware([ 'isAdmin'])->group(function() {
      Route::post('match_fixture_edit', [GeneralSettingController::class , 'match_fixture_edit'])->name('admin/match_fixture_edit');
 
 
-     
+
 
     Route::resources([
         'banner' => BannerController::class,
     ]);
-    
+
 
 //    //leaderboard
 //    Route::get('leaderboard',[LeaderboardController::class , 'index'])->name('admin/leaderboard');
@@ -284,7 +293,7 @@ Route::post('news/section_heading',[NewsController::class,'section_heading'])->n
   Route::match(['get' , 'put'] , 'landing_count', [GeneralSettingController::class, 'landing_count'])->name('admin/landing_count');
 
 
-    
+
 Route::resources(['vacation' => VacationController::class]);
 Route::post('vacation/section_heading',[VacationController::class,'section_heading'])->name('admin/vacation/section_heading');
 

@@ -26,7 +26,7 @@ class SideMenu
                 'params' => '',
                 'title' => 'Users'
             ],
-            
+
             'team' => [
                 'icon' => 'users',
                 'route_name' => 'team.index',
@@ -61,7 +61,7 @@ class SideMenu
                 // ],
                 'title' => 'Season Management'
             ],
-          
+
 
             'fixtures' => [
                 'icon' => 'calendar',
@@ -69,8 +69,8 @@ class SideMenu
                 'params' => '',
                 'title' => 'Fixtures'
              ],
-             
-         
+
+
 
              'team_result' => [
                 'icon' => 'settings',
@@ -79,7 +79,7 @@ class SideMenu
                 'title' => 'Teams Result'
             ],
 
-         
+
 
             'winner' => [
                 'icon' => 'star',
@@ -87,7 +87,7 @@ class SideMenu
                 'params' => '',
                 'title' => 'Winner'
             ],
-            
+
             'contact' => [
                 'icon' => 'phone',
                 'route_name' => 'contact.index',
@@ -106,6 +106,15 @@ class SideMenu
                 //     'layout' => 'side-menu'
                 // ],
                 'title' => 'Reviews'
+            ],
+
+
+
+            'coupons' => [
+                'icon' => 'gift',
+                'route_name' => 'coupons.index',
+                'params' => '',
+                'title' => 'Coupons'
             ],
 
             'setting' => [
@@ -140,7 +149,7 @@ class SideMenu
                         'params' =>'',
                         'title' => 'Banner'
                     ],
-                    
+
                      'vacationPac' => [
                         'icon' => 'settings',
                         'route_name' => 'vacation.index',
@@ -175,7 +184,7 @@ class SideMenu
                         'params' =>'',
                         'title' => 'Match Fixture'
                     ],
-                    
+
                     'prize' => [
                         'icon' => 'award',
                         'route_name' => 'prize.index',
@@ -185,7 +194,7 @@ class SideMenu
                         // ],
                         'title' => 'Prize Management'
                     ],
-                    
+
                     'contact-page' => [
                         'icon' => 'phone',
                         'route_name' => 'admin/contact_page',
@@ -213,7 +222,7 @@ class SideMenu
                         'params' => '',
                         'title' => 'Landing Counts'
                     ],
-                    
+
                     'privacy' => [
                         'icon' => 'phone',
                         'route_name' => 'admin/privacy',

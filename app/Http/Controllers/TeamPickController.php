@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Payment;
+use App\Models\Coupon;
 use App\Models\UserTeam;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -34,7 +35,7 @@ class TeamPickController extends Controller
 
        $starting_season_date = Carbon::parse($get_current_season->starting);
        $starting_season_date1 = Carbon::parse($get_current_season->starting);
-      
+
        $now = Carbon::now();
        if($starting_season_date < $now){
         //print_r("start date ".$starting_season_date);
@@ -48,14 +49,14 @@ class TeamPickController extends Controller
         //echo "<pre>;<br>";
        //print_r(" upcoming_season_date ".$upcoming_season_date);
        $upcoming_week =  $starting_season_date1->addWeeks($right_week)->addDays(6);
-        //print_r("upcoming_week ".$upcoming_week);     
+        //print_r("upcoming_week ".$upcoming_week);
      // exit;
        }else{
            $upcoming_season_date = $starting_season_date->subDays(1);
            $upcoming_week =  $starting_season_date1->addDays(6);
           // print_r("upcoming_week2 ".$upcoming_week);
        }
-    
+
 
 
     //     $fixtures = collect([]);
@@ -182,26 +183,28 @@ public function dashboard_team_pick(Request $request)
     }
     $team_id = $request->team_id;
             $season_id = $request->season_id;
-           
+
             $week = $request->week;
             $fixture_id = $request->fixture_id;
             $user_id = auth()->user()->id;
             $user_region_id = auth()->user()->region_id;
             $user_status = Payment::where(['user_id' => $user_id,'season_id'=> $season_id,'status'=>'succeeded'])->first();
-            if ($user_status) {
-                //get current season date 
+            $user_coupon_check = Coupon::where(['user_id' => $user_id])->first();
+
+            if ($user_status  || $user_coupon_check) {
+                //get current season date
                 $get_current_season = Season::where(['status'=>'active' , 'id' => $season_id])->first();
                 $get_current_season_date = $get_current_season->starting;
 
                 $current_date = Carbon::now() < $get_current_season->starting ? $get_current_season->starting: Carbon::now() ;  // current time and date
                 $is_user_allowed_to_choose_fixture =  Fixture::where(['season_id'=> $season_id, 'week' => $week])->orderBy('date','ASC')->first();
-                
+
                 if($is_user_allowed_to_choose_fixture == null){
                     return response()->json(['message' => 'Sorry.Please try again','status'=>false], 200);
                 }
 
                 $DeferenceInDays = Carbon::parse($current_date)->diffInDays($is_user_allowed_to_choose_fixture->date);
-    
+
                // $is_user_allowed_to_choose_fixture =  Fixture::where(['season_id'=> $season_id, 'week' => $week, 'id'=>$fixture_id, [ 'date', '>', $current_date ]])->first();
 
                 // if no, redirect with error
@@ -227,16 +230,16 @@ public function dashboard_team_pick(Request $request)
                     ]);
                     $this->updateUserMatchs($season_id);
                     return response()->json(['message' => 'added','status'=>true], 200);
-                   
+
                  }
             }
-        
+
             // else{
             //     return response()->json(['message' => 'subscribe','status'=>false], 200);
             // }
-        
 
-     
+
+
 }
 
 
@@ -245,10 +248,16 @@ public function dashboard_team_pick(Request $request)
             $user_id = auth()->user()->id;
             $season_id = $request->season_id;
             $user_status = Payment::where(['user_id' => $user_id,'season_id'=> $season_id,'status'=>'succeeded'])->first();
+            $user_coupon_check = Coupon::where(['user_id' => $user_id])->first();
+
                 if($user_status){
 
                     return response()->json(['message' => 'subscribed','status'=>true], 200);
-                }else{
+                }
+                elseif($user_coupon_check != null){
+                    return response()->json(['message' => 'subscribed','status'=>true], 200);
+                }
+                else{
                     return response()->json(['message' => 'not subscribed','status'=>false], 200);
                 }
         }
@@ -259,7 +268,7 @@ public function dashboard_team_pick(Request $request)
             ->where('season_id',$season_id)
             ->orderby('date', 'desc')
             ->first();
-           
+
             if(!empty($week)){
                 //DB::enableQueryLog();
                 $currentWeek=$week["week"];
@@ -267,8 +276,8 @@ public function dashboard_team_pick(Request $request)
                ->where('week','<=',(int)$currentWeek)
                 ->get();
                // $log = DB::getQueryLog();
-    
-    
+
+
                 if(!empty($fixtureData)){
                     foreach( $fixtureData as $fixture){
                         $userTeam =UserTeam::where('fixture_id',$fixture->id)
@@ -288,7 +297,7 @@ public function dashboard_team_pick(Request $request)
                             'points'=>'2' // because user has not select any match in  the week , so user will get loss
                         ];
                         $address = UserTeam::create($teamData);
-    
+
                     }
                 }
             }

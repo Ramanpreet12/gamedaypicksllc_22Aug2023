@@ -13,6 +13,7 @@ use App\Models\Season;
 use Illuminate\Support\Carbon;
 use App\Models\UserDetail;
 use App\Models\UserTeam;
+use App\Models\Coupon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Payment as payment_class;
 use GuzzleHttp\Client;
@@ -25,7 +26,7 @@ class StripeController extends Controller
     private $payment_mode;
 
     private $currency = "USD";
-    
+
     public function __construct()
     {
         // Closure as callback
@@ -36,18 +37,18 @@ class StripeController extends Controller
     /**
      * returns the private key for clover payment
      */
-    private function getThePrivateKey(){      
+    private function getThePrivateKey(){
         return $this->payment_mode == "TEST"? env('CLOVER_PRIVATE_KEY'):env('CLOVER_PRIVATE_KEY_PRODUCTION');
     }
 
     /**
      * returns the url for the clover payment charge
      */
-       
-     
-     private function getTheChargeUrl(){          
+
+
+     private function getTheChargeUrl(){
         return $this->payment_mode == "TEST" ? 'https://scl-sandbox.dev.clover.com/v1/charges': 'https://scl.clover.com/v1/charges';
-         
+
      }
 
 
@@ -62,18 +63,18 @@ class StripeController extends Controller
         // $date = Season::where('status' , 'active')->value('starting');
         $get_current_year = Carbon::now()->format('Y');
         $date = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->value('starting');
-    
+
         $season = DB::table('seasons')
             ->whereRaw('"' . $date . '" between `starting` and `ending`')
             ->where('status' , 'active')
             ->where('league','1')
             ->first();
-          
+
         return view('front.payment.index',compact('season'));
     }
 
 
-   
+
 
     public function selectTeam(Request $req)
     {
@@ -108,9 +109,9 @@ class StripeController extends Controller
         }
     }
 
-  
+
     public function clover_charge(Request $request){
- 
+
         try {
         $get_current_year = Carbon::now()->format('Y');
         $c_date = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->value('starting');
@@ -149,7 +150,7 @@ class StripeController extends Controller
             ]);
            $res = json_decode($response->getBody(), true);
 
-           
+
             if(isset($res["error"])){
                 $msg=$res["error"]["message"];
                 return redirect()->back()->with('message_error' , $msg);
@@ -188,7 +189,7 @@ class StripeController extends Controller
                     $address = Address::create($addressData);
 
                     $orderDetails = DB::table('payments')->join('addresses', 'addresses.payment_id','=', 'payments.id')->join('seasons', 'seasons.id','=', 'payments.season_id')->where(['payments.id' => $Payment->id])->select('seasons.season_name','payments.*','addresses.name','addresses.address','addresses.city','addresses.country','addresses.zip')->first();
-                    
+
                             if ($address) {
                                 Mail::to(Auth::user()->email)->send(new payment_class($orderDetails));
                                 // Mail::to('yamanwalia000@gmail.com')->send(new payment_class($orderDetails));
@@ -207,15 +208,15 @@ class StripeController extends Controller
             $formatted_response =   json_decode( $responseAsString, true);
 
             dd($formatted_response);
-           
+
             if($formatted_response['error']['code'] == 'issuer_declined'){
                 return redirect()->back()->with('message_error' , 'Your Card is Declined.Please try again or use another card.');
             }else{
                return redirect()->back()->with('message_error' , 'We are facing issue from the payment gateway. Please try again or use another card.');
-            }    
+            }
 
        }catch (\Exception $e) {
-          
+
         $message =  'This user having id '.auth()->user()->id.' is facing the following isssue '.$e->getMessage();
 
         Log::channel('payment')->info($message);
@@ -224,5 +225,55 @@ class StripeController extends Controller
 
       }
 
+    }
+
+    public function couponPage(Request $request){
+        if ($request->isMethod('post')) {
+           $coupon_check =  Coupon::where('coupon_code' , $request->coupon_code)->first();
+
+           //if the requested coupon match with coupon_code in table
+           if ($coupon_check != null) {
+                //if user already had used the coupon (check if he reusing the coupon )
+                $reusing_the_coupon =  Coupon::where(['coupon_code' => $request->coupon_code , 'user_id' => auth()->user()->id])->first();
+                if ($reusing_the_coupon != null) {
+                    return redirect()->back()->with('message_error' , 'You have already used this coupon !');
+
+                } //reusing condition ends here
+                else {
+                //store the id of the user who use the coupon
+                    $store_user_id =  Coupon::where('coupon_code' , $request->coupon_code)->update(['user_id' => auth()->user()->id]);
+                    //if coupon has matched and the id of user has been saved then redirect with success msg
+                    if ($store_user_id) {
+                        return redirect()->back()->with('success' , 'coupon applied successfully');
+
+                    }
+                } //(reusing condition's else part ends here)
+
+
+
+
+            }// requested coupon match condition ends here
+
+
+            //if the requested coupon doesn't match with coupon_code in table
+            else {
+                return redirect()->back()->with('message_error' , 'Invalid coupon code !');
+            }
+
+
+
+        }
+        else {
+            $get_current_year = Carbon::now()->format('Y');
+            $date = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->value('starting');
+
+            $season = DB::table('seasons')
+                ->whereRaw('"' . $date . '" between `starting` and `ending`')
+                ->where('status' , 'active')
+                ->where('league','1')
+                ->first();
+
+            return view('front.payment.coupon' , compact('season'));
+        }
     }
 }
