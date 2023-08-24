@@ -11,7 +11,7 @@
                     <div class="headerMenu row">
                         <div class="col">
                             <h5 class="seasonFixed fixture_head" id="">
-                               
+
                                 {{ $fixture_headings['match_fixture_selected_season_heading'] }}:
                                 {{ $c_season->season_name ?? '' }}
                             </h5>
@@ -180,7 +180,7 @@
                                                                                     upcoming_selectable_week = "false"
                                                                                     @endif
 
-                                                                                    
+
                                                                                     @if ($upcoming_season_date < $team->date)
 
                                                                                     fixture_id={{ $team->id }}
@@ -570,12 +570,15 @@
                             });
                         } else {
                         let url = "payment";
+                        let coupon_url = "coupon";
                         if (resp.message == 'not subscribed') {
                             Swal.fire({
                                 // title: 'Please subscribe first ?',
                                 icon: 'warning',
                                 showCancelButton: true,
-                                html: `Please <a href="${url}">Subscribe </a> To pick the team`
+                                html: `Please <a href="${url}">Subscribe!</a> or <a href="${coupon_url}">use the coupon !</a> To pick the team`
+
+                                // html: `Please <a href="${url}">Subscribe </a> To pick the team`
 
                             });
                         } else {

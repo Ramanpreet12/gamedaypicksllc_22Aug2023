@@ -19,6 +19,7 @@ use App\Mail\Payment as payment_class;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Log;
+use URL;
 
 class StripeController extends Controller
 {
@@ -228,6 +229,7 @@ class StripeController extends Controller
     }
 
     public function couponPage(Request $request){
+
         if ($request->isMethod('post')) {
            $coupon_check =  Coupon::where('coupon_code' , $request->coupon_code)->first();
 
@@ -244,7 +246,10 @@ class StripeController extends Controller
                     $store_user_id =  Coupon::where('coupon_code' , $request->coupon_code)->update(['user_id' => auth()->user()->id]);
                     //if coupon has matched and the id of user has been saved then redirect with success msg
                     if ($store_user_id) {
-                        return redirect()->back()->with('success' , 'coupon applied successfully');
+
+
+                        return redirect()->route('coupon_success')->with('success' , 'coupon applied successfully');
+                        // return redirect()->back()->with('success' , 'coupon applied successfully');
 
                     }
                 } //(reusing condition's else part ends here)
@@ -273,7 +278,8 @@ class StripeController extends Controller
                 ->where('league','1')
                 ->first();
 
-            return view('front.payment.coupon' , compact('season'));
+            return view('front.payment.apply_coupon_code' , compact('season'));
         }
     }
+
 }

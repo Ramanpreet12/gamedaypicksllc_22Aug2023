@@ -42,11 +42,17 @@ gtag('config', 'G-KFQ62F0F5W');
     {{-- Content --}}
     @yield('content')
 
+
     {{-- Footer --}}
     @include('front.layout.footer')
 
+     {{-- script --}}
+     @yield('script')
+
 
 <script id='pixel-script-poptin' src='https://cdn.popt.in/pixel.js?id=50df6b4a857a8' async='true'></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 </body>
 
 </html>

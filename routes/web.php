@@ -95,7 +95,8 @@ Route::get('nfl-battles', [FrontPagesController::class,'nfl_battles'] )->name('n
 //pick the team from match fixture page
 Route::post('nfl_battles_team_pick',[FrontPagesController::class, 'nfl_battles_team_pick'])->name('nfl_battles_team_pick');
 Route::post('check_user_subscribe_for_nfl_battles',[FrontPagesController::class, 'check_user_subscribe_for_nfl_battles'])->name('check_user_subscribe_for_nfl_battles');
-
+//redirect after successfully coupon applied
+// Route::view('coupon-success','front.payment.nfl_battles_coupon_success')->name('coupon-success');
 
 //payment
 
@@ -109,6 +110,8 @@ Route::post('clover_charge', [StripeController::class, 'clover_charge'])->name('
 
 //redirect on coupon page from dashboard team pick page
 Route::match(['get' , 'post'] , 'coupon',[StripeController::class, 'couponPage'])->name('coupon');
+//redirect after successfully coupon applied
+Route::view('coupon_success','front.payment.coupon_success')->name('coupon_success');
 
 Route::match(['get','post'],'forget_password',[AuthController::class,'forgotPassword'])->name('forget_password');
 Route::match(['get','post'],'change_password',[AuthController::class,'changePassword'])->name('change_password');
