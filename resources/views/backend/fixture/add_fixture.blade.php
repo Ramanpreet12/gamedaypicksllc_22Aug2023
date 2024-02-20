@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Fixtures</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Fixtures</title>
 @endsection
 
 @section('subcontent')
@@ -52,7 +52,8 @@
                         <label for="first_team" class="form-label">First Team <span class="text-danger">*</span></label>
                         <select data-placeholder="Select Team" class="tom-select w-full" id="first_team" name="first_team">
                             <option value="">--select--</option>
-                            <option value="TBD_team_one">TBD</option>
+                            {{-- <option value="TBD_team_one">TBD</option> --}}
+                            <option value="0">TBD</option>
                             @foreach ($teams as $team)
                                 <option value="{{ $team->id }}" {{old('first_team') == $team->id ? 'selected' : ''}}>{{ $team->name }}
                                 </option>
@@ -66,7 +67,8 @@
                         <select data-placeholder="Select Team" class="tom-select w-full" id="second_team"
                             name="second_team">
                             <option value="">--select--</option>
-                            <option value="TBD_team_two">TBD</option>
+                            <option value="0">TBD</option>
+                            {{-- <option value="TBD_team_two">TBD</option> --}}
                             @foreach ($teams as $team)
                                 <option value="{{ $team->id }}"  {{old('second_team') == $team->id ? 'selected' : ''}}>{{ $team->name }}
                                 </option>
@@ -74,38 +76,17 @@
                         </select>
                         @error('second_team') <p class="text-danger">{{$message}}</p> @enderror
                     </div>
-                    {{-- <div class="mt-3">
-                        <label for="week" class="form-label">Week</label>
-                        <div class="input-group">
-                            <input id="week" type="text" class="form-control" placeholder="week"
-                                aria-describedby="input-group-1" name="week">
-                        </div>
-                        @error('week') <p class="text-danger">{{$message}}</p> @enderror
-                    </div> --}}
                     <div class="mt-3">
                         <label class="form-label">Date & Time <span class="text-danger">*</span></label>
                         <div class="sm:grid grid-cols-2 gap-2">
                             <div class="input-group">
                                 <div id="date" class="input-group-text">Date</div>
-                                {{-- <input type="date" class="form-control" placeholder="Date" aria-describedby="date"
-                                    name="date" id="picker"> --}}
+
                                     <div>
                                         <div id="picker"></div>
                                         <input type="hidden" id="result" value=""  name="date"/>
                                     </div>
                             </div>
-
-                            {{-- <div class="input-group mt-2 sm:mt-0 relative">
-                                <div id="time" class="input-group-text">Time</div>
-                                <input type="time" class="form-control" placeholder="Time" aria-describedby="time"
-                                    name="time">
-
-                                <select class="form-select w-full" id="time_zone" name="time_zone">
-                                    <option value="">--select--</option>
-                                    <option value="am">AM</option>
-                                    <option value="pm">PM</option>
-                                </select>
-                            </div> --}}
                         </div>
 
 
@@ -113,18 +94,8 @@
                             <div>@error('date') <p class="text-danger">{{$message}}</p> @enderror
                                 @if(Session::has('error_date')) <p class="text-danger">{{Session::get('error_date')}}</p> @endif
                             </div>
-
-                            {{-- <div class="sm:grid grid-cols-2 gap-2">
-                                @error('time') <p class="text-danger">{{$message}}</p> @enderror
-                                @error('time_zone') <p class="ml-5 text-danger">{{$message}}</p> @enderror
-                            </div> --}}
                         </div>
                     </div>
-                    {{-- <div class="text-left mt-5">
-                        <button type="submit" class="btn btn-primary w-24">Save</button>
-                        <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                    </div> --}}
-
                     <br><br>
                 <div
                     class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
@@ -139,15 +110,11 @@
         </div>
     </div>
 @endsection
-
 @section('script')
-
     <script type="text/javascript">
         $(document).ready( function () {
             $('#picker').dateTimePicker();
             $('#picker-no-time').dateTimePicker({ showTime: false, dateFormat: 'DD/MM/YYYY hh:mm A', title: 'Select Date'});
         })
-
         </script>
-
 @endsection

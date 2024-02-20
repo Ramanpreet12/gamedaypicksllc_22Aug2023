@@ -73,7 +73,7 @@ class NewsController extends Controller
                         $file = $request->image;
                         // $destinationPath = public_path(). '/homeSetting/';
 
-                        $filename = $file->getClientOriginalName();
+                        $filename =  'news'.time() . '.' .$file->getClientOriginalName();
                         // $file->move($destinationPath, $filename);
                         $file->storeAs('public/images/news/' , $filename);
 
@@ -99,38 +99,19 @@ class NewsController extends Controller
     }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $news = News::find($id);
         return view('backend.site_setting.news.edit',compact('news'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(NewsRequest $request, $id)
     {
         try{
@@ -140,13 +121,14 @@ class NewsController extends Controller
                   if($request->hasfile('image')){
                          $file = $request->image;
                         //  $destinationPath = public_path(). '/homeSetting/';
-                         $filename = $file->getClientOriginalName();
+                        $filename =  'news'.time() . '.' .$file->getClientOriginalName();
                         //  $file->move($destinationPath, $filename);
                         $file->storeAs('public/images/news/' , $filename);
 
                          $data['image'] = $filename;
                      } else{
-                        unset($data['image'] );
+                        return back()->withError('Could not upload Banner');
+                        // unset($data['image'] );
                      }
                      $data["title"]=$request->title;
                      $data["header"] = $request->header;
@@ -168,20 +150,39 @@ class NewsController extends Controller
      }
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $del = News::find($id)->delete();
-        if($del){
-            return redirect()->route('news.index')->with('message_success','News Deleted Successfully');
-        }else{
-            return redirect()->route('news.index')->with('message_error','Something went wrong');
-        }
+        // $del = News::find($id)->delete();
+        // if($del){
+        //     return redirect()->route('news.index')->with('message_success','News Deleted Successfully');
+        // }else{
+        //     return redirect()->route('news.index')->with('message_error','Something went wrong');
+        // }
     }
+
+    public function deleteNews($id)
+    {
+        try {
+            //get Image
+         $news_image = News::whereId($id)->first();
+
+         $Images_path = storage_path('app/public/images/news/');
+
+          //delete image from folder
+            unlink_image_video_from_db($Images_path , $news_image->image);
+
+            $news =  News::find($id)->delete();
+            if($news){
+                return redirect()->route('news.index')->with('success' , 'News deleted successfully');
+            }else{
+            return redirect()->route('news.index')->with('message_error', 'Something went wrong!');
+            }
+        } catch (\Exception $e) {
+            if (!empty($e)) {
+            return redirect()->back()->with('message_error' , 'Something went wrong!');
+            }
+        }
+
+    }
+
 }

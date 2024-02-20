@@ -73,7 +73,7 @@
                                                 <p class="text-danger hide" id="valid-msg"></p>
                                                 <p class="text-danger hide" id="error-msg"></p>
                                             </div>
-                                            
+
                                                 <div class="mb-3">
                                                 <label for="photo" class="form-label">Upload photo</label>
                                                 <input type="file" class="form-control" name="photo"
@@ -86,7 +86,7 @@
                                             </div>
 
                                             <div class="col-sm-4 col-md-6 mb-3">
-                        
+
                                                 <div class="personal-Img">
                                                     @if (Auth::user()->photo)
                                                     <img src="{{asset('storage/images/user_images/'.Auth::user()->photo)}}"  alt="" class="img-fluid borderImg border">
@@ -96,7 +96,7 @@
 
                                                     @endif
                                                 </div>
-                                               
+
                                             </div>
 
                                         </div>
@@ -135,7 +135,7 @@
         var input = document.querySelector("#phone");
         errorMsg = document.querySelector("#error-msg"),
             validMsg = document.querySelector("#valid-msg");
-        var errorMap = ["Invalid number", "Invalid country code", "Phone number is Too short", "Phone number is Too long", "Invalid number"];
+        var errorMap = ["personal details Invalid number", "Invalid country code", "Phone number is Too short", "Phone number is Too long", "Invalid number"];
         var intl = window.intlTelInput(input, {
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.6/js/utils.js"
         });

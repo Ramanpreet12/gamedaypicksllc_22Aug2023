@@ -1,100 +1,118 @@
 @extends('front.layout.app')
+@push('css')
+    <style>
+        /* change the sweet alert's OK button color */
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+            background-color: #398AD8 !important;
+            outline: none !important;
+            border: none !important;
+        }
+
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
+            outline: none !important;
+            border: none !important;
+        }
+
+        #matchFixture {
+            background-color: <?php echo $colorSection['match_fixture']['bg_color']; ?>;
+        }
+
+        .fixture_text {
+            color: <?php echo $colorSection['match_fixture']['text_color']; ?>;
+        }
+
+        .fixture_head {
+            color: <?php echo $colorSection['match_fixture']['header_color']; ?>;
+        }
+    </style>
+@endpush
 @section('content')
     <section id="matchFixture">
         <div class="container mt-4">
             <div class="row">
 
-
                 <div class="col-12">
-                    <h2 class="fixture_head">{{ $fixture_headings['match_fixture_section_heading'] }}</h2>
+                    <h2 class="fixture_head mb-4">{{ $fixture_headings['match_fixture_section_heading'] }}</h2>
 
+                    @if (isset($fixtures))
                     <div class="headerMenu row">
                         <div class="col">
                             <h5 class="seasonFixed fixture_head" id="">
 
-                                {{ $fixture_headings['match_fixture_selected_season_heading'] }}:
-                                {{ $c_season->season_name ?? '' }}
+                                {{ $fixture_headings['match_fixture_selected_season_heading'] }} :
+                                &nbsp; &nbsp;&nbsp;&nbsp;{{ $c_season->season_name ?? '' }}
                             </h5>
                         </div>
                         <div class="col">
-                            {{-- @if (Request::url() == config('app.url') . '/fixtures/weeks') --}}
-                            @foreach ($fixtures as $week => $data)
+
+
+                                @foreach ($fixtures as $week => $data)
+                                    <h5 id="set_week" class="seasonFixed selectWeekPart fixture_head">
+                                        {{ $fixture_headings['match_fixture_selected_week_heading'] }} :
+                                        &nbsp; &nbsp;&nbsp; {{ $week }}</h5>
+                                @endforeach
+                            {{-- @else
                                 <h5 id="set_week" class="seasonFixed selectWeekPart fixture_head">
-                                    {{ $fixture_headings['match_fixture_selected_week_heading'] }} :
-                                    {{ $week }}</h5>
-                            @endforeach
-                            {{-- @endif --}}
-                        </div>
-                        <div class="fixtureForms col">
-                            <form action="{{ url('nfl-battles') }}" method="get" class="seasonFixed formSpacing">
-                                <div class="inner_form">
-                                    {{-- @csrf --}}
-                                    <label class="fixture_head" for=""
-                                        style=" margin-right:10px; font-weight:800; font-size: 20px; font-family: 'Oxanium', 'cursive';">{{ $fixture_headings['match_fixture_select_season_heading'] }}:
-                                    </label>
-                                    @if ($get_all_seasons->isNotEmpty())
-                                        <select class="form-control" name="seasons" id="seasons">
-                                            {{-- <option value="">{{$c_season->season_name ?? ''}}</option> --}}
-                                            {{-- <input type="text" name="" value=""> --}}
-                                            {{-- <option value="">select </option> --}}
-
-                                            @foreach ($get_all_seasons as $season)
-                                                <option value="{{ $season->id ?? '' }}"
-                                                    {{ $c_season->id == $season->id ? 'selected' : '' }}>
-                                                    {{ $season->season_name }}</option>
-                                            @endforeach
-
-                                            <i class="fa-solid fa-angle-down"></i>
-                                        </select>
-                                    @endif
-                                </div>
-                            </form>
-                        </div>
-                        {{-- for weeks --}}
-                        <div class=" col">
-                            <form action="{{ url('nfl-battles') }}" method="get" class="seasonFixed ">
-                                <div class="inner_form">
-                                    {{-- @csrf --}}
-                                    <input type="hidden" value="{{ $c_season->id ?? '' }}" name="season_id">
-                                    <label class="fixture_head" for=""
-                                        style=" margin-right:10px; font-weight:800; font-size: 20px; font-family: 'Oxanium', 'cursive';">{{ $fixture_headings['match_fixture_select_week_heading'] }}:
-                                    </label>
-                                    @if ($get_all_seasons->isNotEmpty())
-                                        <select class="form-control" name="weeks" id="weeks">
-                                            @for ($i = 1; $i <= 18; $i++)
-                                                <option value="{{ $i }}"
-                                                    @php if( request()->query('weeks') == $i){ echo "selected"; } @endphp>
-                                                    Week
-                                                    {{ $i }}</option>
-                                            @endfor
-                                        </select>
-                                    @endif
-                                </div>
-                            </form>
+                                    {{ $fixture_headings['match_fixture_selected_week_heading'] }}</h5>
+                            @endif --}}
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="fixtureForms col">
+                                <form action="{{ url('nfl-battles') }}" method="get" class="seasonFixed formSpacing">
+                                    <div class="select_week_season d-flex">
+                                        <label class="fixture_head" for=""
+                                            style="margin-right:80px; font-weight:800; font-size: 18px; font-family: 'Oxanium', 'cursive';">{{ $fixture_headings['match_fixture_select_season_heading'] }}
+                                            :
+                                        </label>
+
+                                        {{-- {{ dd($get_all_seasons) }} --}}
+                                        @if (isset($get_all_seasons) && $get_all_seasons->isNotEmpty())
+                                            <select class="form-control" name="seasons" id="seasons" style="width:180px;">
+
+                                                @foreach ($get_all_seasons as $season)
+                                                    <option value="{{ $season->id ?? '' }}"
+                                                        {{ $c_season->id == $season->id ? 'selected' : '' }}>
+                                                        {{ $season->season_name }}</option>
+                                                @endforeach
+
+                                                <i class="fa-solid fa-angle-down"></i>
+                                            </select>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <form action="{{ url('nfl-battles') }}" method="get" class="seasonFixed ">
+                                    <div class="select_week_season d-flex mb-3"><input type="hidden"
+                                            value="{{ $c_season->id ?? '' }}" name="seasons">
+                                        <label class="fixture_head" for=""
+                                            style="margin-right:80px; font-weight:800; font-size: 18px; font-family: 'Oxanium', 'cursive';">{{ $fixture_headings['match_fixture_select_week_heading'] }}
+                                            :
+                                        </label>
+                                        @if (isset($get_all_seasons) && $get_all_seasons->isNotEmpty())
+                                            <select class="form-control" name="weeks" id="weeks" style="width:170px;">
+                                                @for ($i = 1; $i <= 18; $i++)
+                                                    <option value="{{ $i }}"
+                                                        @php if( request()->query('weeks') == $i){ echo "selected"; } @endphp>
+                                                        Week
+                                                        {{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    @endif
                 </div>
             </div>
-            {{-- <div class="col-4">
-                <form action="">
-                    <div>
-                        <select name="" id="" class="form-control">
-                            <option value="">select Season</option>
-                            @foreach ($fixtures as $seasons => $item)
-                                <option value="">{{ $seasons }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <select name="" id="" class="form-control">
-                            @foreach ($fixtures as $seasons => $item)
-                                <option value="">{{ $seasons }}</option>
-                            @endforeach
-                            <option value="">select Week</option>
-                        </select>
-                    </div>
-                </form>
-            </div> --}}
 
             <div class="row">
                 <div class="col-12">
@@ -112,12 +130,10 @@
                             <span>Login first to select the team . </span>
                             <a href="{{ route('login') }}">Click here to login</a>
                         </div>
-                        @if ($fixtures->isNotEmpty())
+                        @if (isset($fixtures) && $fixtures->isNotEmpty())
                             <table class="table">
                                 <thead>
                                     <tr class="table-dark">
-
-                                        {{-- <th scope="col" class="rollPlay">Week</th> --}}
                                         <th scope="col" class="fixture_head text-center">Match</th>
                                         <th scope="col" class="fixture_head text-center">Date</th>
                                         <th scope="col" class="fixture_head text-center">Time</th>
@@ -130,7 +146,6 @@
                                                 {{ $week }}</td>
                                             <td></td>
                                             <td></td>
-                                            {{-- <td></td> --}}
                                         </tr>
                                         @foreach ($weakData as $weeks => $team)
                                             @if (!empty($team->first_team_id) && !empty($team->second_team_id))
@@ -140,10 +155,17 @@
                                                 @php
                                                     $formatted_second_team_name = str_replace(' ', '_', $team->second_team_id->name);
                                                 @endphp
+                                            @else
+                                                @php
+                                                    $formatted_first_team_name = 'TBD';
+                                                @endphp
+
+                                                @php
+                                                    $formatted_second_team_name = 'TBD';
+                                                @endphp
                                             @endif
 
                                             @if ($week == $team->week)
-                                                {{-- {{dd($get_selected_teams_by_user)}} --}}
                                                 <tr>
                                                     <td>
                                                         <div
@@ -154,66 +176,37 @@
                                                                         data-bs-target="#SeasonExpireModal"
                                                                         style="background:none;  border:none; color:#212529"
                                                                         class="expire_season_msg">
+                                                                        @if (!empty($team->first_team_id))
+                                                                            <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
+                                                                                alt="" class="img-fluid">
 
-                                                                        <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
-                                                                            alt="" class="img-fluid">
 
-                                                                        <div class="fixture_text" style="min-width:200px">
-                                                                            @if (!empty($team->first_team_id))
+                                                                            <div class="fixture_text"
+                                                                                style="min-width:200px">
+
                                                                                 {{ $team->first_team_id->name }}
-                                                                            @else
-                                                                                {{ 'TBD' }}
-                                                                            @endif
-
-                                                                        </div>
+                                                                            </div>
+                                                                        @else
+                                                                            <div class="fixture_text"
+                                                                                style="min-width:200px">
+                                                                                {{ 'TBD' }} </div>
+                                                                        @endif
                                                                     </button>
                                                                 @else
                                                                     @if (!empty($team->first_team_id))
-                                                                        @if (!empty($get_selected_teams))
-                                                                            @if (get_selected_teams($team->first_team_id->id, $team->season_id, $team->id, $team->week))
-                                                                                <button disabled
-                                                                                    style="background:rgb(243, 101, 101);  border:none; color:#212529"
-                                                                                    class="team_name"
-                                                                                    @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
+                                                                        {{-- @if (!empty($get_selected_teams)) --}}
+
+
+
+                                                                        <button data-bs-toggle="modal"
+                                                                            data-bs-target="#selectTeam"
+                                                                            {{-- style="background:#ff7f7f;  border:none; color:#212529" --}}
+                                                                            style="background:none;  border:none; color:#212529"
+                                                                            class="team_name"
+                                                                            @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
                                                                                     @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-
-
-                                                                                    @if ($upcoming_season_date < $team->date)
-
-                                                                                    fixture_id={{ $team->id }}
-                                                                                    team_id={{ $team->first_team_id->id }}
-                                                                                    season_id={{ $team->season_id }}
-                                                                                    week={{ $team->week }}
-                                                                                    teamName={{ $formatted_first_team_name }}
-                                                                                    first_teamName={{ $formatted_first_team_name }}
-                                                                                    second_teamName={{ $formatted_second_team_name }}
-                                                                                    fixture_date={{ $team->date }}
-                                                                                    fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                                    @endif>
-                                                                                    <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
-                                                                                        alt="" class="img-fluid">
-
-                                                                                    <div class="fixture_text"
-                                                                                        style="min-width:200px">
-                                                                                        {{ $team->first_team_id->name }}
-                                                                                    </div>
-                                                                                </button>
-                                                                            @else
-                                                                                <button data-bs-toggle="modal"
-                                                                                    data-bs-target="#selectTeam"
-                                                                                    style="background:none;  border:none; color:#212529"
-                                                                                    class="team_name"
-                                                                                    @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
-                                                                                    @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                                    @if ($upcoming_season_date < $team->date)
-
-                                                                                    fixture_id={{ $team->id }}
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                            @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                                     team_id={{ $team->first_team_id->id }}
                                                                                     season_id={{ $team->season_id }}
                                                                                     week={{ $team->week }}
@@ -222,30 +215,27 @@
                                                                                     first_teamName={{ $formatted_first_team_name }}
                                                                                     second_teamName={{ $formatted_second_team_name }}
                                                                                     fixture_date={{ $team->date }}
-                                                                                    fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                                    @endif>
-                                                                                    <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
-                                                                                        alt="" class="img-fluid">
+                                                                                    fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
+                                                                            <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
+                                                                                alt="" class="img-fluid">
 
-                                                                                    <div class="fixture_text"
-                                                                                        style="min-width:200px">
-                                                                                        {{ $team->first_team_id->name }}
-                                                                                    </div>
-                                                                                </button>
-                                                                            @endif
-                                                                        @else
+                                                                            <div class="fixture_text"
+                                                                                style="min-width:200px">
+                                                                                {{ $team->first_team_id->name }}
+                                                                            </div>
+                                                                        </button>
+                                                                        {{-- @endif --}}
+                                                                        {{-- @else
+
+
                                                                             <button data-bs-toggle="modal"
                                                                                 data-bs-target="#selectTeam"
                                                                                 style="background:none;  border:none; color:#212529"
                                                                                 class="team_name"
-                                                                                @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
+                                                                                @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
                                                                                     @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                                    @if ($upcoming_season_date < $team->date)
-
-                                                                                fixture_id={{ $team->id }}
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                                @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                                 team_id={{ $team->first_team_id->id }}
                                                                                 season_id={{ $team->season_id }}
                                                                                 week={{ $team->week }}
@@ -254,8 +244,7 @@
                                                                                 first_teamName={{ $formatted_first_team_name }}
                                                                                 second_teamName={{ $formatted_second_team_name }}
                                                                                 fixture_date={{ $team->date }}
-                                                                                fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                                @endif>
+                                                                                fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
                                                                                 <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
                                                                                     alt="" class="img-fluid">
 
@@ -264,9 +253,12 @@
                                                                                     {{ $team->first_team_id->name }}
                                                                                 </div>
                                                                             </button>
-                                                                        @endif
+                                                                        @endif --}}
                                                                     @else
-                                                                        {{ 'TBD' }}
+                                                                        <div class="fixture_text text-center"
+                                                                            style="min-width:200px">
+                                                                            {{ 'TBD' }}
+                                                                        </div>
                                                                     @endif
                                                                 @endif
                                                             </div>
@@ -280,28 +272,33 @@
                                                                         data-bs-target="#SeasonExpireModal"
                                                                         style="background:none;  border:none; color:#212529"
                                                                         class="expire_season_msg">
+                                                                        @if (!empty($team->second_team_id))
+                                                                            <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
+                                                                                alt="" class="img-fluid">
 
-                                                                        <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
-                                                                            alt="" class="img-fluid">
-
-                                                                        <div class="fixture_text" style="min-width:200px">
-                                                                            {{ $team->second_team_id->name }}
-                                                                        </div>
+                                                                            <div class="fixture_text"
+                                                                                style="min-width:200px">
+                                                                                {{ $team->second_team_id->name }}
+                                                                            </div>
+                                                                        @else
+                                                                            <div class="fixture_text"
+                                                                                style="min-width:200px">
+                                                                                {{ 'TBD' }}
+                                                                            </div>
+                                                                        @endif
                                                                     </button>
                                                                 @else
                                                                     @if (!empty($team->second_team_id))
-                                                                        @if (!empty($get_selected_teams))
-                                                                            @if (get_selected_teams($team->second_team_id->id, $team->season_id, $team->id, $team->week))
-                                                                                <button disabled class="team_name"
-                                                                                    style="background:rgb(184, 107, 107);  border:none; color:#212529"
-                                                                                    @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
-                                                                                    @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                                    @if ($upcoming_season_date < $team->date)
+                                                                        {{-- @if (!empty($get_selected_teams)) --}}
 
-                                                                                    fixture_id={{ $team->id }}
+                                                                        <button data-bs-toggle="modal"
+                                                                            data-bs-target="#selectTeam" class="team_name"
+                                                                            {{-- style="background:#6995f3f1;  border:none; color:#fbfdff" --}}
+                                                                            style="background:none;  border:none; color:#212529"
+                                                                            @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
+                                                                                    @else
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                            @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                                     team_id={{ $team->second_team_id->id }}
                                                                                     season_id={{ $team->season_id }}
                                                                                     week={{ $team->week }}
@@ -309,60 +306,25 @@
                                                                                     first_teamName={{ $formatted_first_team_name }}
                                                                                     second_teamName={{ $formatted_second_team_name }}
                                                                                     fixture_date={{ $team->date }}
-                                                                                    fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                                    @endif>
-                                                                                    <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
-                                                                                        alt="" class="img-fluid">
+                                                                                    fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
+                                                                            <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
+                                                                                alt="" class="img-fluid">
 
-                                                                                    <div class="fixture_text"
-                                                                                        style="min-width:200px">
-                                                                                        {{ $team->second_team_id->name }}
-                                                                                    </div>
-                                                                                </button>
-                                                                            @else
-                                                                                <button data-bs-toggle="modal"
-                                                                                    data-bs-target="#selectTeam"
-                                                                                    class="team_name"
-                                                                                    style="background:none;  border:none; color:#212529"
-                                                                                    @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
-                                                                                    @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                                    @if ($upcoming_season_date < $team->date)
-
-                                                                                    fixture_id={{ $team->id }}
-                                                                                    team_id={{ $team->second_team_id->id }}
-                                                                                    season_id={{ $team->season_id }}
-                                                                                    week={{ $team->week }}
-                                                                                    teamName={{ $formatted_second_team_name }}
-                                                                                    first_teamName={{ $formatted_first_team_name }}
-                                                                                    second_teamName={{ $formatted_second_team_name }}
-                                                                                    fixture_date={{ $team->date }}
-                                                                                    fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                                    @endif>
-                                                                                    <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
-                                                                                        alt="" class="img-fluid">
-
-                                                                                    <div class="fixture_text"
-                                                                                        style="min-width:200px">
-                                                                                        {{ $team->second_team_id->name }}
-                                                                                    </div>
-                                                                                </button>
-                                                                            @endif
-                                                                        @else
+                                                                            <div class="fixture_text"
+                                                                                style="min-width:200px">
+                                                                                {{ $team->second_team_id->name }}
+                                                                            </div>
+                                                                        </button>
+                                                                        {{-- @endif --}}
+                                                                        {{-- @else
                                                                             <button data-bs-toggle="modal"
                                                                                 data-bs-target="#selectTeam"
                                                                                 class="team_name"
                                                                                 style="background:none;  border:none; color:#212529"
-                                                                                @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
+                                                                                @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
                                                                                     @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                                    @if ($upcoming_season_date < $team->date)
-
-                                                                                fixture_id={{ $team->id }}
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                                @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                                 team_id={{ $team->second_team_id->id }}
                                                                                 season_id={{ $team->season_id }}
                                                                                 week={{ $team->week }}
@@ -370,8 +332,7 @@
                                                                                 first_teamName={{ $formatted_first_team_name }}
                                                                                 second_teamName={{ $formatted_second_team_name }}
                                                                                 fixture_date={{ $team->date }}
-                                                                                fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                                @endif>
+                                                                                fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
                                                                                 <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
                                                                                     alt="" class="img-fluid">
 
@@ -380,9 +341,12 @@
                                                                                     {{ $team->second_team_id->name }}
                                                                                 </div>
                                                                             </button>
-                                                                        @endif
+                                                                        @endif --}}
                                                                     @else
-                                                                        {{ 'TBD' }}
+                                                                        <div class="fixture_text text-center"
+                                                                            style="min-width:200px">
+                                                                            {{ 'TBD' }}
+                                                                        </div>
                                                                     @endif
                                                                 @endif
                                                             </div>
@@ -408,23 +372,7 @@
                                 </tbody>
                             </table>
                         @else
-                            <hr style="color:#888;">
-                            <section id="pageNotFound" class="no_data_found">
-
-                                <div class="container">
-                                    <div class="row justify-content-center text-center">
-                                        <div class="col-auto">
-                                            <div class="notFoundImg">
-                                                {{-- <img src="https://nfl.kloudexpert.com/front/img/soccerFootball.png" alt=""> --}}
-                                                <img src="{{ asset('front/img/soccerFootball.png') }}" alt="">
-                                            </div>
-                                            <h3>No Data Found</h3>
-
-                                            <a href="{{ route('home') }}" class="btn btn-primary">Go to Home</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+                            @include('no-data-found')
                         @endif
                     </div>
                 </div>
@@ -466,19 +414,7 @@
             </div>
         </div>
     </div>
-    <style>
-        #matchFixture {
-            background-color: <?php echo $colorSection['match_fixture']['bg_color']; ?>;
-        }
 
-        .fixture_text {
-            color: <?php echo $colorSection['match_fixture']['text_color']; ?>;
-        }
-
-        .fixture_head {
-            color: <?php echo $colorSection['match_fixture']['header_color']; ?>;
-        }
-    </style>
 @endsection
 
 
@@ -501,8 +437,8 @@
                 let attr = $(this).attr('fixture_id');
                 if (typeof attr == 'undefined') {
                     Swal.fire({
-                        title: 'Time over ',
-                        html: "Your Time to pick the team for week is over . You can pick the team <span style='color:#f27474'> before Thursday 12:00 AM </span> . You can still pick the team for next week.Good Luck",
+                        title: 'Time over !',
+                        html: "<span style='font-size: 15px;line-height: 22px;'>Your Time to pick the team for this week is over. <br> Now you can pick the team <span style='color:#f27474'> before Thursday 12:00 AM. </span><br> You can still pick the team for next week.</span><br>Good Luck.",
                         icon: 'error',
                     });
 
@@ -514,8 +450,8 @@
                 // console.log(upcoming_selectable_week);
                 if (upcoming_selectable_week != 'true') {
                     Swal.fire({
-                        title: "Can't pick the team in advance ! ",
-                        html: "You can't pick the team before it's starts. Please wait for the week to come.",
+                        title: "<span style='font-size:20px;'>You can't pick the team before the week starts!</span>",
+                        html: "<span style='font-size:15px;'>Please wait for the next week to come.<br> You can start pick the team before <br> Thursday 12:00 AM of upcoming week.</span>",
                         icon: 'error',
                     });
 
@@ -557,7 +493,7 @@
                     },
                     success: function(resp) {
 
-                         console.log(resp);
+                        console.log(resp);
                         let login_url = "payment";
                         if (resp.message == 'not_login') {
                             console.log('pleaser login');
@@ -569,105 +505,107 @@
 
                             });
                         } else {
-                        let url = "payment";
-                        let coupon_url = "coupon";
-                        if (resp.message == 'not subscribed') {
-                            Swal.fire({
-                                // title: 'Please subscribe first ?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                html: `Please <a href="${url}">Subscribe!</a> or <a href="${coupon_url}">use the coupon !</a> To pick the team`
+                            let url = "payment";
+                            let coupon_url = "coupon";
+                            if (resp.message == 'not subscribed') {
+                                Swal.fire({
+                                    // title: 'Please subscribe first ?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    html: `Please <a href="${url}">Subscribe!</a> or <a href="${coupon_url}">use the coupon !</a> To pick the team`
 
-                                // html: `Please <a href="${url}">Subscribe </a> To pick the team`
+                                    // html: `Please <a href="${url}">Subscribe </a> To pick the team`
 
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Are you sure?',
-                                html: "Do you really want to pick the <span style='color:#3085d6'>" +
-                                    formatted_team_name +
-                                    " </span> team for the nfl battle between <span style='color:#3085d6'>" +
-                                    formatted_first_team_name +
-                                    "</span> and <span style='color:#3085d6'>" +
-                                    formatted_second_team_name + " </span>?",
-                                icon: 'question',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Yes, Pick it!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    html: "Do you really want to pick the <span style='color:#3085d6'>" +
+                                        formatted_team_name +
+                                        " </span> team for the nfl battle between <span style='color:#3085d6'>" +
+                                        formatted_first_team_name +
+                                        "</span> and <span style='color:#3085d6'>" +
+                                        formatted_second_team_name + " </span>?",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Yes, Pick it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
 
-                                    $.ajax({
-                                        type: 'POST',
-                                        // url: '/check_user',
-                                        url: '/nfl_battles_team_pick',
-                                        data: {
-                                            season_id: season_id,
-                                            fixture_id: fixture_id,
-                                            team_id: team_id,
-                                            week: week
-                                        },
-                                        success: function(resp) {
-                                            console.log(resp);
+                                        $.ajax({
+                                            type: 'POST',
+                                            // url: '/check_user',
+                                            url: '/nfl_battles_team_pick',
+                                            data: {
+                                                season_id: season_id,
+                                                fixture_id: fixture_id,
+                                                team_id: team_id,
+                                                week: week
+                                            },
+                                            success: function(resp) {
+                                                console.log(resp);
 
-                                            if (resp.message == 'update') {
-                                                Swal.fire({
-                                                    title: 'Your Pick team has been updated',
-                                                    html: "You have pick <span style='color:#3085d6'>" +
-                                                        formatted_team_name +
-                                                        " </span> team for  week <span style='color:#3085d6'>" +
-                                                        week +
-                                                        " </span> on <span style='color:#3085d6'>" +
-                                                        fixture_date +
-                                                        " </span> at <span style='color:#3085d6'>" +
-                                                        fixture_time +
-                                                        " </span>",
-                                                    icon: 'success',
-                                                    // showCancelButton: true,
+                                                if (resp.message ==
+                                                    'update') {
+                                                    Swal.fire({
+                                                        title: "<span style='font-size:22px;'>Your Picked team has been updated</span>",
+                                                        html: "<p style='font-size:16px; line-height: 24px;'>You have pick <span style='color:#3085d6'>" +
+                                                            formatted_team_name +
+                                                            " </span> team for  week <span style='color:#3085d6'>" +
+                                                            week +
+                                                            " </span><br> on <span style='color:#3085d6'>" +
+                                                            fixture_date +
+                                                            " </span> at <span style='color:#3085d6'>" +
+                                                            fixture_time +
+                                                            ". </span> </p> <span style='margin-top:-10px; font-size:14px;' >Go to <a href={{ route('my_selections') }}> dashboard  </a>to see your selections.</span>",
+                                                        icon: 'success',
+                                                        // showCancelButton: true,
 
 
-                                                });
-                                                setTimeout(() => {
-                                                    location
-                                                        .reload();
-                                                }, 5000);
+                                                    });
+                                                    // setTimeout(() => {
+                                                    //     location
+                                                    //         .reload();
+                                                    // }, 5000);
+                                                }
+                                                if (resp.message ==
+                                                    'added') {
+                                                    Swal.fire({
+                                                        title: "<span style='font-size:22px;'>You have pick the team.<span>",
+                                                        html: "<p style='font-size:16px; line-height: 24px;'> You have pick <span style='color:#3085d6'>" +
+                                                            formatted_team_name +
+                                                            " </span> team for  week <span style='color:#3085d6'>" +
+                                                            week +
+                                                            " </span> on <br><span style='color:#3085d6'>" +
+                                                            fixture_date +
+                                                            " </span> at <span style='color:#3085d6'>" +
+                                                            fixture_time +
+                                                            " </span></p> <span style='margin-top:-10px; font-size:14px;' >Go to <a href={{ route('my_selections') }}> dashboard  </a>to see your selections.</span>",
+                                                        icon: 'success',
+                                                        // showCancelButton: true,
+
+                                                    });
+                                                    // setTimeout(() => {
+                                                    //     location
+                                                    //         .reload();
+                                                    // }, 5000);
+                                                }
+
+                                                // else{
+                                                //     location.reload();
+                                                // }
                                             }
-                                            if (resp.message == 'added') {
-                                                Swal.fire({
-                                                    title: 'You have pick the team',
-                                                    html: "You have pick <span style='color:#3085d6'>" +
-                                                        formatted_team_name +
-                                                        " </span> team for  week <span style='color:#3085d6'>" +
-                                                        week +
-                                                        " </span> on <span style='color:#3085d6'>" +
-                                                        fixture_date +
-                                                        " </span> at <span style='color:#3085d6'>" +
-                                                        fixture_time +
-                                                        " </span>",
-                                                    icon: 'success',
-                                                    // showCancelButton: true,
+                                        });
 
-                                                });
-                                                setTimeout(() => {
-                                                    location
-                                                        .reload();
-                                                }, 5000);
-                                            }
-
-                                            // else{
-                                            //     location.reload();
-                                            // }
-                                        }
-                                    });
-
-                                }
-                                // else {
-                                //     console.log('not');
-                                // }
-                            });
+                                    }
+                                    // else {
+                                    //     console.log('not');
+                                    // }
+                                });
+                            }
                         }
-                    }
                     }
                 });
 
@@ -757,7 +695,7 @@
 
             $('.expire_season_msg').click(function() {
                 $('#SeasonExpireModal #expire_season_msg').html(
-                    '<p style="color:red"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon w-6 h-6 mr-2"> <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"> </polygon> <line x1="12" y1="8" x2="12" y2="12"></line> <line x1="12" y1="16" x2="12.01" y2="16"></line>  </svg> <span style="color:red" >Season has been expired </span></p>'
+                    '<p style="color:red"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon w-6 h-6 mr-2"> <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"> </polygon> <line x1="12" y1="8" x2="12" y2="12"></line> <line x1="12" y1="16" x2="12.01" y2="16"></line>  </svg> <span style="color:red" > This Season has been expired </span></p>'
                 );
             });
 

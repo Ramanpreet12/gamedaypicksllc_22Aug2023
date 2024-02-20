@@ -16,7 +16,12 @@
         <script src="{{ asset('dist/js/jquery.min.js') }}"></script>
         <script src="{{ asset('dist/js/jquery.validate.min.js') }}"></script>
         <script src="{{ asset('dist/js/custom.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script> --}}
+
+        <!-- jquery-sweetalert new -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer="defer"></script>
+
+
         {{-- jquery dattables  --}}
         <script src="{{asset('dist/js/bootstrap.min.js')}}"></script>
         <script src="{{asset('dist/js/jquery.dataTables.min.js')}}"></script>

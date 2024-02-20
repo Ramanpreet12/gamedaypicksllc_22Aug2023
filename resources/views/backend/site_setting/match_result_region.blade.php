@@ -1,6 +1,6 @@
 @extends('../layout/' . $layout)
 @section('subhead')
-    <title>NFL | Match Result</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Match Result</title>
 @endsection
 @section('subcontent')
     <div class="intro-y box mt-5">
@@ -95,14 +95,6 @@
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('players_total_loss')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
-
-
-
-
-
-
-
-
                 </div>
                 <br><br>
                 <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">

@@ -26,16 +26,18 @@ class VacationPacRequest extends FormRequest
         if (request()->ismethod('post')) {
             $rules = [
              'title' => 'required',
-              'image_video' => 'required',
+
              'status' => 'required',
-             'serial' => 'required'
+             'serial' => 'required',
+             'image_video' => 'required|Mimes:jpeg,jpg,gif,png,webp,svg,avi,mpeg,mp4',
             ];
          }
          elseif(request()->isMethod('put')){
              $rules = [
                  'title' => 'required',
                  'status' => 'required',
-                 'serial' => 'required'
+                 'serial' => 'required',
+                 'image_video' => 'Mimes:jpeg,jpg,gif,png,webp,svg,avi,mpeg,mp4',
                 ];
          }
          return $rules;
@@ -47,6 +49,17 @@ class VacationPacRequest extends FormRequest
         'image' => 'Image or Video',
         'status' => 'Status',
         'serial' => 'Serial'
+       ];
+
+    }
+
+    public function messages()
+    {
+       return [
+        'image_video.Mimes' => 'Invalid file type!',
+        // 'image_video.dimensions' => 'Minimum width should be 1000px and height should be 800px',
+        'image.Mimes' => 'Image with jpeg, jpg, gif, png, webp, svg & Video with avi, mpeg, mp4 extension is acceptable',
+
        ];
 
     }

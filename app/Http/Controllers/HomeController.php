@@ -390,13 +390,13 @@ class HomeController extends Controller
 
 
         }
-        
-        
-        
+
+
+
         // We are writing this code because client want to show those records when customer is enrolled in the game but not selected zany team. We will only consider this when there is no records coming from above code.
-           
-           
-           
+
+
+
 
 
         // We are writing this code because client want to show the fake data if there is no data in his database.
@@ -555,11 +555,12 @@ class HomeController extends Controller
 
         //get banners
 
-        $banners = Banner::where('status', 'Active')->get();
+        $banners = Banner::where('status', 'Active')->orderBy('serial' , 'ASC')->get();
 
         // $matchBoards = Fixture::with('first_team_id' , 'second_team_id' , 'season')->inRandomOrder()->limit(1)->get();
 
         $Win_matchBoards = DB::table('fixtures')
+        ->where('date' ,'>' ,Carbon::now()->format('Y-m-d'))
 
        ->select('fixtures.win as fixture_win' ,'teams.id as win_team_id' , 'teams.logo as win_team_logo' , 'teams.name as win_team_name')
 
@@ -575,8 +576,9 @@ class HomeController extends Controller
 
 
 
-        $Loss_matchBoards = DB::table('fixtures')
 
+        $Loss_matchBoards = DB::table('fixtures')
+        ->where('date' ,'>' ,Carbon::now()->format('Y-m-d'))
         ->select('fixtures.loss as fixture_loss' ,'teams.id as loss_team_id' , 'teams.logo as loss_team_logo' , 'teams.name as loss_team_name')
 
          ->selectRaw('COUNT(fixtures.loss) AS total_loss_pts_of_team')
@@ -595,10 +597,16 @@ class HomeController extends Controller
 
         $matchBoards_win_loss = $coll->collapse();
 
+        //  dd($matchBoards_win_loss);
+
+        // $upcoming_matches = Fixture::with('first_team_id', 'second_team_id', 'season')->inRandomOrder()->limit(5)->get();
+        $upcoming_matches = Fixture::where('date' ,'>' ,Carbon::now()->format('Y-m-d'))->with('first_team_id', 'second_team_id', 'season')
+
+                                    ->inRandomOrder()->limit(5)->get();
 
 
-        $upcoming_matches = Fixture::with('first_team_id', 'second_team_id', 'season')->inRandomOrder()->limit(5)->get();
-
+                                    // dd(Carbon::now()->format('Y-m-d'));
+                                    // dd($upcoming_matches);
 
 
         if (Cache::has('leader_board_regions_wise_users_results')) {
@@ -631,10 +639,6 @@ class HomeController extends Controller
 
         }
 
-
-
-
-
         $fixtureHeading = SectionHeading::where('name', 'Upcoming Fixture')->first();
 
         $leaderboardHeading = SectionHeading::where('name', 'leaderboard')->first();
@@ -647,8 +651,6 @@ class HomeController extends Controller
 
         $reviewsHeading = SectionHeading::where('name' , 'Reviews')->first();
 
-
-
         //get videos and news
 
         $news = News::where('type', "news")->where('status', "active")->get();
@@ -659,13 +661,8 @@ class HomeController extends Controller
 
         //get reviews
 
-        $get_reviews = Reviews::inRandomOrder()->limit(10)->get();
-
-
-
+        $get_reviews = Reviews::where('status' , 'active')->inRandomOrder()->limit(10)->get();
         $get_teams = Team::where('status' , 'active')->select('logo')->get();
-
-
 
         return view('home.index',compact('get_teams' , 'get_reviews' ,'colorSection' , 'banners', 'upcoming_matches' ,'leader_board_regions_wise_users_results', 'news' ,'vacations' , 'menus' , 'mainMenus' , 'subMenus' , 'leaderboardHeading' , 'fixtureHeading' , 'leaderboardHeading' ,'playerRosterHeading','videosHeading' ,'newsHeading' ,'matchBoards_win_loss' ,'reviewsHeading'));
 
@@ -899,7 +896,7 @@ class HomeController extends Controller
 
 
 
-        
+
 
         $name = $request->letters;
 
@@ -917,15 +914,15 @@ class HomeController extends Controller
 
         $roster_data['Mid-West'] =  $this->getTheTopPlayersDataBasedOnRegion('Mid-West',100,$name,$gp);
 
-        
 
-      
 
-        
+
+
+
 
         $roster_data['Overseas'] =  $this->getTheTopPlayersDataBasedOnRegion('Overseas',100,$name,$gp);
 
-        
+
 
         foreach($roster_data as $rd){
 
@@ -1033,6 +1030,9 @@ class HomeController extends Controller
 
      public function news_alerts(Request $request){
 
+        $request->validate([
+            'email' => 'email|required'
+        ]);
         $news_alerts = new NewsAlerts;
         $news_alerts->email = $request->email;
         $news_alerts->save();
@@ -1043,26 +1043,27 @@ class HomeController extends Controller
 
     //gameday campaign number of visitors (change route name visitors to landing)
      public function visitors(Request $request) {
+
         $ip = $request->ip();
-          
+
             Visitor::create([
                 'ip_address' => $ip,
             ]);
 
-        
+
         $get_visitor_count = Visitor::count();
-      
-        
+
+
        $get_ip_address = Visitor::where('ip_address' ,'=' , $ip)->first();
-       
-      
-       
-      
+
+
+
+
          return view('front.visitors' , compact('get_visitor_count' , 'get_ip_address'));
     }
 
     public function store_visitor(Request $request){
-        
+
         return redirect()->route('home');
         // $ip = $request->ip();
         // if (Visitor::where('ip_address', $ip)->count() < 1)
@@ -1100,7 +1101,7 @@ public function storeCraftmanVisitors(Request $request) {
     return redirect()->route('home');
 
 }
-        
+
      //cron function
      public function updateUserPreMatchs(){
         $date = Carbon::now()->isoFormat('YYYY-MM-DD');;

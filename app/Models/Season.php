@@ -20,4 +20,10 @@ class Season extends Model
     {
         return $this->hasOne(Winner::class , 'season_id' , 'id');
     }
+
+    public function prize()
+    {
+        return $this->hasMany(Season::class , 'season_id' , 'id');
+    }
+
 }

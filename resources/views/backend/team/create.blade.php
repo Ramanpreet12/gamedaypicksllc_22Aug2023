@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Team</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }}  | Team</title>
 @endsection
 
 @section('subcontent')
@@ -73,29 +73,6 @@
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('name')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
-
-                    {{-- <div class="form-inline mt-5">
-                        <label for="match_played" class="font-medium form-label sm:w-60">Match Played <span class="text-danger">*</span></label>
-                        <input id="match_played" type="text" class="form-control" placeholder="Enter number of match played" name="match_played" value="">
-                    </div> --}}
-
-
-                    {{-- <div class="form-inline mt-5">
-                        <label for="win" class="font-medium form-label sm:w-60">Win <span class="text-danger">*</span></label>
-                        <input id="win" type="text" class="form-control" placeholder="Enter number of wins " name="win" value="">
-                    </div>
-
-
-                    <div class="form-inline mt-5">
-                        <label for="loss" class="font-medium form-label sm:w-60">Loss <span class="text-danger">*</span></label>
-                        <input id="loss" type="text" class="form-control" placeholder="Enter number of loss" name="loss" value="">
-                    </div>
-
-                    <div class="form-inline mt-5">
-                        <label for="pts" class="font-medium form-label sm:w-60">PTS <span class="text-danger">*</span></label>
-                        <input id="pts" type="text" class="form-control" placeholder="Enter number of PTS" name="pts" value="">
-                    </div> --}}
-
                     <div class="form-inline mt-5">
                         <label for="logo" class="font-medium form-label sm:w-60">Logo <span class="text-danger">*</span></label>
                         <input id="logo" type="file" class="form-control" placeholder="Image" name="logo">
@@ -117,31 +94,6 @@
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('status')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
-
-                    {{-- @if (!empty($general->logo))
-                        <div class="form-inline mt-5">
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-                            <img src="{{asset('storage/images/general/'.$general->logo)}}" alt="" height="50px" width="100px">
-                        </div>
-
-                    @else
-                        <div class="form-inline mt-5">
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-                            <img alt="Admin Image" class="rounded-full" height="50px" width="100px"
-                            src="{{asset('dist/images/dummy_image.webp')}}">
-                        </div>
-
-                    @endif --}}
-
-
-
-
-                    {{-- <div class="form-inline mt-5">
-                        <label for="logo" class="font-medium form-label sm:w-60"></label>
-                        <img src="{{asset('public/images/general/'.$general->favicon)}}" alt="" height="50px" width="100px">
-
-                    </div> --}}
-
 
                 </div>
 

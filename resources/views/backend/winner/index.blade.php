@@ -1,11 +1,10 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Winner</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Winner</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
     @if (session()->has('success_msg'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -49,7 +48,6 @@
                         <th class="text-center whitespace-nowrap">Email </th>
                         <th class="text-center whitespace-nowrap">Photo</th>
                         <th class="text-center whitespace-nowrap">Points </th>
-                        {{-- <th class="text-center whitespace-nowrap">Created At</th> --}}
                         <th class="text-center whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
@@ -58,42 +56,29 @@
                     @foreach ($get_users as $user)
 
                         <tr class="intro-x">
-                            <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$user->season_name}} </div>
-                            </td>
-                            <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4"> {{ $user->user_name ?? ''}} </div>
-                            </td>
-                            <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4"> {{ $user->user_email ?? ''}} </div>
-                            </td>
+                            <td> {{$user->season_name ?? ''}}</td>
+                            <td> {{ $user->user_name ?? ''}}</td>
+                            <td>{{ $user->user_email ?? ''}} </td>
                             <td class="">
                                 <div class="flex">
                                     <div class="w-10 h-10 image-fit zoom-in">
-                                        @if (!empty($user->photo))
-                                        <img src="{{asset('storage/images/user_images/'.$user->photo)}}" alt="" height="50px" width="100px" class="rounded-full">
+                                        @if (!empty($user->user_photo))
+                                        <img src="{{asset('storage/images/user_images/'.$user->user_photo)}}" alt=""  class="rounded-full">
                                         @else
                                         <img src="{{asset('dist/images/dummy_image.webp')}}" alt="" class="img-fluid rounded-full">
                                         @endif
                                     </div>
-
                                 </div>
                             </td>
 
                             <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4">{{ $user->total_points }} </div>
+                                {{ $user->winning_points ?? '' }}
                             </td>
-                            {{-- <td class="text-center">{{ $user->user->name ?? ''}}</td>
-                            <td class="text-center">{{ $user->points }}</td> --}}
-                            {{-- <td class="text-center">{{ \Carbon\Carbon::parse($user->created_at)->format('j F, Y') }}</td> --}}
-
-
                             <td class="table-report__action">
                                 <div class="flex justify-center items-center">
                                     <a class="flex items-center mr-3" href="{{url('admin/winner/assign_prize/'.$user->user_id ?? '')}}">
                                         <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Assign Prize
                                     </a>
-
                                     {{-- <form action="" method="post">
                                         @csrf
                                         @method('DELETE')
@@ -104,42 +89,14 @@
                                 </div>
                             </td>
                         </tr>
-                        
+
                     @endforeach
 
                 </tbody>
             </table>
         </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
-
-        <!-- END: Pagination -->
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-feather="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Are you sure?</div>
-                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process
-                            cannot be undone.</div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                        <button type="button" class="btn btn-danger w-24">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END: Delete Confirmation Modal -->
-
 @endsection
-
-
 
    @section('script')
    <script>

@@ -9,17 +9,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Laralink">
   <!-- Site Title -->
-  <title>NFL-Payment Invoice</title>
+  <title>{{ $general->name ? $general->name : 'NFL' }} | Payment Invoice</title>
   <link rel="stylesheet" href="{{asset('front/css/invoice.css')}}">
 </head>
 
 <body>
   <div class="tm_container">
- 
+
     <div class="tm_invoice_wrap">
       <div class="tm_invoice tm_style1" id="tm_download_section">
         <div class="tm_coffee_shop_img">
-          <img src="assets/img/coffy_shop_img.svg" alt="">            
+          <img src="assets/img/coffy_shop_img.svg" alt="">
         </div>
         <div class="tm_invoice_in">
           <div class="tm_invoice_head tm_align_center">

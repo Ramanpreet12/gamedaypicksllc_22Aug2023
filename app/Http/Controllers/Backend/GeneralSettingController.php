@@ -18,24 +18,24 @@ class GeneralSettingController extends Controller
                 'contact_page_content'         => 'required',
                 'contact_form_heading'         => 'required',
                 'contact_social_links_heading' => 'required',
-                // 'contact_page_image'           => 'required',
+                'contact_page_image'           => 'image|Mimes:jpeg,jpg,gif,png,webp,svg',
             );
 
-        $fieldNames = array(
+            $fieldNames = array(
                 'contact_section_heading'       => 'Page Heading',
                 'contact_location_heading'      => 'Location Heading',
                 'contact_page_content'          => 'Content',
                 'contact_form_heading'          => 'Enquiry Form Heading',
                 'contact_social_links_heading'  => 'Social Links Heading',
-                // 'contact_page_image'            => 'Image',
+                // 'contact_page_image.Mimes'           =>  'Image with jpeg, jpg, gif, png, webp, svg extension is acceptable',
              );
 
-        $validator = Validator::make($request->all(), $rules);
-        $validator->setAttributeNames($fieldNames);
+            $validator = Validator::make($request->all(), $rules);
+            $validator->setAttributeNames($fieldNames);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }else{
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }else{
             $image_file     =   $request->file('contact_page_image');
             if ($image_file) {
                 $image_filename = $image_file->getClientOriginalName();
@@ -61,6 +61,88 @@ class GeneralSettingController extends Controller
             return view('backend.site_setting.contactPage' ,compact('contact_details'));
         }
     }
+
+
+    public function aboutPage(Request $request) {
+        if ($request->isMethod('put')) {
+            $rules = array(
+                'heading'      => 'required',
+                'content'      => 'required',
+                'image'        => 'image|Mimes:jpeg,jpg,gif,png,webp,svg',
+            );
+
+            $fieldNames = array(
+                'heading'       => 'Page Heading',
+                'content'       => 'Content',
+             );
+
+            $validator = Validator::make($request->all(), $rules);
+            $validator->setAttributeNames($fieldNames);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }else{
+            $image_file     =   $request->file('about_page_image');
+            if ($image_file) {
+                $image_filename = $image_file->getClientOriginalName();
+                $success = $image_file->storeAs('public/images/static_page/' , $image_filename);
+                if (!isset($success)) {
+                    return back()->withError('Could not upload logo');
+                }
+                GeneralSetting::where(['name' => 'about_page_image'])->update(['value' => $image_filename]);
+            }
+            GeneralSetting::where(['name' => 'about_page_heading'])->update(['value' => $request->heading]);
+            GeneralSetting::where(['name' => 'about_page_sub_heading'])->update(['value' => $request->sub_heading]);
+            GeneralSetting::where(['name' => 'about_page_content'])->update(['value' => $request->content]);
+            GeneralSetting::where(['name' => 'about_page_status'])->update(['value' => $request->status]);
+
+                return redirect()->back()->with('success' , 'About Page updated successfully');
+            }
+        }
+        else {
+            $get_about_details = GeneralSetting::where('type', 'aboutPage')->get()->toArray();
+
+            $about_page_details = key_value('name', 'value', $get_about_details);
+
+            return view('backend.site_setting.aboutPage' , compact('about_page_details') );
+        }
+    }
+
+
+    public function privacyPage(Request $request) {
+        if ($request->isMethod('put')) {
+            $rules = array(
+                'heading'      => 'required',
+                'content'      => 'required',
+                // 'image'        => 'image|Mimes:jpeg,jpg,gif,png,webp,svg',
+            );
+
+            $fieldNames = array(
+                'heading'       => 'Page Heading',
+                'content'       => 'Content',
+             );
+
+            $validator = Validator::make($request->all(), $rules);
+            $validator->setAttributeNames($fieldNames);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }else{
+
+            GeneralSetting::where(['name' => 'privacy_page_heading'])->update(['value' => $request->heading]);
+            GeneralSetting::where(['name' => 'privacy_page_content'])->update(['value' => $request->content]);
+                return redirect()->back()->with('success' , 'Privacy Page updated successfully');
+            }
+        }
+        else {
+            $get_privacy_details = GeneralSetting::where('type', 'privacyPage')->get()->toArray();
+
+            $privacy_page_details = key_value('name', 'value', $get_privacy_details);
+
+            return view('backend.site_setting.privacyPage' , compact('privacy_page_details'));
+        }
+    }
+
 
 
     public function match_fixture(Request $request) {
@@ -142,4 +224,56 @@ class GeneralSettingController extends Controller
 
     }
 
+
+    public  function editPonyExpressFlagFootball(Request $request) {
+        if ($request->isMethod('put')) {
+
+            $rules = array(
+                // 'pony_page_image'      => 'required',
+                'pony_page_zipcode_heading'     => 'required',
+                'pony_page_button_text'         => 'required',
+            );
+
+            $fieldNames = array(
+                // 'pony_page_image'       => 'Pony Page Image',
+                'pony_page_zipcode_heading'      => 'zipcode heading',
+                'pony_page_button_text'          => 'button',
+
+             );
+
+            $validator = Validator::make($request->all(), $rules);
+            $validator->setAttributeNames($fieldNames);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }else{
+            $image_file     =   $request->file('pony_page_image');
+
+            if ($image_file) {
+                $image_filename = $image_file->getClientOriginalName();
+                $success = $image_file->storeAs('public/images/general/' , $image_filename);
+                if (!isset($success)) {
+                    return back()->withError('Could not upload logo');
+                }
+                GeneralSetting::where(['name' => 'pony_page_image'])->update(['value' => $image_filename]);
+            }
+
+            GeneralSetting::where(['name' => 'pony_page_heading'])->update(['value' => $request->pony_page_heading]);
+            GeneralSetting::where(['name' => 'pony_page_zipcode_heading'])->update(['value' => $request->pony_page_zipcode_heading]);
+            GeneralSetting::where(['name' => 'pony_page_button_text'])->update(['value' => $request->pony_page_button_text]);
+                return redirect()->back()->with('success' , 'Contact Page updated successfully');
+            }
+        }
+        else {
+            $get_pony_page_details = GeneralSetting::where('type', 'pony_page')->get()->toArray();
+            $pony_page_details = key_value('name', 'value', $get_pony_page_details);
+
+            return view('backend.pony_flag_football_backend' , compact('pony_page_details'));
+        }
+
+
+    }
+
+
 }
+

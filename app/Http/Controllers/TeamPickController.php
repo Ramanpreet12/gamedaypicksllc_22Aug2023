@@ -8,13 +8,15 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Payment;
-use App\Models\Coupon;
 use App\Models\UserTeam;
+use App\Models\Coupon;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TeamSelected;
 use App\Models\Team;
 use App\Models\Season;
+use App\Models\Jersey;
 use Auth;
 
 class TeamPickController extends Controller
@@ -22,64 +24,32 @@ class TeamPickController extends Controller
     private $league_id = 1 ;// league id basically determines the leagues for eg NFL ,FIFA etc
     public function index(Request $request)
     {
-
-
         $fixtures = collect([]);
         $season_name = null;
         $get_all_seasons = collect([]);
         $c_season = array();
         $get_current_year = Carbon::now()->format('Y');
         $season_data  = Season::where('status','active')->first();
+        if($season_data == null){
+            return view('front.teampick');
+        }
         $get_year_from_season_date = Carbon::createFromFormat('Y-m-d H:i:s', $season_data->starting)->format('Y');
-       $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
+       $get_current_season = Season::where(['status'=>'active'])->first();
+    //    $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
 
        $starting_season_date = Carbon::parse($get_current_season->starting);
        $starting_season_date1 = Carbon::parse($get_current_season->starting);
 
        $now = Carbon::now();
        if($starting_season_date < $now){
-        //print_r("start date ".$starting_season_date);
-       //echo "<br>";
-      // print_r("today date ".$now);
        $length = $starting_season_date->diffInWeeks($now);
-       //print_r("length ".$length);
-        //echo "<br>";
        $right_week = $length+1;
        $upcoming_season_date = $starting_season_date->addWeeks($right_week)->subDays(1);
-        //echo "<pre>;<br>";
-       //print_r(" upcoming_season_date ".$upcoming_season_date);
        $upcoming_week =  $starting_season_date1->addWeeks($right_week)->addDays(6);
-        //print_r("upcoming_week ".$upcoming_week);
-     // exit;
        }else{
            $upcoming_season_date = $starting_season_date->subDays(1);
            $upcoming_week =  $starting_season_date1->addDays(6);
-          // print_r("upcoming_week2 ".$upcoming_week);
        }
-
-
-
-    //     $fixtures = collect([]);
-    //      $season_name = null;
-    //      $get_all_seasons = collect([]);
-    //      $c_season = array();
-    //      $get_current_year = Carbon::now()->format('Y');
-    //     // $current_season_data  = Season::where('status','active')->first();
-    //     $season_data  = Season::where('status','active')->first();
-    //     // $get_year_from_season_date =$season_data->starting;
-    //     $get_year_from_season_date = Carbon::createFromFormat('Y-m-d H:i:s', $season_data->starting)->format('Y');
-    //     $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
-
-    //     $starting_season_date = Carbon::parse($get_current_season->starting);
-    //     $starting_season_date1 = Carbon::parse($get_current_season->starting);
-
-    //     $now = Carbon::now();
-    //     $length = $starting_season_date->diffInWeeks($now);
-    //     $right_week = $length+1;
-    //     $upcoming_season_date = $starting_season_date->addWeeks($right_week)->subDays(1);
-    //    $upcoming_week =  $starting_season_date1->addWeeks($right_week)->addDays(6);
-
-
 
         // If there is no active season . Then redirect with no found record.
         if(!$season_data){
@@ -91,29 +61,19 @@ class TeamPickController extends Controller
 
         // Now checking if  there is week coming in parameter from url. If not then assign the season id from above $current_season_data.
         $selected_week = $request->weeks ? $request->weeks : 1;
-        $select_season_data = Season::where('status' , 'active')->where('id' ,$current_season_id)->first();
-
+        $select_season_data = Season::where('id' ,$current_season_id)->first();
         $fixtures = Fixture::with('first_team_id','second_team_id' , 'season')
         ->where(['season_id'=> $current_season_id,'week'=>$selected_week])
-        ->whereDate('date','>=',$select_season_data->starting)->get()->groupby('week');
-
-
-        // $fixtures = DB::table('fixtures')->select('fixtures.*','team_id as selected_team')->join('user_teams as ut', 'ut.fixture_id', '=', 'fixtures.id')->where('fixtures.season_id', $current_season_id)->whereDate('date','>=',$select_season_data->starting)->get()->groupby('week');
-        // echo "<pre>";print_r($fixtures);echo"</pre>";die();
-        // dd($fixtures);
-
+        ->get()->groupby('week');
         if( $select_season_data){
-            $c_season = DB::table('seasons')->whereRaw('"' . $select_season_data->starting . '" between `starting` and `ending`')
-                               ->where(['status' => 'active' , 'id' => $current_season_id])->first();
+             $c_season = DB::table('seasons')->whereRaw('"' . $select_season_data->starting . '" between `starting` and `ending`')
+                               ->where(['id' => $current_season_id])->first();
+           
         }
-          // Fetch all the season which are active
-         $get_all_seasons = Season::where('status' , 'active')->orderby('id' , 'desc')->get();
+         $get_all_seasons = Season::orderby('id' , 'desc')->get();
          $season_name =  $select_season_data->season_name;
-
-
-         //get the team selected by user
-        $get_selected_teams_by_user =  UserTeam::where('user_id' , Auth::user()->id)->pluck('team_id')->toArray();
-
+        $get_selected_teams_by_user =  UserTeam::where(['user_id' => Auth::user()->id , 'season_id' => $get_current_season->id ])->pluck('team_id')->toArray();
+        // dd($get_selected_teams_by_user);
         return view('front.teampick' , compact('fixtures' , 'season_name' , 'get_all_seasons' , 'c_season' ,'get_selected_teams_by_user' ,'upcoming_season_date' ,'upcoming_week'));
 
 
@@ -190,8 +150,11 @@ public function dashboard_team_pick(Request $request)
             $user_region_id = auth()->user()->region_id;
             $user_status = Payment::where(['user_id' => $user_id,'season_id'=> $season_id,'status'=>'succeeded'])->first();
             $user_coupon_check = Coupon::where(['user_id' => $user_id])->first();
+            // $user_coupon_check = Jersey::where('email' , Auth::user()->email)->first();
 
-            if ($user_status  || $user_coupon_check) {
+            // dd($user_coupon_check);
+
+            if ($user_status || $user_coupon_check) {
                 //get current season date
                 $get_current_season = Season::where(['status'=>'active' , 'id' => $season_id])->first();
                 $get_current_season_date = $get_current_season->starting;
@@ -228,6 +191,9 @@ public function dashboard_team_pick(Request $request)
                         'team_id' => $team_id,
                         'fixture_id'=>$fixture_id,
                     ]);
+
+
+
                     $this->updateUserMatchs($season_id);
                     return response()->json(['message' => 'added','status'=>true], 200);
 
@@ -249,10 +215,13 @@ public function dashboard_team_pick(Request $request)
             $season_id = $request->season_id;
             $user_status = Payment::where(['user_id' => $user_id,'season_id'=> $season_id,'status'=>'succeeded'])->first();
             $user_coupon_check = Coupon::where(['user_id' => $user_id])->first();
+            // $user_coupon_check = Jersey::where('email' , Auth::user()->email)->first();
 
-                if($user_status){
+            // dd($user_coupon_check);
+            if($user_status){
 
                     return response()->json(['message' => 'subscribed','status'=>true], 200);
+
                 }
                 elseif($user_coupon_check != null){
                     return response()->json(['message' => 'subscribed','status'=>true], 200);

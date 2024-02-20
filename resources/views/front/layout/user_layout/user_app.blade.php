@@ -12,17 +12,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- intl-tel-input  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.6/css/intlTelInput.css">
-    {{-- <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFQ62F0F5W"></script>
-        <script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFQ62F0F5W"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
-
-
-
-gtag('config', 'G-KFQ62F0F5W');
-</script> --}}
+        gtag('config', 'G-KFQ62F0F5W');
+    </script>
     @stack('css')
 
     @if (!empty($general->favicon))
@@ -30,18 +30,12 @@ gtag('config', 'G-KFQ62F0F5W');
     @else
         <link rel="icon" type="image/x-icon" href="">
     @endif
-
-    <title>NFL</title>
-
+    <title>{{ $general->name ? $general->name : 'NFL' }}</title>
 </head>
 
 <body>
     @include('front.layout.user_layout.user_header')
-
-    {{-- Content --}}
     @yield('content')
-
-    {{-- Footer --}}
     @include('front.layout.user_layout.user_footer')
 
 </body>

@@ -2,7 +2,7 @@
 
 @section('subhead')
     <title>
-        NFL | Team Result</title>
+        {{ $general->name ? $general->name : 'NFL' }} | Team Result</title>
 @endsection
 
 @section('subcontent')
@@ -39,16 +39,7 @@
             <form action="{{ route('admin/team_result/create') }}" method="post">
                 @csrf
                 <div class="intro-y box p-5">
-                    {{-- <div class="mt-3">
-                        <label for="season" class="form-label">Season</label>
-                        <select data-placeholder="Select Season" class="tom-select w-full" id="season" name="season">
-                            <option value="">--select--</option>
-                            @foreach ($seasons as $season)
-                                <option value="{{ $season->id }}">{{ $season->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('season') <p class="text-danger">{{$message}}</p> @enderror
-                    </div> --}}
+
                     <div class="mt-3">
                         <label for="team_one" class="form-label">Team One</label>
                         <select data-placeholder="Select Team" class="tom-select w-full" id="team_one" name="team_one">
@@ -77,27 +68,6 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
-                    {{-- <div class="mt-3">
-                        <label for="team1_score" class="form-label">Team one scores</label>
-                        <div class="input-group">
-                            <input id="team1_score" type="text" class="form-control" placeholder="team1_score"
-                                aria-describedby="input-group-1" name="team1_score">
-                        </div>
-                        @error('team1_score')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div> --}}
-                    {{-- <div class="mt-3">
-                        <label for="team2_score" class="form-label">Team Two scores</label>
-                        <div class="input-group">
-                            <input id="team2_score" type="text" class="form-control" placeholder="team2_score"
-                                aria-describedby="input-group-1" name="team2_score">
-                        </div>
-                        @error('team2_score')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div> --}}
-
 
                     <div class="mt-3 flex justify-content-between">
                         <div>
@@ -112,27 +82,9 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- // --}}
-                        <div>
-                            {{-- <label class="form-label">Status</label>
-                            <div class="sm:grid grid-cols-2 gap-2">
-                                <div class="input-group">
-                                    <div id="date" class="input-group-text">Date</div>
-                                    <input type="date" class="form-control" placeholder="Date" aria-describedby="date"
-                                        name="date">
-                                </div>
-                                <div class="input-group mt-2 sm:mt-0 relative">
-                                    <div id="time" class="input-group-text">Time</div>
-                                    <input type="time" class="form-control" placeholder="Time"
-                                        aria-describedby="time" name="time">
 
-                                    <select class="form-select w-full" id="time_zone" name="time_zone">
-                                        <option value="">--select--</option>
-                                        <option value="am">AM</option>
-                                        <option value="pm">PM</option>
-                                    </select>
-                                </div>
-                            </div> --}}
+                        <div>
+
 
                             <div>
                                 <label class="form-label"> Status</label>
@@ -160,9 +112,7 @@
                                 @error('status')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
-                                {{-- @error('time_zone')
-                                    <p class="ml-5 text-danger">{{ $message }}</p>
-                                @enderror --}}
+
                             </div>
                         </div>
                     </div>

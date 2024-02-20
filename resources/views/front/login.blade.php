@@ -9,6 +9,13 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-sm-8 col-lg-6 col-md-8">
+
+          @if (session()->has('pre_signup_success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session()->get('pre_signup_success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          @endif
             @if (session()->has('success'))
                 <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -42,7 +49,7 @@
                     <form method="post" action="{{route('login')}}">
                         @csrf
                          <div class="mb-3">
-                          <label for="email" class="form-label">Email address</label>
+                          <label for="email" class="form-label">Email</label>
                           <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="johndoe@gmail.com">
                           </div>
                           <div class="mb-3">

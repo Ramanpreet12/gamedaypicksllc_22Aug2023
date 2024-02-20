@@ -320,7 +320,9 @@ h1, h2, h3, h4, h5, h6 {
       padding: 15px 20px;
       font-family: "Oxanium", "cursive";
       font-weight: 600;
-      text-transform: uppercase; }
+      text-transform: uppercase;
+      font-size: 12px;
+    }
       .navbar .navbar-nav .nav-item .nav-link .navHoverEffect {
         position: absolute;
         top: 50%;
@@ -1997,3 +1999,35 @@ nav.navbarMobile .navbar-nav .nav-item .dropdown-toggle {
     position: absolute; }
 
 /*# sourceMappingURL=style.css.map */
+.announcement_bar_box{
+
+        display: inline-block;
+        height: 100%;
+        text-align: center;
+        width: 100%;
+        background: #DA9A29;
+
+        margin: 0;
+        padding: 0;
+        vertical-align: middle;
+        font-size: 16px;
+      }
+
+      .announcement_bar_box p {
+        color: #F6F4F4;
+        padding-top: 11px;
+        /* animation: marquee 10s linear infinite; */
+    }
+
+
+    /* @keyframes marquee {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        100% {
+            transform: translate(-100%, 0);
+        }
+    } */
+
+

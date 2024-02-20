@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('head')
-    <title>NFL | Login</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Login</title>
 @endsection
 
 @section('content')
@@ -12,12 +12,12 @@
                 <a href="" class="-intro-x flex items-center pt-5">
                     <img alt="Rubick Tailwind HTML Admin Template" class="w-6" src="{{ asset('dist/images/logo.svg') }}">
                     <span class="text-white text-lg ml-3">
-                        NFL
+                        {{ $general->name ? $general->name : 'NFL' }}
                     </span>
                 </a>
                 <div class="my-auto">
-                  
-                    <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">NFL <br> Management.</div>
+
+                    <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">{{ $general->name ? $general->name : 'NFL' }} <br> Management.</div>
                     <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400">Manage all your Fixtures and Payments</div>
                 </div>
             </div>
@@ -81,54 +81,4 @@
         background-repeat: no-repeat;
     }
     </style>
-@endsection
-
-@section('script')
-
-    {{-- <script>
-        (function () {
-            async function login() {
-                // Reset state
-                $('#login-form').find('.login__input').removeClass('border-danger')
-                $('#login-form').find('.login__input-error').html('')
-
-                // Post form
-                let email = $('#email').val()
-                let password = $('#password').val()
-
-                // Loading state
-                $('#btn-login').html('<i data-loading-icon="oval" data-color="white" class="w-5 h-5 mx-auto"></i>')
-                tailwind.svgLoader()
-                await helper.delay(1500)
-
-                axios.post(`login`, {
-                    email: email,
-                    password: password
-                }).then(res => {
-                    location.href = '/'
-                }).catch(err => {
-                    $('#btn-login').html('Login')
-                    if (err.response.data.message != 'Wrong email or password.') {
-                        for (const [key, val] of Object.entries(err.response.data.errors)) {
-                            $(`#${key}`).addClass('border-danger')
-                            $(`#error-${key}`).html(val)
-                        }
-                    } else {
-                        $(`#password`).addClass('border-danger')
-                        $(`#error-password`).html(err.response.data.message)
-                    }
-                })
-            }
-
-            $('#login-form').on('keyup', function(e) {
-                if (e.keyCode === 13) {
-                    login()
-                }
-            })
-
-            $('#btn-login').on('click', function() {
-                login()
-            })
-        })()
-    </script> --}}
 @endsection

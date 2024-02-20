@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | News</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | News</title>
 @endsection
 
 @section('subcontent')
@@ -45,38 +45,38 @@
                         <label for="title" class="font-medium form-label sm:w-60">Title <span class="text-danger">*</span></label>
                         <input id="title" type="text" class="form-control" placeholder="News Title" name="title" value="{{old('title')}}">
                     </div>
-                    <div class="form-inline mt-2">
+                    <div class="form-inline mb-1">
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('title')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
 
 
-                    <div class="form-inline">
+                    <div class="form-inline mt-2">
                         <label for="header" class="font-medium form-label sm:w-60">Header <span class="text-danger">*</span></label>
                         <input id="header" type="text" class="form-control" placeholder="News header" name="header" value="{{old('header')}}">
                     </div>
-                    <div class="form-inline mt-2">
+                    <div class="form-inline mb-1">
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('header')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
 
 
-                    <div class="form-inline">
+                    <div class="form-inline mt-2">
                         <label for="description" class="font-medium form-label sm:w-60">Description <span class="text-danger"></span></label>
                         <textarea class="form-control" name="description" id="editor" cols="10" rows="3" placeholder="News Description">{{old('description')}}</textarea>
                     </div>
-                    <div class="form-inline mt-2">
+                    <div class="form-inline mb-1">
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('description')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
 
 
                     <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
+                        <label for="image" class="font-medium form-label sm:w-60">Image (360px × 495px) <span class="text-danger">*</span></label>
                         <input id="image" type="file" class="form-control" placeholder="News Image " name="image">
 
                     </div>
-                    <div class="form-inline mt-2">
+                    <div class="form-inline mb-1">
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('image')<p class="text-danger">{{$message}}</p> @enderror
                     </div>

@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(MatchResultSeeder::class);
         // $this->call(GeneralSettingSeeder::class);
         // $this->call(ReviewsSeeder::class);
-        $this->call(CouponSeeder::class);
+        // $this->call(CouponSeeder::class);
+        $this->call(AdminJerseySeeder::class);
     }
 }

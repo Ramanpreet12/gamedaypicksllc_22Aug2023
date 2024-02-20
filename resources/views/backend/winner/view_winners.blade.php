@@ -1,11 +1,10 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Winners</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Winners</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
     @if (session()->has('success_msg'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -44,16 +43,16 @@
             <table class="table table-report -mt-2 table-responsive" id="view_winners">
                 <thead class="bg-primary text-white">
                     <tr>
-                        <th class="text-center whitespace-nowrap">Season </th>
-                        <th class="text-center whitespace-nowrap">User Name </th>
-                        <th class="text-center whitespace-nowrap">User Email </th>
-                        <th class="text-center whitespace-nowrap">User Photo </th>
-                        <th class="text-center whitespace-nowrap">Points </th>
-                        <th class="text-center whitespace-nowrap">Prize</th>
-                        <th class="text-center whitespace-nowrap">Prize Photo</th>
-                        <th class="text-center whitespace-nowrap">Created At</th>
-                        <th class="text-center whitespace-nowrap">Updated At</th>
-                        <th class="text-center whitespace-nowrap">Action</th>
+                        <th class="text-center">Season </th>
+                        <th class="text-center">User Name </th>
+                        <th class="text-center">User Email </th>
+                        <th class="text-center">User Photo </th>
+                        <th class="text-center">Points </th>
+                        <th class="text-center">Prize</th>
+                        <th class="text-center">Prize Photo</th>
+                        <th class="text-center">Created At</th>
+                        <th class="text-center">Updated At</th>
+                        <th class="text-center">Action</th>
 
                     </tr>
                 </thead>
@@ -61,132 +60,87 @@
                 <tbody>
 
                     @if ($get_winners->isNotEmpty())
-                    @forelse ($get_winners as $winner)
+                    @foreach ($get_winners as $winner)
 
                         <tr class="intro-x">
-                            <td>
-                                <div class="text-slate-500 font-medium mx-4">  {{$winner->season->season_name}} </div>
+                            <td class="text-center">{{$winner->season->season_name ?? ''}}</td>
+                            <td class="text-center">
+                               {{ $winner->user->name ?? ''}}
                             </td>
-                            <td>
-                                <div class="text-slate-500 font-medium mx-4"> {{ $winner->user->name ?? ''}} </div>
-                            </td>
-                            <td>
-                                <div class="text-slate-500 font-medium mx-4"> {{ $winner->user->email ?? ''}} </div>
+                            <td class="text-center">
+                               {{ $winner->user->email ?? ''}}
                             </td>
                             <td class="">
                                 <div class="flex">
+
                                     <div class="w-10 h-10 image-fit zoom-in">
-                                        @if (!empty($winner->photo))
-                                        <img src="{{asset('storage/images/user_images/'.$winner->photo)}}" alt="" height="50px" width="100px" class="rounded-full">
+
+
+                                        @if (!empty($winner->user->photo))
+                                        <img src="{{asset('storage/images/user_images/'.$winner->user->photo)}}" alt="" height="120px" width="200px" class="rounded-full">
                                         @else
+
                                                 <img src="{{asset('dist/images/dummy_image.webp')}}" alt="" class="img-fluid rounded-full">
                                         @endif
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="text-slate-500 font-medium mx-4">{{ $winner->total_points }} </div>
+                            <td class="text-center">
+                               {{ $winner->total_points ?? '0' }}
                             </td>
-                            <td>
-                                <div class="text-slate-500 font-medium mx-4">  {{$winner->prize->name}} </div>
+                            <td class="text-center">
+                                {{$winner->prize->name ?? ''}}
                             </td>
                             <td class="">
                                 <div class="flex">
                                     <div class="zoom-in">
                                         @if (!empty($winner->prize->image))
-                                        <img src="{{asset('storage/images/prize/'.$winner->prize->image)}}" alt="" height="50px" width="100px" class="img-fluid">
+                                        <img src="{{asset('storage/images/prize/'.$winner->prize->image)}}" alt=""    height="50px" width="100px">
                                         @else
                                                 <img src="{{asset('dist/images/dummy_image.webp')}}" alt="" class="img-fluid rounded-full">
                                         @endif
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="text-slate-500 font-medium  mx-4">{{\Carbon\Carbon::parse($winner->created_at)->format('j F , Y , H:i')}}</div>
+                            <td class="text-center">
+                               {{\Carbon\Carbon::parse($winner->created_at)->format('j F, Y')}}
                             </td>
-                            <td>
-                                <div class="text-slate-500 font-medium  mx-4">{{\Carbon\Carbon::parse($winner->updated_at)->format('j F , Y , H:i')}}</div>
+                            <td class="text-center">
+                                {{\Carbon\Carbon::parse($winner->updated_at)->format('j F, Y')}}
                             </td>
 
-                            <td class="table-report__action w-56">
+                            <td class="table-report__action">
                                 <div class="flex justify-center items-center">
                                     <a class="flex items-center mr-3" href="{{ route('winner.edit',$winner->id) }}">
                                         <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit
                                     </a>
-                                    <form action="{{ route('winner.destroy', $winner->id)}}" method="post">
+                                    <a data-toggle="tooltip" title="Delete">
+                                        <button class="btn btn-danger confirmDelete" data-toggle="tooltip"
+                                            title="Delete" module="view_winner" module_id={{ $winner->id }}>
+                                            <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
+                                    </a>
+
+                                    {{-- <form action="{{ route('winner.destroy', $winner->id)}}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        {{-- <a class="flex items-center text-danger" href="" data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal">
-                                            <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete
-                                        </a> --}}
                                             <button class="btn btn-danger show_sweetalert" type="submit" data-toggle="tooltip">  <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
-
-                                      </form>
-
-
+                                      </form> --}}
                                 </div>
                             </td>
-
-
-                            {{-- <td class="text-center">{{ $user->user->name ?? ''}}</td>
-                            <td class="text-center">{{ $user->points }}</td> --}}
-                            {{-- <td class="text-center">{{ \Carbon\Carbon::parse($user->created_at)->format('j F, Y') }}</td> --}}
-
-
-                            {{-- <td class="table-report__action">
-                                <div class="flex justify-center items-center">
-                                    <a class="flex items-center mr-3" href="{{url('admin/winner/assign_prize/'.$user->user->id ?? '')}}">
-                                        <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Assign Prize
-                                    </a>
-                                </div>
-                            </td> --}}
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="text-center">No Records found</td>
-
-                        </tr>
-                    @endforelse
+                    @endforeach
                     @endif
                 </tbody>
             </table>
         </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
-
-        <!-- END: Pagination -->
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-feather="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Are you sure?</div>
-                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process
-                            cannot be undone.</div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                        <button type="button" class="btn btn-danger w-24">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END: Delete Confirmation Modal -->
-
 @endsection
-
-
 
    @section('script')
    <script>
     $(function() {
       $('#view_winners').DataTable({
-        scrollX: true,
+        // scrollX: true,
       });
     });
    </script>

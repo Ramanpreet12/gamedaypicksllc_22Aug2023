@@ -1,11 +1,10 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Team Result</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Team Result</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
     @if (session()->has('success'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -24,7 +23,7 @@
 
         <h2 class="text-lg font-medium mr-auto">Team Result Management</h2>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            {{-- <a class="btn btn-primary shadow-md mr-2" href="{{route('banner.create')}}" id="add_banner">Add New Banner</a> --}}
+
         </div>
     </div>
 
@@ -34,25 +33,13 @@
             <table class="table table-report -mt-2" id="team_result_table">
                 <thead class="bg-primary text-white">
                     <tr>
-
                         <th class="text-center whitespace-nowrap">Match</th>
-
-
-                        {{-- <th class="text-center whitespace-nowrap">Scores</th> --}}
-
                         <th class="text-center whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- {{dd($team_results->first_team_id->name)}} --}}
-                    {{-- @forelse ($team_results as $team_result) --}}
 
                         <tr class="intro-x">
-                            {{-- <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4">{{ $team_results->first_team_id->name }} </div>
-                            </td> --}}
-
-
                             <td>
                                 <div class="flex">
                                     <div class="w-10 h-10 image-fit zoom-in">
@@ -66,13 +53,7 @@
                                         {{ $team_results->first_team_id->name ?? '' }}
                                         </div>
                                 </div>
-
-                                {{-- {{ $team_results->first_team_id->name }} --}}
                             </td>
-                            {{-- <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4">{{ $team_results->first_team_points }}</div>
-                            </td> --}}
-                            {{-- <td class="text-center">{{ $team_results->first_team_points }}</td> --}}
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
                                     <form action="{{ url('admin/team_result/edit/' . $team_results->id) }}" method="post">
@@ -103,13 +84,7 @@
                                         {{ $team_results->second_team_id->name ?? '' }}
                                         </div>
                                 </div>
-
-                                {{-- {{ $team_results->second_team_id->name }} --}}
                             </td>
-                            {{-- <td>
-                                <div class="text-slate-500 font-medium whitespace-nowrap mx-4">{{ $team_results->second_team_points }}</div>
-                            </td> --}}
-                            {{-- <td class="text-center">{{ $team_results->second_team_points }}</td> --}}
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
 
@@ -127,47 +102,13 @@
                                 </div>
                             </td>
                         </tr>
-                    {{-- @empty
-                        <tr>
-                            <td colspan="7" class="text-center">No Records found</td>
-                            <p>No Records found</p>
-                        </tr>
-                    @endforelse --}}
-
                 </tbody>
             </table>
         </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
 
-        <!-- END: Pagination -->
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-feather="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Are you sure?</div>
-                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process
-                            cannot be undone.</div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                        <button type="button" class="btn btn-danger w-24">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END: Delete Confirmation Modal -->
 
 @endsection
-
-
-
    @section('script')
    <script>
     $(function() {

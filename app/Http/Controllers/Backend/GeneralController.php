@@ -48,7 +48,7 @@ class GeneralController extends Controller
 
     {
 
-      // dd($request);die();
+    //   dd($request);die();
 
         // try {
 
@@ -61,7 +61,9 @@ class GeneralController extends Controller
                     'name' => $request->get('name'),
 
                     'email' => $request->get('email'),
-
+                    'announcement_bar' => $request->get('announcement_bar'),
+                    'header_announcement_bar_bg_color' => $request->get('header_announcement_bar_bg_color'),
+                    'header_announcement_bar_text_color' => $request->get('header_announcement_bar_text_color'),
                     'homepage_title' => $request->get('homepage_title'),
 
                     'homepage_subtitle' => $request->get('homepage_subtitle'),
@@ -108,23 +110,11 @@ class GeneralController extends Controller
 
                 if($request->has('logo')){
 
-                    // if ($request->hasFile('logo')) {
-
-                    //         $logo_file = $request->file('logo');
-
-                    //         $logo_filename = "logo".time().'.'.$logo_file->getClientOriginalExtension();
-
-                    //         $logo_file->storeAs('public/images/general/' , $logo_filename);
-
-                    // }
-
                    $logo_filename =  general_images($request->logo);
 
                     $updateDetails['logo'] = $logo_filename;
 
                 }
-
-
 
                 if($request->has('favicon')){
 
@@ -183,29 +173,28 @@ class GeneralController extends Controller
                 public function prize_banner(Request $request) {
 
                   $general = General::First();
-
                   $update_prize_banner = array();
-
                   $update_prize_banner['selected_option'] = $request->prize_banner_option;
 
-                  if($request->has('prize_banner')){
-
-                      $prize_banner_filename =  general_images($request->prize_banner);
-
-                      $update_prize_banner['prize_banner'] = $prize_banner_filename;
-
+                  if($request->has('prize_banner_video')){
+                      $video = $request->file('prize_banner_video');
+                      $video_filename = $video->getClientOriginalName();
+                      $video_ext = '.'.$video->getClientOriginalExtension();
+                      if($video_ext == '.mp4'){
+                        $update_prize_banner['prize_banner_video'] = $video_filename;
+                        $video->storeAs('public/videos/prizeVideo/' , $video_filename);
+                      }else{
+                        return redirect()->back()->with('error_msg' , 'please upload mp4 video');
+                      }
                   }
-
-
-
+                  if($request->has('prize_banner')){
+                      $prize_banner_filename =  general_images($request->prize_banner);
+                      $update_prize_banner['prize_banner'] = $prize_banner_filename;
+                  }
                   if($request->has('youtube_link')){
-
                     $update_prize_banner['youtubelink'] = $request->youtube_link;
-
                 }
-
-                  $update_query =  $general->update( $update_prize_banner);
-
+                  $update_query =  $general->update($update_prize_banner);
                   return redirect()->back()->with('success_msg' , 'Prize Banner updated successfully');
 
               }

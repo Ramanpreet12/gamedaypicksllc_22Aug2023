@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Color Setting</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Color Setting</title>
 @endsection
 
 @section('subcontent')

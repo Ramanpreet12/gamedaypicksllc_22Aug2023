@@ -12,6 +12,9 @@ use App\Models\Fixture;
 use App\Models\UserTeam;
 use App\Models\Season;
 use App\Models\Winner;
+use App\Models\AdminJersey;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Auth , Hash,PDF;
 use Cache;
 
@@ -20,28 +23,34 @@ class UserDashboardController extends Controller
 {
     public function dashboard()
     {
-        // $c_date = Carbon::now();
-        // $c_season = DB::table('seasons')
-        //     ->whereRaw('"' . $c_date . '" between `starting` and `ending`')
-        //     ->first();
 
-        $c_date = Season::where('status' , 'active')->value('starting');
-        $c_season = DB::table('seasons')
-            ->whereRaw('"' . $c_date . '" between `starting` and `ending`')
-            ->where('status' , 'active')->first();
-
+        if(Auth::user()->age <= config('app.jersey_kid_age_limit')){
+            return redirect('pony-express-flag-football-shop');
+        }
 
         $payment = Payment::where('user_id', auth()->user()->id)->latest()->take(5)->get();
-        $user = DB::table('user_teams')->join('teams', 'teams.id', 'user_teams.team_id')->where(['user_id' => auth()->user()->id, 'season_id' => $c_season->id])->select('teams.name', 'teams.logo', 'user_teams.*')->orderby('user_teams.week', 'desc')->latest()->take(3)->get();
-        $upcoming = Fixture::with('first_team_id','second_team_id')
-        ->where('season_id',$c_season->id)
-        // ->whereDate('date','>=',$c_date)
-        ->orderby('date','asc')->latest()->take(5)->get()->groupby('week');
-      
         $get_prizes = Winner::with('prize' , 'season')->where('user_id', auth()->user()->id)->orderBy('id' , 'desc')->get();
+        $c_date = Season::where('status' , 'active')->value('starting');
+        $c_season = DB::table('seasons')
+                    ->whereRaw('"' . $c_date . '" between `starting` and `ending`')
+                    ->where('status' , 'active')->first();
+
+            if($c_season != null ){
+                $user = DB::table('user_teams')
+                ->join('teams', 'teams.id', 'user_teams.team_id')
+                ->where(['user_id' => auth()->user()->id, 'season_id' => $c_season->id])
+                ->select('teams.name', 'teams.logo', 'user_teams.*')
+                ->orderby('user_teams.week', 'desc')->latest()->take(3)->get();
+
+                $upcoming = Fixture::with('first_team_id','second_team_id')
+                ->where('season_id',$c_season->id)->where('date' ,'>' ,Carbon::now()->format('Y-m-d'))->inRandomOrder()->take(5)->get()->groupby('week');
+                return view('front.dashboard', compact('user', 'payment','upcoming','get_prizes'));
+            }
+            else{
+                return view('front.dashboard' , compact('payment','get_prizes'));
+            }
 
 
-         return view('front.dashboard', compact('user', 'payment','upcoming','get_prizes'));
         //return view('front.test',compact('user', 'payment','upcoming','prize'));
     }
     public function userPayment()
@@ -50,27 +59,51 @@ class UserDashboardController extends Controller
         return view('front.payment', compact('payment'));
     }
 
+    public function getAllPreviousOrders(){
+
+        // $get_orders = Order::with('get_orders_items')->where('user_id' , Auth::user()->id)->get();
+
+        $userallorders = DB::table('order_items')->join('orders', 'orders.id', '=', 'order_items.order_id')
+                                                ->join('products', 'products.id', '=', 'order_items.product_id')
+                                                ->join('product_images', 'product_images.product_id', '=', 'products.id')
+                                                 ->where('orders.user_id','=',Auth::user()->id)
+                                                 ->where('product_images.image_sort','=',1)
+                                                 ->orderBy('order_items.order_id' , 'DESC')
+                                                 ->get();
+
+
+
+        return view('front.previousOrderlist' , compact('userallorders'));
+    }
+
+
+
     public function my_selections()
     {
+
         $my_selections = DB::table('user_teams')
          ->select('f.week As fweek' ,'f.date as fdate' ,'f.time as ftime' ,'f.time_zone as ftime_zone' ,'f.id','f.win As team_win','f.loss As team_loss','t.logo As team_logo', 't.name As user_team', 's.season_name As season_name','t1.name As first_name','t1.logo As first_logo','t2.name As second_name','t2.logo As second_logo','user_teams.points As user_point')
         ->join('teams as t', 't.id', '=', 'user_teams.team_id')
         ->join('seasons as s', 's.id', '=', 'user_teams.season_id')
         ->join('fixtures as f', 'f.id', '=', 'user_teams.fixture_id')
-         ->join('teams as t1', 't1.id', '=', 'f.first_team')
+        ->join('teams as t1', 't1.id', '=', 'f.first_team')
         ->join('teams as t2', 't2.id', '=', 'f.second_team')
-         ->where('user_id', auth()->user()->id)
-        ->orderby('user_teams.week', 'desc')->get()->groupby('fweek');
-        // $c_date = Season::where('status' , 'active')->value('starting');
+        ->where('user_id', auth()->user()->id)
+        ->orderby('s.season_name', 'desc')
+        ->orderby('user_teams.week', 'desc')
+        ->get()->groupby( ['season_name', 'fweek']);
+
         $get_current_year = Carbon::now()->format('Y');
-        $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
+        $get_current_season = Season::where(['status'=>'active' ])->first();
+        // dd($get_current_season);
 
-        // $c_date = Season::where('status' , 'active')->value('starting');
-         $c_date = $get_current_season->starting;
-
-        $c_season = DB::table('seasons')->whereRaw('"' . $c_date . '" between `starting` and `ending`')
-                ->where('status' , 'active')->first();
-           $season_name = $c_season->season_name;
+        $season_name ='';
+        if ($get_current_season != null) {
+            $c_date = $get_current_season->starting;
+            $c_season = DB::table('seasons')->whereRaw('"' . $c_date . '" between `starting` and `ending`')
+                        ->where('status' , 'active')->first();
+            $season_name = $c_season->season_name ?  $c_season->season_name : 'ramn';
+        }
 
 
 
@@ -88,38 +121,45 @@ class UserDashboardController extends Controller
         ->join('teams as t2', 't2.id', '=', 'f.second_team')
          ->where('user_id', auth()->user()->id)
          ->whereNotNull(['f.win' , 'f.loss'])
-        ->orderby('user_teams.week', 'desc')->get()->groupby('fweek');
+        // ->orderby('user_teams.week', 'desc')
+        ->orderby('s.season_name', 'desc')
+        ->orderby('user_teams.week', 'desc')
+        ->get()->groupby( ['season_name', 'fweek']);
 
-        // $c_date = Season::where('status' , 'active')->value('starting');
+
+        $season_name = '' ;
         $get_current_year = Carbon::now()->format('Y');
-        $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
-
-        // $c_date = Season::where('status' , 'active')->value('starting');
-         $c_date = $get_current_season->starting;
-         
+        $get_current_season = Season::where(['status'=>'active'])->first();
+        if ($get_current_season != null ) {
+            $c_date = $get_current_season->starting;
             $c_season = DB::table('seasons')->whereRaw('"' . $c_date . '" between `starting` and `ending`')
-                    ->where('status' , 'active')->first();
-               $season_name = $c_season->season_name;
+                        ->where('status' , 'active')->first();
+            $season_name = $c_season->season_name;
+        }
 
-        // $get_season_name = $past_selections->season_name;
-        // dd($season_name);
+
+
         return view('front.past_selections', compact('past_selections' , 'season_name'));
     }
 
     public function upcomingMatches()
     {
-        // $c_date = Carbon::now();
-        // $c_season = DB::table('seasons')
-        //     ->whereRaw('"' . $c_date . '" between `starting` and `ending`')
-        //     ->first();
+
         $c_date = Season::where('status' , 'active')->value('starting');
-        $c_season = DB::table('seasons')
+        if ( $c_date != null ) {
+            $c_season = DB::table('seasons')
             ->whereRaw('"' . $c_date . '" between `starting` and `ending`')
             ->where('status' , 'active')->first();
-        $upcoming = Fixture::with('first_team_id','second_team_id')->where('season_id',$c_season->id)->whereDate('date','>',$c_date)->get()->groupby('week');
-        // echo "<pre>";
-        // print_r( $upcoming);
-        return view('front.upcoming',compact('upcoming'));
+
+            $upcoming = Fixture::with('first_team_id','second_team_id')
+                ->where('season_id',$c_season->id)->where('date' ,'>' ,Carbon::now()->format('Y-m-d'))->get()->groupby('week');
+
+            return view('front.upcoming',compact('upcoming'));
+        }
+        else{
+            return view('front.upcoming');
+        }
+
     }
 
     public function settings(Request $request)
@@ -160,10 +200,12 @@ class UserDashboardController extends Controller
 
             $input = $request->all();
             $request->validate([
-                'new_password' => 'required|min:6|regex:/[a-z]/',
+                'new_password' =>'required|string|min:6|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+                // 'new_password' => 'required|min:6|regex:/[a-z]/',
             ],
             [
-             'new_password.required'=> 'New Password field is Required', // custom message
+             'new_password.required'=> 'New Password is Required', // custom message
+             'new_password.regex'=> 'Password must contain at least one digit , one uppercase and one lowercase letter and  a special character', // custom message
             ]
          );
 
@@ -204,5 +246,12 @@ class UserDashboardController extends Controller
         } catch (\Exception $e) {
             Log::info($e->getMessage());
         }
+    }
+
+    public function prizes(){
+
+        $get_prizes = Winner::where('user_id' , Auth::user()->id)->with('prize' , 'season')->get();
+
+       return view('front.user_prizes' , compact('get_prizes'));
     }
 }

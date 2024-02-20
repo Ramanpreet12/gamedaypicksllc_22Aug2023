@@ -1,11 +1,10 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Contact</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Contact</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
     @if (session()->has('success_msg'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -36,7 +35,6 @@
 
         <h2 class="text-lg font-medium mr-auto">Contacts</h2>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            {{-- <a class="btn btn-primary shadow-md mr-2" href="" id="add_banner">Add New Team</a> --}}
         </div>
     </div>
 
@@ -49,11 +47,9 @@
                         <th class="text-center">S.No.</th>
                         <th class="text-center">Name</th>
                         <th class="text-center">Email </th>
-                        {{-- <th class="text-center">Phone No. </th> --}}
                         <th class="text-center">Subject </th>
                         <th class="text-center">Message </th>
                         <th class="text-center">Created At</th>
-
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -77,9 +73,6 @@
                             <td>
                                 <div class="text-slate-500 font-medium mx-4">  {{$contact->email}} </div>
                             </td>
-                            {{-- <td>
-                                <div class="text-slate-500 font-medium mx-4">{{$contact->country_code}}  {{$contact->phone_number}} </div>
-                            </td> --}}
 
                             <td>
                                 <div class="text-slate-500 font-medium mx-4">  {{$contact->subject}} </div>
@@ -90,14 +83,6 @@
                             <td>
                                 <div class="text-slate-500 font-medium mx-4"> {{ \Carbon\Carbon::parse($contact->created_at)->format('j F, Y , H:i') }}</div>
                             </td>
-                            {{-- <td>
-                                <div class="text-slate-500 font-medium mx-4"> {{ \Carbon\Carbon::parse($contact->updated_at)->format('j F, Y , H:i') }}</div>
-                            </td> --}}
-
-                            {{-- <td class="text-center">{{ \Carbon\Carbon::parse($team->created_at)->format('j F, Y') }}</td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($team->updated_at)->format('j F, Y') }}</td> --}}
-
-
                             <td class="table-report__action">
                                 <div class="flex justify-center items-center">
                                     <a class="flex items-center mr-3" href="{{route('contact.show' , $contact->id)}}">
@@ -124,12 +109,7 @@
                 </tbody>
             </table>
         </div>
-
-
 @endsection
-
-
-
    @section('script')
    <script>
     $(function() {

@@ -9,6 +9,6 @@ class Reviews extends Model
 {
     use HasFactory;
     protected $table = 'reviews';
-    protected $fillable = ['username' , 'reviewemail' , 'comment' , 'rating' , 'status'];
+    protected $fillable = ['username' , 'email' , 'comment' , 'rating' , 'status'];
 
 }

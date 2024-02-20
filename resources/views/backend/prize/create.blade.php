@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Prize</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Prize</title>
 @endsection
 
 @section('subcontent')
@@ -88,16 +88,6 @@
                         <label for="image" class="font-medium form-label sm:w-60"></label>
                         @error('content') <p class="text-danger">{{$message}}</p> @enderror
                     </div>
-
-                    {{-- season Name and season date  --}}
-                    {{-- <div class="form-inline mt-5">
-                        <label for="season_name" class="font-medium form-label sm:w-60">Season Name <span class="text-danger">*</span></label>
-                        <input id="season_name" type="text" class="form-control" placeholder="Enter season name" name="season_name" value="{{old('season_name')}}">
-                    </div>
-                    <div class="form-inline">
-                        <label for="season_name" class="font-medium form-label sm:w-60"></label>
-                        @error('season_name') <p class="text-danger">{{$message}}</p> @enderror
-                    </div> --}}
 
                     <div class="form-inline mt-5">
                         <label for="prize_date" class="font-medium form-label sm:w-60">Date <span class="text-danger">*</span></label>

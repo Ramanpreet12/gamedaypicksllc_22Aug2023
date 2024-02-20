@@ -2,16 +2,16 @@
 @section('content')
     <style>
 
-::-webkit-input-placeholder {  
+::-webkit-input-placeholder {
   color: #bdbdbd;
 }
-::-moz-placeholder { 
+::-moz-placeholder {
   color: #bdbdbd;
 }
-:-ms-input-placeholder {  
-  color: #bdbdbd; 
+:-ms-input-placeholder {
+  color: #bdbdbd;
 }
-:-moz-placeholder {  
+:-moz-placeholder {
   color: #bdbdbd;
 }
         .errorValidation {
@@ -71,14 +71,14 @@
     <section id="paymentForm">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-sm-12 col-lg-12 col-md-12">  
-                @foreach($errors as $error) 
-              
-                      {{$error}}
-                  
-                @endforeach 
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                @foreach($errors as $error)
 
-                   
+                      {{$error}}
+
+                @endforeach
+
+
                 </div>
                 <div class="col-sm-12 col-lg-8 col-md-12">
                     <div class="loginFormSubmit">
@@ -115,7 +115,7 @@
                                         <label for="fname" class="form-label">Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="fname" name="fname"
                                             placeholder="John" value="{{ ucfirst(auth()->user()->name) }}">
-                                            
+
                                     </div>
                                     <div class="input-errors" id="fname-error" role="alert"></div>
                                     {{-- <div class="mb-3">
@@ -124,18 +124,18 @@
                                             placeholder="Enter Amount" value="">
                                     </div> --}}
 
-                                    <div class="mb-3">
+                                    <div class="mb-3 pt-3">
                                         <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="address" name="address"
                                             placeholder="Street Address">
-                                            
+
                                     </div>
                                     <div class="input-errors" id="address-error" role="alert"></div>
                                     <div class="row">
-                                        <div class="mb-3">
+                                        <div class="mb-2 pt-3">
                                             <label for="validationCustom03" class="form-label">City <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" placeholder="City" id="city" name="city">
-                                            
+
                                         </div>
                                         <div class="input-errors" id="city-error" role="alert"></div>
                                         {{-- <div class="col-sm-6 mb-3">
@@ -147,14 +147,14 @@
                                             </div>
                                         </div> --}}
                                     </div>
-                                    <div class=" mb-3">
+                                    <div class="mb-3 pt-2">
                                         <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="country" name="country"
-                                            placeholder="USA">
-                                           
+                                            placeholder="Country">
+
                                     </div>
                                      <div class="input-errors" id="country-error" role="alert"></div>
-                                    <a href="{{ route('teams') }}" type="button" class="btn btn-primary">Return Back
+                                    <a href="{{ route('teams') }}" type="button" class="btn btn-primary mt-3">Return Back
                                     </a>
                                 </div>
                             </div>
@@ -210,9 +210,9 @@
 
                             </div>
                             <div class="col-sm-1">
-                                
+
                                     <div class="textItem">
-                                        
+
                                         <div class="form-row top-row ">
                                             <div id="" class="field">
                                                 <img src="{{asset('front/img/clover_device_img.png')}}" alt="" height="200px " width="200px">
@@ -220,7 +220,7 @@
                                             </div>
                                         </div>
                                     </div>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -244,18 +244,18 @@
 
 
     <script>
- 
-        @if(env('PAYMENT_MODE') == 'TEST' )         
+
+        @if(env('PAYMENT_MODE') == 'TEST' )
         const clover = new Clover('{{env("CLOVER_PUBLIC_KEY")}}');
         @else
         const clover = new Clover('{{env("CLOVER_PUBLIC_KEY_PRODUCTION")}}');
         @endif
-        
+
 
         const elements = clover.elements();
         const form = document.getElementById('payment-form');
 
-  
+
 
 
 
@@ -355,32 +355,32 @@ const cardPostalCode = elements.create('CARD_POSTAL_CODE', styles);
         const displayCardDateError = document.getElementById('card-date-errors');
         const displayCardCvvError = document.getElementById('card-cvv-errors');
         const displayCardPostalCodeError = document.getElementById('card-postal-code-errors');
-        
-        
+
+
         const city = document.getElementById('city');
         const displayCityError = document.getElementById('city-error');
-        
+
         city.addEventListener('change', function(event) {
             console.log(city.value);
             if(city.value == ''){
                  displayCityError.innerHTML = 'Billing City name required';
-            
+
             } else{
 			displayCityError.innerHTML = '';
-		}				
+		}
         });
 
         city.addEventListener('blur', function(event) {
             console.log(`cardNumber blur ${JSON.stringify(event)}`);
              if(city.value == ''){
                  displayCityError.innerHTML = 'Billing City name required';
-            
+
             } else{
 			displayCityError.innerHTML = '';
 		}
         });
-        
-        
+
+
 
         cardNumber.addEventListener('change', function(event) {
             console.log(`cardNumber changed ${JSON.stringify(event)}`);
@@ -436,8 +436,8 @@ const cardPostalCode = elements.create('CARD_POSTAL_CODE', styles);
 		    flag=true;
 		  }else{
 		  	document.getElementById("fname-error").innerHTML = "";
-		  }	
-            	
+		  }
+
             	let address= document.getElementById("address").value;
 		  if (address.trim()=="") {
 		    document.getElementById("address-error").innerHTML = "Billing address required";
@@ -445,7 +445,7 @@ const cardPostalCode = elements.create('CARD_POSTAL_CODE', styles);
 		  }else{
 		  	document.getElementById("address-error").innerHTML = "";
 		  }
-		  
+
 		  let city = document.getElementById("city").value;
 		  if (city.trim()=="") {
 		    document.getElementById("city-error").innerHTML = "Billing City name required";
@@ -460,24 +460,24 @@ const cardPostalCode = elements.create('CARD_POSTAL_CODE', styles);
 		  }else{
 		  	document.getElementById("country-error").innerHTML = "";
 		  }
-		  
-            
-            
-            
-            
+
+
+
+
+
             clover.createToken()
                 .then(function(result) {
                     console.log('token_result:', result);
-                    
-                     
-                    
+
+
+
                     if (result.errors || flag==true) {
                     	let i=0;
                         Object.entries(result.errors).forEach(function([key, value]) {
                             console.log(' Error for key=> '+key+' i=> '+value);
-                            
-                            
-                            
+
+
+
                             if(key=="CARD_NUMBER"){
                             	var div = document.getElementById('card-number-errors');
 				div.innerHTML = value;

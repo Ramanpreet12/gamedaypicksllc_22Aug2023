@@ -26,7 +26,8 @@ class UserRegisterRequest extends FormRequest
         return [
 
             'fname'            => 'required' ,
-            'email'            => 'required|unique:users' ,
+            'email'            => 'required' ,
+            // 'email'            => 'required|unique:users' ,
             // 'password'         =>'required|confirmed' ,
             'phone'            => 'required' ,
             'birthday'         => 'required|before:'.\Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
@@ -35,7 +36,7 @@ class UserRegisterRequest extends FormRequest
             'password_confirmation' => 'required',
             'address' => 'required',
             'city' => 'required',
-            'zipcode' => 'required',
+            'zipcode' => 'required|regex:/\b\d{5}\b/',
             'country' => 'required',
             'id_proof' => 'required',
             'id_proof_number' => 'required',
@@ -67,7 +68,7 @@ class UserRegisterRequest extends FormRequest
         'password.regex' => 'Password must contain at least one digit , one uppercase and one lowercase letter and  a special character',
         'password.min:6' => 'Password must be at least 6 characters in length' ,
         'birthday.before' => 'You must be 18 years above' ,
-
+        'zipcode.regex' => 'Zip Code should be 5 digits',
 
         ];
 

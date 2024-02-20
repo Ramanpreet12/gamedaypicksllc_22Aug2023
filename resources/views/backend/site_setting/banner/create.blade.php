@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Banners</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Banners</title>
 @endsection
 
 @section('subcontent')
@@ -42,7 +42,7 @@
                 <div class="preview  mr-5">
                     <div class="form-inline">
                         <label for="heading" class="font-medium form-label sm:w-60">Heading <span class="text-danger">*</span></label>
-                        <input id="heading" type="text" class="form-control" placeholder="Banner Heading" name="heading" value="">
+                        <input id="heading" type="text" class="form-control" placeholder="Banner Heading" name="heading" value="{{ old('heading') }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
@@ -51,7 +51,8 @@
 
 
                     <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
+                        <label for="image" class="font-medium form-label sm:w-60">Image <br> (min. width=1500px & min. height=500px) <span class="text-danger">*</span></label>
+
                         <input id="image" type="file" class="form-control" placeholder="Banner Image" name="image">
 
                     </div>
@@ -62,7 +63,7 @@
 
                     <div class="form-inline mt-5">
                         <label for="serial" class="font-medium form-label sm:w-60">Serial <span class="text-danger">*</span></label>
-                        <input id="serial" type="number" class="form-control" placeholder="Banner Serial" name="serial" value="">
+                        <input id="serial" type="number" class="form-control" placeholder="Banner Serial" name="serial" value="{{ old('serial') }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
@@ -74,39 +75,13 @@
                         <select class="form-control" id="status" name="status">
 
                             <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
+                            <option value="Inactive" >Inactive</option>
                         </select>
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('status')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
-
-                    {{-- @if (!empty($general->logo))
-                        <div class="form-inline mt-5">
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-                            <img src="{{asset('storage/images/general/'.$general->logo)}}" alt="" height="50px" width="100px">
-                        </div>
-
-                    @else
-                        <div class="form-inline mt-5">
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-                            <img alt="Admin Image" class="rounded-full" height="50px" width="100px"
-                            src="{{asset('dist/images/dummy_image.webp')}}">
-                        </div>
-
-                    @endif --}}
-
-
-
-
-                    {{-- <div class="form-inline mt-5">
-                        <label for="logo" class="font-medium form-label sm:w-60"></label>
-                        <img src="{{asset('public/images/general/'.$general->favicon)}}" alt="" height="50px" width="100px">
-
-                    </div> --}}
-
-
                 </div>
 
                 <br><br>

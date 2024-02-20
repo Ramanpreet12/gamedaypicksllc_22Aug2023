@@ -25,7 +25,7 @@ class ColorSettingController extends Controller
     }
     public function update_color(ColorSettingRequest $request , $id){
 
-        //print_r($request->all());exit;
+        // print_r($request->all());exit;
         if($request->isMethod('post')){
             ColorSetting::where('id' , $id)->update([
                 //'section' => $request->section,

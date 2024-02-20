@@ -1,11 +1,10 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Fixture</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Fixture</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
     @if (session()->has('success'))
         <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check2-circle"
@@ -63,11 +62,8 @@
                 <thead class="bg-primary text-white">
                     <tr>
                         <th class="text-center">Season</th>
-                        {{-- <th class="text-center"></th> --}}
                         <th class="text-center">Team One</th>
-                        {{-- <th class="text-center whitespace-nowrap"></th> --}}
                         <th class="text-center">Team Two</th>
-
                         <th class="text-center">Week </th>
                         <th class="text-center">Date </th>
                         <th class="text-center">Time </th>
@@ -108,7 +104,6 @@
                                         </div>
                                     </div>
                                 </td>
-                                {{-- <td class="text-center">{{ $fixture->first_team_id->name }}</td> --}}
                                 <td class="">
                                     <div class="flex">
                                         <div class="w-10 h-10 image-fit zoom-in">
@@ -131,11 +126,8 @@
 
                                     </div>
                                 </td>
-                                {{-- <td class="text-center">{{ $fixture->second_team_id->name }}</td> --}}
                                 <td class="text-center">{{ $fixture->week ?? ''}}</td>
                                 <td class="text-center">{{ $fixture->date  ?? ''}}</td>
-
-                                {{-- <td class="text-center">{{ \Carbon\Carbon::parse($fixture->date)->format('j F, Y , H:i a') }}</td> --}}
 
                                 @if ($fixture->time == '12:00:00' && ($fixture->time_zone = 'am'))
                                     <td class="text-center whitespace-nowrap">TBD</td>
@@ -144,11 +136,6 @@
                                         {{ \Carbon\Carbon::createFromFormat('H:i:s', $fixture->time)->format('h:i') }}
                                         {{ ucfirst($fixture->time_zone) }} ET</td>
                                 @endif
-
-
-                                {{-- <td class="text-center whitespace-nowrap">
-                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $fixture->time)->format('g:i') }}
-                                    {{ ucfirst($fixture->time_zone) }} ET</td> --}}
                                 <td class="text-center">{{ \Carbon\Carbon::parse($fixture->created_at)->format('j F, Y') }}
                                 </td>
                                 <td class="text-center">{{ \Carbon\Carbon::parse($fixture->updated_at)->format('j F, Y') }}
@@ -159,19 +146,21 @@
                                         <a class="flex items-center mr-3" href="{{ route('fixtures.edit', $fixture->id) }}">
                                             <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit
                                         </a>
-                                        {{-- <a class="flex items-center mr-3 show_sweetalert" href="{{ url('admin/fixtures/'.$fixture->id) }}">
-                                        <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete
-                                    </a> --}}
-                                        {{-- <a class="flex items-center mr-3 show_sweetalert" href="{{ url('admin/fixtures/'.$fixture->id) }}">
-                                        <button class="btn btn-danger" type="submit" data-toggle="tooltip">  <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
-                                    </a> --}}
-                                        <form action="{{ route('fixtures.destroy', $fixture->id) }}" method="post">
+
+                                        {{-- <form action="{{ route('fixtures.destroy', $fixture->id) }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-danger show_sweetalert" type="submit"
                                                 data-toggle="tooltip"> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i>
                                                 Delete</button>
-                                        </form>
+                                        </form> --}}
+
+                                        <a data-toggle="tooltip" title="Delete">
+                                            <button class="btn btn-danger confirmDelete" data-toggle="tooltip"
+                                            title="Delete" module="fixture" module_id={{ $fixture->id }}>
+                                            <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
+                                        </a>
+
                                     </div>
                                 </td>
                             </tr>
@@ -185,37 +174,9 @@
                 </tbody>
             </table>
         </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
-
-        <!-- END: Pagination -->
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-feather="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Are you sure?</div>
-                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process
-                            cannot be undone.</div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                        <button type="button" class="btn btn-danger w-24">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END: Delete Confirmation Modal -->
 
 @endsection
-
-
-
 @section('script')
     <script>
         $(function() {

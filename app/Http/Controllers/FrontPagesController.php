@@ -33,6 +33,7 @@ class FrontPagesController extends Controller
     {
         if ($request->isMethod('POST')) {
 
+
             $request->validate([
                          'name'=> 'required',
                         'subject'=>'required',
@@ -91,18 +92,25 @@ class FrontPagesController extends Controller
 
     public function about()
     {
-        $get_about_details = StaticPage::where('type' , 'about')->first();
-        return view('front.about' , compact('get_about_details'));
+        // $get_about_details = StaticPage::where('type' , 'about')->first();
+        $get_about_details = GeneralSetting::where('type' , 'aboutPage')->get()->toArray();
+        $about_details = key_value('name', 'value', $get_about_details);
+
+        return view('front.about' , compact('about_details'));
     }
 
     public function privacy()
     {
-        $get_privacy_details = StaticPage::where('type' , 'privacy')->first();
+        $get_privacy_details = GeneralSetting::where('type' , 'privacyPage')->get()->toArray();
+        $privacy_details = key_value('name', 'value', $get_privacy_details);
+        // $get_privacy_details = StaticPage::where('type' , 'privacy')->first();
 
-        return view('front.privacy' , compact('get_privacy_details'));
+        return view('front.privacy' , compact('privacy_details'));
     }
     public function regionResults(Request $request)
     {
+
+
          $get_total_points = collect([]);
          $season_name = null;
          $get_all_seasons = collect([]);
@@ -115,11 +123,20 @@ class FrontPagesController extends Controller
             }
         }
         else {
+
+
+            // get the headings
+            $get_match_results_details = MatchResult::first();
+
                  if($request->season){
-                 $c_date = Season::where('status' , 'active')->where('id' , $request->season)->value('starting');
+                 $c_date = Season::where('id' , $request->season)->value('starting');
+                //  $c_date = Season::where('status' , 'active')->where('id' , $request->season)->value('starting');
                  if( $c_date){
+
                  $c_season = DB::table('seasons')->whereRaw('"' . $c_date . '" between `starting` and `ending`')
-                                ->where(['status' => 'active' , 'id' =>$request->season])->first();
+                                ->where(['id' =>$request->season])
+                                // ->where(['status' => 'active' , 'id' =>$request->season])
+                                ->first();
                  }
 
                  }else{
@@ -131,11 +148,11 @@ class FrontPagesController extends Controller
                  }
 
                 if(empty($c_season)){
-                    return view('front.region_result' , compact('get_total_points' ,'season_name' , 'get_all_seasons' , 'c_season'));
+                    return view('front.region_result' , compact('get_total_points' ,'season_name' , 'get_all_seasons' , 'c_season' , 'get_match_results_details'));
                 }
                 $season_data = Season::where('id' ,  $c_season->id)->first();
                 if (!$season_data) {
-                    return view('front.region_result' , compact('get_total_points' ,'season_name' , 'get_all_seasons' , 'c_season'));
+                    return view('front.region_result' , compact('get_total_points' ,'season_name' , 'get_all_seasons' , 'c_season' , 'get_match_results_details'));
                 }
 
                 // Fetch all the region
@@ -184,80 +201,90 @@ class FrontPagesController extends Controller
                      }
                  }
                 $season_name = $c_season->season_name;
-                $get_all_seasons = Season::where('status' , 'active')->get();
+                $get_all_seasons = Season::orderBy('id' , 'DESC')->get();
+                // $get_all_seasons = Season::where('status' , 'active')->get();
+
                 $total_players = UserTeam::where('season_id',$c_season->id)->distinct('user_id')->count();
-                $get_match_results_details = MatchResult::first();
 
 
 
-        return view('front.region_result' , compact('total_win_loss' ,'season_name' ,'get_all_seasons' ,'c_season' , 'total_players' ,'get_match_results_details'));
+        return view('front.region_result' , compact('get_match_results_details' , 'total_win_loss' ,'season_name' ,'get_all_seasons' ,'c_season' , 'total_players' ));
      }
     }
 
     public function nfl_battles(Request $request)
     {
 
-
+           //get headings of page
+           $get_fixture_headings = GeneralSetting::where(['type' => 'matchFixture'])->get()->toArray();
+           $fixture_headings = key_value('name', 'value', $get_fixture_headings);
+        // dd('test');
         $fixtures = collect([]);
         $season_name = null;
         $get_all_seasons = collect([]);
         $c_season = array();
         $get_current_year = Carbon::now()->format('Y');
         $season_data  = Season::where('status','active')->first();
-        $get_year_from_season_date = Carbon::createFromFormat('Y-m-d H:i:s', $season_data->starting)->format('Y');
-       $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
 
-       $starting_season_date = Carbon::parse($get_current_season->starting);
-       $starting_season_date1 = Carbon::parse($get_current_season->starting);
+        if($season_data == null ){
 
-       $now = Carbon::now();
-       if($starting_season_date < $now){
-        //print_r("start date ".$starting_season_date);
-       //echo "<br>";
-      // print_r("today date ".$now);
-       $length = $starting_season_date->diffInWeeks($now);
-       //print_r("length ".$length);
-        //echo "<br>";
-       $right_week = $length+1;
-       $upcoming_season_date = $starting_season_date->addWeeks($right_week)->subDays(1);
-        //echo "<pre>;<br>";
-       //print_r(" upcoming_season_date ".$upcoming_season_date);
-       $upcoming_week =  $starting_season_date1->addWeeks($right_week)->addDays(6);
-        //print_r("upcoming_week ".$upcoming_week);
-     // exit;
-       }else{
-           $upcoming_season_date = $starting_season_date->subDays(1);
-           $upcoming_week =  $starting_season_date1->addDays(6);
-          // print_r("upcoming_week2 ".$upcoming_week);
-       }
+            return view('front.nfl_battles' , compact('fixture_headings'));
+
+        }
+                // dd($season_data);
+                $get_year_from_season_date = Carbon::createFromFormat('Y-m-d H:i:s', $season_data->starting)->format('Y');
+            $get_current_season = Season::where(['status'=>'active'])->first();
+            //    $get_current_season = Season::where(['status'=>'active' , 'season_name' => $get_current_year])->first();
+
+            $starting_season_date = Carbon::parse($get_current_season->starting);
+            $starting_season_date1 = Carbon::parse($get_current_season->starting);
+
+            $now = Carbon::now();
+            if($starting_season_date < $now){
+            $length = $starting_season_date->diffInWeeks($now);
+            $right_week = $length+1;
+            $upcoming_season_date = $starting_season_date->addWeeks($right_week)->subDays(1);
+            $upcoming_week =  $starting_season_date1->addWeeks($right_week)->addDays(6);
+            }else{
+                $upcoming_season_date = $starting_season_date->subDays(1);
+                $upcoming_week =  $starting_season_date1->addDays(6);
+            }
 
 
 
-         //get headings of page
-         $get_fixture_headings = GeneralSetting::where(['type' => 'matchFixture'])->get()->toArray();
-         $fixture_headings = key_value('name', 'value', $get_fixture_headings);
-
-       // $current_season_data  = Season::where('status','active')->first();
+       $current_season_data  = Season::where('status','active')->first();
        // If there is no active season . Then redirect with no found record.
        if(!$season_data){
            return view('front.nfl_battles' , compact('fixtures' , 'season_name' , 'get_all_seasons' , 'c_season' ,'fixture_headings' , 'upcoming_season_date' ,'upcoming_week'));
        }
        // Now checking if  there is season coming in parameter from url. If not then assign the season id from above $current_season_data.
        $current_season_id = $request->seasons ? $request->seasons : $get_current_season->id;
+
        // Now checking if  there is week coming in parameter from url. If not then assign the season id from above $current_season_data.
        $selected_week = $request->weeks ? $request->weeks : 1;
-       $select_season_data = Season::where('status' , 'active')->where('id' ,$current_season_id)->first();
+       //    03-01-2024 starts
+       $select_season_data = Season::where('id' ,$current_season_id)->first();
+    //    $select_season_data = Season::where('status' , 'active')->where('id' ,$current_season_id)->first();
+    //    03-01-2024 ends
        $fixtures = Fixture::with('first_team_id','second_team_id')
        ->where(['season_id'=> $current_season_id,'week'=>$selected_week])
        // ->whereDate('date','>=',$select_season_data->starting)
        ->get()->groupby('week');
        if( $select_season_data){
-           $c_season = DB::table('seasons')->whereRaw('"' . $select_season_data->starting . '" between `starting` and `ending`')
-                              ->where(['status' => 'active' , 'id' => $current_season_id])->first();
+        // 03-01-2024 starts
+        //    $c_season = DB::table('seasons')->whereRaw('"' . $select_season_data->starting . '" between `starting` and `ending`')
+        //                       ->where(['status' => 'active' , 'id' => $current_season_id])->first();
+
+              $c_season = DB::table('seasons')->whereRaw('"' . $select_season_data->starting . '" between `starting` and `ending`')
+                 ->where(['id' => $current_season_id])->first();
+
+        //   03-01-2024 ends
        }
          // Fetch all the season which are active
-
-        $get_all_seasons = Season::where('status' , 'active')->orderby('id' , 'desc')->get();
+//    03-01-2024 starts
+        $get_all_seasons = Season::orderby('id' , 'desc')->get();
+        // $get_all_seasons = Season::where('status' , 'active')->orderby('id' , 'desc')->get();
+        //    03-01-2024 ends
         $season_name =  $select_season_data->season_name;
 
        return view('front.nfl_battles' , compact('fixtures' , 'season_name' , 'get_all_seasons' , 'c_season' ,'fixture_headings', 'upcoming_season_date' ,'upcoming_week'));
@@ -407,7 +434,11 @@ class FrontPagesController extends Controller
     public function prize()
     {
         $prizes = Prize::with('season')->where('status' , 'active')->get();
-        $get_prize_banner = General::where('prize_banner' , '!=' , null)->select('prize_banner')->first();
+
+        $get_active_season = Season::where('status' , 'active')->first();
+
+
+        $get_prize_banner = General::where('prize_banner' , '!=' , null)->select('prize_banner','prize_banner_video')->first();
         $get_prize_heading = SectionHeading::where('name', 'Prize')->first();
 
         return view('front.prize' , compact('prizes' , 'get_prize_banner' , 'get_prize_heading'));
@@ -416,6 +447,8 @@ class FrontPagesController extends Controller
 
     public function reviews(ReviewsRequest $request)
     {
+
+
 
        $reviews = Reviews::create([
         'username' => $request->username,
@@ -479,7 +512,7 @@ class FrontPagesController extends Controller
 		                'fixture_id'=>$fixture->id,
 		                'week'=>$fixture->week,
 		                'team_id'=>'0',
-                        'points'=>'2' // because user has not select any match in  the week , so user will get loss
+                        'points'=>'2' // because user has not select any match in previous week , so user will get loss
 		            ];
 		            $address = UserTeam::create($teamData);
 

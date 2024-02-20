@@ -146,13 +146,32 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-        $del = Menu::find($id)->delete();
-        if($del){
-            return redirect()->route('menu.index')->with('message_success','Menu Deleted Successfully');
-        }else{
-            return redirect()->route('menu.index')->with('message_error','Something went wrong');
-        }
+        // $del = Menu::find($id)->delete();
+        // if($del){
+        //     return redirect()->route('menu.index')->with('message_success','Menu Deleted Successfully');
+        // }else{
+        //     return redirect()->route('menu.index')->with('message_error','Something went wrong');
+        // }
     }
+
+    public function deleteMenu($id)
+    {
+        try {
+
+            $menu =  Menu::find($id)->delete();
+            if($menu){
+                return redirect()->route('menu.index')->with('message_success','Menu Deleted Successfully');
+            }else{
+            return redirect()->route('banner.index')->with('message_error', 'Something went wrong!');
+            }
+        } catch (\Exception $e) {
+            if (!empty($e)) {
+            return redirect()->back()->with('message_error' , 'Something went wrong!');
+            }
+        }
+
+    }
+
 
 
 

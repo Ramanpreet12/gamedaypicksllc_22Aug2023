@@ -1,3 +1,16 @@
+@if (!$general->announcement_bar == null)
+    <div  style="background:{{ $general->header_announcement_bar_bg_color ? $general->header_announcement_bar_bg_color :'#DA9A29' }}; color:{{ $general->header_announcement_bar_text_color ? $general->header_announcement_bar_text_color :'#fff' }}; padding:10px 0; font-size:17px;">
+    {{-- <div style="background:#DA9A29; color:#fff; padding:10px 0; font-size:17px;"> --}}
+        <marquee behavior="scroll" scrollamount="6" direction="left" width="100%" style="padding-top:8px">
+            {{ $general->announcement_bar }}
+            {{-- Get the Coupon after &nbsp; <a href="{{ route('pre-sign-up') }}" > Buy jersey </a> &nbsp; of $150 to select the team --}}
+        </marquee>
+
+@endif
+
+
+</div>
+
 <nav class="navbar navbar-expand-lg navbarDesktop" style="background-color:{{ $colorSection['header']['bg_color'] }};">
 
     <div class="container-fluid">
@@ -7,11 +20,8 @@
             @if (!empty($general->logo))
 
                 <img src="{{ asset('storage/images/general/' . $general->logo) }}" alt="logo" height="50px"
-
                     width="100px">
-
             @else
-
                 <img src="{{ asset('front/img/football picks.png') }}" alt="logo" class="img-fluid">
 
             @endif
@@ -23,19 +33,14 @@
             <div class="loginbtn">
 
                 <a href="{{ url('login') }}" class="btn btn-primary"
-
                     style="color:{{ $colorSection['header']['text_color'] }};" type="submit">log in </a>
 
             </div>
-
         @else
-
             <div class="loginbtn userDropdown dropdown">
 
                 <a href="" class="dropdown-toggle"
-
                     style="color:{{ $colorSection['header']['text_color'] }}; text-decoration: none;" type="button"
-
                     data-bs-toggle="dropdown" aria-expanded="false">
 
                     {{ Auth::user()->name }} &nbsp;<i class="fa-solid fa-user"></i>
@@ -44,7 +49,7 @@
 
                 <ul class="dropdown-menu">
 
-                   
+
 
                     <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
 
@@ -57,7 +62,6 @@
         @endif
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 
             <span class="navbar-toggler-icon"></span>
@@ -77,19 +81,16 @@
                         @php  $check_submenu = get_main_menus($menuMenu->id)  @endphp
 
                         <a @if ($check_submenu != '') class="nav-link {{ $check_submenu }}"  @else class="nav-link" @endif
-
                             @if ($menuMenu->url) href="<?php echo url($menuMenu->url); ?>" @else href="javascript:void(0)" @endif
-
-                            role="button" data-bs-toggle="" aria-expanded="false" style="color:{{ $colorSection['header']['text_color'] }}">
+                            role="button" data-bs-toggle="" aria-expanded="false"
+                            style="color:{{ $colorSection['header']['text_color'] }}">
 
                             {{ $menuMenu->title }}<span class="navHoverEffect"> </span></a>
 
 
 
                         @if ($check_submenu != '')
-
                             <div class="dropdown-menu megaMenu" x-placement="bottom-start"
-
                                 style="position: absolute; background-color:{{ $colorSection['navbar']['bg_color'] }};">
 
                                 <div class="container">
@@ -99,15 +100,10 @@
                                         <ul class="navbar-nav dropList">
 
                                             @foreach ($subMenus as $subMenu)
-
                                                 @if ($subMenu->parent_id == $menuMenu->id)
-
                                                     <li class="nav-item"> <a class="dropdown-item"
-
                                                             href="{{ $subMenu->url }}">{{ $subMenu->title }}</a></li>
-
                                                 @endif
-
                                             @endforeach
 
                                         </ul>
@@ -117,7 +113,6 @@
                                 </div>
 
                             </div>
-
                         @endif
 
                     </li>
@@ -125,9 +120,34 @@
                 @endforeach
 
                 <li class="nav-item"><a type="button" href="javascript:void(0)" class="nav-link" data-bs-toggle="modal"
+                        data-bs-target="#addReviewModal"
+                        style="color:{{ $colorSection['header']['text_color'] }}">Reviews <span class="navHoverEffect">
+                        </span></a></li>
 
-                        data-bs-target="#addReviewModal" style="color:{{ $colorSection['header']['text_color'] }}">Reviews <span class="navHoverEffect"> </span></a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"
+                    @if(Auth::user() && Auth::user()->age <= config('app.youth_age_limit'))
+                    href="{{ route('pony-express-flag-football-shop') }}"
+                    @else
+                    href="{{ route('shop') }}"
+                    @endif
+                       style="color:{{ $colorSection['header']['text_color'] }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop <span class="navHoverEffect">
+                        </span></a>
+                        <ul class="dropdown-menu mt-4" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Greek store</a></li>
 
+                          </ul>
+
+                    </li>
+
+
+
+                <li class="nav-item"><a
+                        @if (Auth::user()) href="{{ url('cart') }}"   @else href="{{ route('login') }}" @endif
+                        class="nav-link" {{-- <li class="nav-item"><a @if (Auth::user())  href="{{ url('cart/'.encrypt(Auth::user()->email)) }}"  @else href="{{ route('pre-sign-up') }}" @endif class="nav-link" --}}
+                        style="color:{{ $colorSection['header']['text_color'] }}"> <i
+                            class="fas fa-shopping-cart fa-xs cart_icon" style="font-size:15px"></i> <span
+                            class="navHoverEffect"> </span></a></li>
             </ul>
 
 
@@ -151,11 +171,8 @@
             @if (!empty($general->logo))
 
                 <img src="{{ asset('storage/images/general/' . $general->logo) }}" alt="logo" height="50px"
-
                     width="100px">
-
             @else
-
                 <img src="{{ asset('front/img/football picks.png') }}" alt="logo" class="img-fluid">
 
             @endif
@@ -167,19 +184,14 @@
             <div class="loginbtn">
 
                 <a href="{{ url('login') }}" class="btn btn-primary"
-
                     style="color:{{ $colorSection['header']['text_color'] }};" type="submit">log in </a>
 
             </div>
-
         @else
-
             <div class="loginbtn userDropdown dropdown">
 
                 <a href="" class="dropdown-toggle"
-
                     style="color:{{ $colorSection['header']['text_color'] }}; text-decoration: none;" type="button"
-
                     data-bs-toggle="dropdown" aria-expanded="false">
 
                     {{ Auth::user()->name }} &nbsp;<i class="fa-solid fa-user"></i>
@@ -200,9 +212,9 @@
 
         @endif
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
 
             <span class="navbar-toggler-icon"></span>
 
@@ -221,83 +233,53 @@
                         @php  $mobile_check_submenu = get_main_menus($mobile_menuMenu->id)  @endphp
 
                         <a class="nav-link"
-
                             @if ($mobile_menuMenu->url) href="<?php echo url($mobile_menuMenu->url); ?>" @else href="javascript:void(0)" @endif
-
                             style="color:{{ $colorSection['header']['text_color'] }}">
 
-                            {{ $mobile_menuMenu->title }}<span class="navHoverEffect"> </span></a>  
-
-                            
-
-                          
-
-
-
-
-
+                            {{ $mobile_menuMenu->title }}<span class="navHoverEffect"> </span></a>
                             @if ($mobile_check_submenu != '')
+                            <span type="button" class="dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
 
-                            <span type="button" class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Dropdown</span>
 
-    <span class="visually-hidden">Dropdown</span>
+                            </span>
 
-  </span>
+                            <div class="dropdown-menu megaMenu" x-placement="bottom-start"
+                                style="position: absolute; background-color:{{ $colorSection['navbar']['bg_color'] }};">
 
-                        <div class="dropdown-menu megaMenu" x-placement="bottom-start"
+                                <div class="container">
 
-                            style="position: absolute; background-color:{{ $colorSection['navbar']['bg_color'] }};">
+                                    <div class="row">
 
-                            <div class="container">
+                                        <ul class="navbar-nav dropList">
 
-                                <div class="row">
+                                            @foreach ($subMenus as $subMenu)
+                                                @if ($subMenu->parent_id == $mobile_menuMenu->id)
+                                                    <li class="nav-item"> <a class="dropdown-item"
+                                                            href="{{ $subMenu->url }}">{{ $subMenu->title }}</a></li>
+                                                @endif
+                                            @endforeach
 
-                                    <ul class="navbar-nav dropList">
+                                        </ul>
 
-                                        @foreach ($subMenus as $subMenu)
-
-                                            @if ($subMenu->parent_id == $mobile_menuMenu->id)
-
-                                                <li class="nav-item"> <a class="dropdown-item"
-
-                                                        href="{{ $subMenu->url }}">{{ $subMenu->title }}</a></li>
-
-                                            @endif
-
-                                        @endforeach
-
-                                    </ul>
+                                    </div>
 
                                 </div>
 
                             </div>
-
-                        </div>
-
                         @endif
-
-
-
-
-
                     </li>
 
                 @endforeach
 
-
-
                 <li class="nav-item"><a type="button" href="javascript:void(0)" class="nav-link"
-
-                        data-bs-toggle="modal" data-bs-target="#addReviewModal" style="color:{{ $colorSection['header']['text_color'] }}">Reviews <span class="navHoverEffect">
+                        data-bs-toggle="modal" data-bs-target="#addReviewModal"
+                        style="color:{{ $colorSection['header']['text_color'] }}">Reviews <span
+                            class="navHoverEffect">
 
                         </span></a></li>
-
-
-
             </ul>
-
-
-
         </div>
 
     </div>
@@ -307,7 +289,6 @@
 
 
 <style type="text/css">
-
     .navbar .navbar-collapse .navbar-nav .dropdown .dropdown-menu a {
 
         background-color: <?php echo $colorSection['navbar']['bg_color']; ?>;
@@ -344,7 +325,7 @@
 
 
 
-    .btn-selected-team{
+    .btn-selected-team {
         background-color: #ffb301af;
     }
 
@@ -353,11 +334,11 @@
     }
 
     .btn-selected-team:after {
-       background-color: #ffb301af;
+        background-color: #ffb301af;
     }
 
 
-    .btn-selected-team{
+    .btn-selected-team {
         background-color: #ffb301af;
     }
 
@@ -366,24 +347,13 @@
     }
 
     .btn-selected-team:after {
-       background-color: #ffb301af;
+        background-color: #ffb301af;
     }
-
-
 </style>
-
-
-
-
-
-
-
-
 
 <!-- Modal -->
 
 <div class="modal fade" id="addReviewModal" tabindex="-1" aria-labelledby="addReviewModalLabel"
-
     aria-hidden="true">
 
     <div class="modal-dialog">
@@ -427,13 +397,10 @@
                             <div class="col-6">
 
                                 <input type="text" class="form-control" id="recipient-name"
-
-                                    placeholder="User name" name="username" value="{{old('username')}}">
+                                    placeholder="User name" name="username" value="{{ old('username') }}">
 
                                 @error('username')
-
                                     <p class="text-danger text-xs"> {{ $message }}</p>
-
                                 @enderror
 
                             </div>
@@ -441,13 +408,10 @@
                             <div class="col-6">
 
                                 <input type="email" class="form-control" id="recipient-email"
-
-                                    placeholder="Email address" name="reviewemail" value="{{old('reviewemail')}}">
+                                    placeholder="Email address" name="email" value="{{ old('email') }}">
 
                                 @error('email')
-
                                     <p class="text-danger text-xs"> {{ $message }}</p>
-
                                 @enderror
 
                             </div>
@@ -460,12 +424,10 @@
 
                     <div class="mb-3">
 
-                        <textarea class="form-control" id="message-text" placeholder="Comments" name="comment">{{old('comment')}}</textarea>
+                        <textarea class="form-control" id="message-text" placeholder="Comments" name="comment">{{ old('comment') }}</textarea>
 
                         @error('comment')
-
                             <p class="text-danger text-xs"> {{ $message }}</p>
-
                         @enderror
 
                     </div>
@@ -479,24 +441,17 @@
                             <input type="hidden" name="rating" id="rating">
 
                             @for ($i = 1; $i <= 5; $i++)
-
-                                
-
                                 <i id="rating-{{ $i }}"
-
                                     class="fa-solid fa-star {{ $i >= 0 ? 'text-secondary' : 'text-warning' }} icon-click"></i>
-
                             @endfor
 
                             @error('rating')
-
                                 <p class="text-danger text-xs"> {{ $message }}</p>
-
                             @enderror
 
                             <p id="rating_empty_msg" style="color:red"></p>
 
-                            
+
 
                         </div>
 
@@ -512,19 +467,8 @@
 
                 </form>
 
-
-
-
-
             </div>
 
-            <!-- <div class="modal-footer">
-
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-        <button type="button" class="btn btn-primary">Save changes</button>
-
-      </div> -->
 
         </div>
 
@@ -537,7 +481,6 @@
 <!-- Modal -->
 
 <div class="modal fade" id="reviews_success_modal" tabindex="-1" aria-labelledby="selectTeamLabel"
-
     aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
@@ -578,7 +521,6 @@
 
                 <button type="button" class="btn btn-secondary pr-4" data-bs-dismiss="modal">Close</button>
 
-                {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
 
             </div>
 
@@ -587,4 +529,3 @@
     </div>
 
 </div>
-

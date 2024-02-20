@@ -1,6 +1,6 @@
 @extends('../layout/' . $layout)
 @section('subhead')
-    <title>NFL | Match Fixture</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Match Fixture</title>
 @endsection
 @section('subcontent')
     <div class="intro-y box mt-5">
@@ -37,7 +37,7 @@
                 <div class="preview">
                     <div class="form-inline">
                         <label for="match_fixture_section_heading" class="font-medium form-label sm:w-60">Page Heading <span class="text-danger">*</span></label>
-                        <input id="match_fixture_section_heading" type="text" class="form-control" placeholder="Match Results By Region" name="match_fixture_section_heading" value="{{$match_fixture_details['match_fixture_section_heading']}}">
+                        <input id="match_fixture_section_heading" type="text" class="form-control" placeholder="Page Heading" name="match_fixture_section_heading" value="{{$match_fixture_details['match_fixture_section_heading']}}">
                     </div>
                     <div class="form-inline">
                         <label for="" class="font-medium form-label sm:w-60"></label>

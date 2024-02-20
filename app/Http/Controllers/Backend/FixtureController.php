@@ -49,7 +49,8 @@ class FixtureController extends Controller
 
     public function create(){
         $fixtures = Fixture::with('first_team_id' , 'second_team_id' , 'season')->get();
-        $seasons = Season::where('status' , 'active')->get();
+        $seasons = Season::orderBy('id' , 'DESC')->get();
+        // $seasons = Season::where('status' , 'active')->get();
         $teams = Team::get();
         return view('backend.fixture.add_fixture' , compact('fixtures' , 'seasons' ,'teams'));
     }
@@ -63,6 +64,7 @@ class FixtureController extends Controller
        }
 
     public function store(FixtureRequest $request){
+
 
             if($request->isMethod('post')){
               $duration = Season::where('id',$request->season)->first();
@@ -145,7 +147,8 @@ class FixtureController extends Controller
         // $season = Season::get();
 
         $fixture = Fixture::where('id' , $id)->first();
-         $seasons = Season::where('status' , 'active')->get();
+        $seasons = Season::orderBy('id' , 'DESC')->get();
+        //  $seasons = Season::where('status' , 'active')->get();
          $teams = Team::get();
 
         return view('backend.fixture.edit_fixture' , compact('fixture' ,'seasons' , 'teams'));
@@ -230,9 +233,18 @@ class FixtureController extends Controller
     }
 
     public function destroy($id){
+        // Fixture::where('id' , $id)->delete();
+        // return redirect()->back()->with('success' , 'Fixture deleted successfully');
+    }
+
+    public function deleteFixture($id){
         Fixture::where('id' , $id)->delete();
         return redirect()->back()->with('success' , 'Fixture deleted successfully');
     }
+
+
+
+
 
     public function section_heading(Request $request)
     {
@@ -248,16 +260,16 @@ class FixtureController extends Controller
                     'value' => 'Upcoming Fixture'
                 ]);
             }
-            
+
         return redirect('admin/fixtures')->with('success' , 'Fixture Title updated successfully');
         }
     }
 
 
 
-   
 
-  
+
+
 
     public function loss_user()
     {
@@ -298,7 +310,7 @@ class FixtureController extends Controller
 
     public function my_results()
     {
-  
+
     $get_weeks = Fixture::pluck('week')->toArray();
 
     $user_teams = UserTeam::where(['user_id' => 47 ])->pluck('week')->toArray();
@@ -307,6 +319,10 @@ class FixtureController extends Controller
 
        return view('front.my_results');
     }
+
+
+
+
 }
 
 

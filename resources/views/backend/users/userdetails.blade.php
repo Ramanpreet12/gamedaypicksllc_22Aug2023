@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Users</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Users</title>
 @endsection
 
 @section('subcontent')
@@ -33,7 +33,7 @@
 
     <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">Users Details</h2>
-        <a href="{{route('admin/user')}}"><button class="btn btn-primary">Back</button></a>
+        <a href="{{route('admin/payments')}}"><button class="btn btn-primary">Back</button></a>
     </div>
 
     <div class="grid grid-cols-12 gap-6 mt-5 p-5 bg-white mb-5">
@@ -43,26 +43,26 @@
               <table class="table table-striped table-hover table-bordered">
 
 
-                {{-- {{dd($userDetails)}} --}}
+                {{-- {{dd($user_type)}} --}}
                 <tr>
                     <td> <b> User Name :</b> </td>
-                    <td>{{$userDetails->name }}</td>
+                    <td>{{  $userDetails->name ?? ''}}</td>
                 </tr>
 
                 <tr>
                     <td><b> User Email : </b></td>
-                    <td>{{$userDetails->email }}</td>
+                    <td>{{$userDetails->email ?? ''}}</td>
                 </tr>
                 <tr>
                     <td><b> Group : </b></td>
-                    <td>{{$userDetails->group }}</td>
+                    <td>{{$userDetails->group ?? ''}}</td>
                 </tr>
                 @if ((isset($userDetails->user_team_name )) && (isset($userDetails->user_team_logo)))
                 <tr>
                     <td><b> User Team : </b></td>
                     <td>
 
-                      
+
                         <img src="{{asset('storage/images/team_logo/'.$userDetails->user_team_logo)}}" alt="">
                         {{$userDetails->user_team_name ?? ''}}
                         @else
@@ -73,15 +73,16 @@
 
                 <tr>
                     <td><b> D.O.B : </b></td>
-                    <td>{{$userDetails->dob }}</td>
+                    <td>{{$userDetails->dob ?? ''}}</td>
                 </tr>
                 <tr>
                     <td><b> Phone Number : </b></td>
-                    <td>{{$userDetails->country_code }} {{$userDetails->phone_number}}</td>
+                    <td>{{$userDetails->country_code ?? '' }} {{$userDetails->phone_number ?? ''}}</td>
                 </tr>
 
                 <tr>
                     <td><b> ID Proof : </b></td>
+                    @if ($userDetails !=  null)
                     <td>
                         @if ($userDetails->id_proof == 'driver_license')
                             @php
@@ -123,6 +124,8 @@
 
                         {{$id_proof ?? ''}}
                     </td>
+                    @endif
+
                     {{-- <td>{{$userDetails->id_proof}} </td> --}}
                 </tr>
 
@@ -134,24 +137,35 @@
 
                 <tr>
                     <td><b> Address : </b></td>
-                    <td>{{$userDetails->address}}</td>
+                    <td>{{$userDetails->address ?? ''}}</td>
                 </tr>
                 <tr>
                     <td><b> City : </b></td>
-                    <td>{{$userDetails->city}}</td>
+                    <td>{{$userDetails->city ?? ''}}</td>
                 </tr>
                 <tr>
                     <td><b> State : </b></td>
-                    <td>{{$userDetails->state_name}}</td>
+                    <td>{{$userDetails->state_name ?? ''}}</td>
                 </tr>
                 <tr>
+                    <td><b> Zip code : </b></td>
+                    <td>{{$userDetails->zipcode ?? ''}}</td>
+                </tr>
+
+                <tr>
                     <td><b> Country : </b></td>
-                    <td>{{$userDetails->country}}</td>
+                    <td>{{$userDetails->country ?? ''}}</td>
                 </tr>
                 <tr>
                     <td><b> Region :  </b></td>
-                    <td>{{$userDetails->regionName}}</td>
+                    <td>{{$userDetails->regionName ?? ''}}</td>
                 </tr>
+
+                <tr>
+                    <td><b> User Type :  </b></td>
+                    <td>{{$user_type ?? ''}}</td>
+                </tr>
+
 
                 {{-- <tr>
                     <td><b> Subscribed :  </b></td>
@@ -163,7 +177,7 @@
                 </tr> --}}
 
                 <tr>
-                    
+
                     <td><b> User Image :  </b></td>
                     <td>
                         @if (!empty($userDetails->photo))

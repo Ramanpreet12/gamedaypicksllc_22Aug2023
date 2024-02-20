@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Str;
-use App\Models\UserTeam;
 
+use App\Models\UserTeam;
+use App\Models\Season;
 
 if (!function_exists('get_main_menus')) {
 
@@ -181,36 +182,58 @@ if (!function_exists('get_team_logo')) {
 
 
 if (!function_exists('key_value')) {
-
     function key_value($key, $value, $ar)
-
     {
-
         $ret = [];
-
         foreach($ar as $k => $v) {
-
             $ret[$v[$key]] = $v[$value];
-
         }
-
         return $ret;
-
     }
+}
 
-    }
 
-    
     //get selected teams by users from user teams
 if (!function_exists('get_selected_teams')) {
     function get_selected_teams($team_id , $season_id , $fixture_id , $week){
-        $ut = UserTeam::where(['user_id'=>Auth::user()->id, 'team_id'=>$team_id, "season_id"=> $season_id, 'fixture_id'=>$fixture_id,'week'=>$week])->first();
+    //   dd(Auth::check());
+        //
+        // get current season
+        $get_season = Season::where('status' , 'active')->first();
 
+        if (Auth::check()) {
+            // $ut = UserTeam::where(['user_id'=>Auth::user()->id, 'team_id'=>$team_id, "season_id"=> $get_season->id, 'fixture_id'=>$fixture_id,'week'=>$week])->first();
+            $ut = UserTeam::where(['user_id'=>Auth::user()->id, 'team_id'=>$team_id, "season_id"=> $season_id, 'fixture_id'=>$fixture_id,'week'=>$week])->first();
 
-        if ($ut) {
-          return true;
-        }else{
+            // dd($ut);
+            return true;
+        } else {
             return false;
         }
+
+
+
+
+        // if ($ut) {
+        //   return true;
+        // }else{
+        //     return false;
+        // }
     }
 }
+
+
+
+
+
+ // custom function to unlink image or video from db
+ if (!function_exists('unlink_image_video_from_db')) {
+    function unlink_image_video_from_db($storage_path , $image_or_video){
+        $image_video_to_be_deleted = $storage_path.$image_or_video;
+      if (file_exists( $image_video_to_be_deleted)) {
+       unlink( $image_video_to_be_deleted);
+      }
+        return $image_video_to_be_deleted;
+    }
+}
+

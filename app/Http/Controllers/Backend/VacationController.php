@@ -68,8 +68,9 @@ class VacationController extends Controller
         if($request->isMethod('post')) {
             if ($request->hasFile('image_video')) {
                 $image_video = $request->file('image_video');
-                $image_video_filename = $image_video->getClientOriginalName();
-                $success = $image_video->storeAs('public/images/vacation/' , $image_video_filename);
+                $image_video_filename =   'vacation'.rand(1111, 9999).'-'.time() . '-' .$image_video->getClientOriginalName();
+                $formatted_image_video_filename = str_replace( " ", "-", $image_video_filename );
+                $success = $image_video->storeAs('public/images/vacation/' , $formatted_image_video_filename);
                 if (!isset($success)) {
                     return back()->withError('Could not upload Banner');
                 }
@@ -77,7 +78,7 @@ class VacationController extends Controller
 
             $vacation = new Vacation;
             $vacation->title  = $request->title;
-            $vacation->image_video    = $image_video_filename;
+            $vacation->image_video    = $formatted_image_video_filename;
             $vacation->serial   = $request->serial;
             $vacation->status   = $request->status;
             $vacation->save();
@@ -121,13 +122,16 @@ class VacationController extends Controller
             $data = array();
                 $image_video     =   $request->file('image_video');
                 if ($image_video) {
-                    $image_video_filename =   $image_video->getClientOriginalName();
-                    // $image_video_filename  =   'banner_'.time() . '.' . $extension;
-                    $success = $image_video->storeAs('public/images/vacation/' , $image_video_filename);
+                    $image_video_filename =  'vacation'.rand(1111, 9999).'-'.time() . '-' .$image_video->getClientOriginalName();
+                    // $image_video_extension =   $image_video->getClientOriginalExtension();
+                    // dd($image_video_extension);
+
+                    $formatted_image_video_filename = str_replace( " ", "-", $image_video_filename );
+                    $success = $image_video->storeAs('public/images/vacation/' , $formatted_image_video_filename);
                     if (!isset($success)) {
                         return back()->withError('Could not upload Banner');
                     }
-                    $data["image_video"]=$image_video_filename;
+                    $data["image_video"]=$formatted_image_video_filename;
                 }
 
                 $data["title"]=$request->title;
@@ -146,7 +150,31 @@ class VacationController extends Controller
      */
     public function destroy($id)
     {
-        Vacation::find($id)->delete();
-        return redirect('admin/vacation')->with('message_success' , 'Vacation Pac deleted successfully');;
+        // Vacation::find($id)->delete();
+        // return redirect('admin/vacation')->with('message_success' , 'Vacation Pac deleted successfully');;
+    }
+
+    public function deleteVacation($id)
+    {
+        try {
+            //get Image
+            $vacation_image_video = Vacation::whereId($id)->first();
+            // dd($vacation_image_video);
+            $Image_video_path = storage_path('app/public/images/vacation/');
+
+            //delete image from folder
+                unlink_image_video_from_db($Image_video_path , $vacation_image_video->image_video);
+
+                $vacation =  Vacation::find($id)->delete();
+                if($vacation){
+                    return redirect()->route('vacation.index')->with('success' , 'Vacation deleted successfully');
+                }else{
+                return redirect()->route('vacation.index')->with('message_error', 'Something went wrong!');
+                }
+        } catch (\Exception $e) {
+            if (!empty($e)) {
+            return redirect()->back()->with('message_error' , 'Something went wrong!');
+            }
+        }
     }
 }

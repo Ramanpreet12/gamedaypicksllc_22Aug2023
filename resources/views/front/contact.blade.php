@@ -469,7 +469,7 @@
         grecaptcha.ready(function() {
 
             grecaptcha.execute('{{ env('CAPCHA_SITE_KEY') }}', {
-        
+
                 action: 'contact'
 
             }).then(function(token) {

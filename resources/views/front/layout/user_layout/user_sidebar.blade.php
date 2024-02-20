@@ -12,9 +12,11 @@
                 <li><a href="{{ route('my_selections') }}">My Selections</a></li>
                 <li><a href="{{ route('past_selections') }}">Past Selections</a></li>
                 <li><a href="{{ route('userPayment') }}">Payments</a></li>
+                <li><a href="{{ route('prizes') }}">Prizes</a></li>
                 <li><a href="{{ route('upcomingMatches') }}">Upcoming Matches</a></li>
                 <li><a href="{{ route('settings') }}">Settings</a></li>
                 <li><a href="{{ route('update-password') }}">Change Password </a></li>
+                <li><a href="{{ route('orderlist') }}">Orders</a></li>
                 {{-- <li class="dropdown"><a href="{{ route('settings') }}" class="dropdown-toggle" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
                     <ul class="dropdown-menu">

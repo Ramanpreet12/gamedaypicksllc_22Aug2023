@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Users</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Users</title>
 @endsection
 
 @section('subcontent')
@@ -81,7 +81,7 @@
 
                 <tbody>
 
-                   
+
                     @if ($get_users->isNotEmpty())
                         @php
                             $count = '';
@@ -145,7 +145,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                  
+
                         {{-- <tr>
                             <td colspan="8" class="text-center">No Records found</td>
 

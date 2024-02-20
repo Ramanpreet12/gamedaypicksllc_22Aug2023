@@ -2,7 +2,7 @@
 
 @section('subhead')
     <title>
-        NFL | Fixtures</title>
+        {{ $general->name ? $general->name : 'NFL' }} | Fixtures</title>
 @endsection
 
 @section('subcontent')
@@ -91,20 +91,11 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
-                    {{-- <div class="mt-3">
-                    <label for="week" class="form-label">Week</label>
-                    <div class="input-group">
-                        <input id="week" type="text" class="form-control" placeholder="week" aria-describedby="input-group-1" name="week" value="{{$fixture->week}}">
-                    </div>
-                    @error('week') <p class="text-danger">{{$message}}</p> @enderror
-                </div> --}}
                     <div class="mt-3">
                         <label class="form-label">Date & Time <span class="text-danger">*</span></label>
                         <div class="sm:grid grid-cols-2 gap-2">
                             <div class="input-group">
                                 <div id="date" class="input-group-text">Date</div>
-                                {{-- <input type="date" class="form-control" placeholder="Date" aria-describedby="date"
-                                    name="date" value="{{ $fixture->date }}"> --}}
 
                                     @php
                                         $dateTime = array();
@@ -121,19 +112,6 @@
                                         <input type="hidden" id="result" value="{{ $get_dateTime }}"  name="date"/>
                                     </div>
                             </div>
-
-                            {{-- <div class="input-group mt-2 sm:mt-0">
-                                <div id="time" class="input-group-text">Time</div>
-                                <input type="time" class="form-control" placeholder="Time" aria-describedby="time"
-                                    name="time" value="{{ $fixture->time }}">
-                                <select class="form-select w-full" id="time_zone" name="time_zone">
-                                    <option value="am" {{ 'am' == $fixture->time_zone ? 'selected' : '' }}> AM
-                                    </option>
-                                    <option value="pm" {{ 'pm' == $fixture->time_zone ? 'selected' : '' }}>PM
-                                    </option>
-                                </select>
-                            </div> --}}
-
                         </div>
                         <div class="sm:grid grid-cols-2 gap-2">
                             <div>
@@ -141,14 +119,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
-                            {{-- <div class="sm:grid grid-cols-2 gap-2">
-                                @error('time')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                                @error('time_zone')
-                                    <p class="ml-5 text-danger">{{ $message }}</p>
-                                @enderror
-                            </div> --}}
+
                         </div>
                     </div>
 

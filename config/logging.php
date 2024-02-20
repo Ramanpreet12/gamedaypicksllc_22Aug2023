@@ -127,6 +127,24 @@ return [
             'path' => storage_path('logs/successfullpayment.log'),
             'level' => 'info',
         ],
+
+
+        // jersey_payment_successfull logging file
+        'jersey_payment_successfull' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/jersey_payment_successfull.log'),
+            'level' => 'info',
+        ],
+
+
+         // jersey_payment_failed logging file
+         'jersey_payment_failed' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/jersey_payment_failed.log'),
+            'level' => 'info',
+        ],
+
+
     ],
 
 ];

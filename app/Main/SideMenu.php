@@ -17,7 +17,7 @@ class SideMenu
                 'icon' => 'home',
                 'title' => 'Dashboard',
                 'route_name' => 'admin/dashboard',
-                'params' =>''
+                'params' => ''
             ],
 
             'user' => [
@@ -26,6 +26,14 @@ class SideMenu
                 'params' => '',
                 'title' => 'Users'
             ],
+
+            'pre_signup_users' => [
+                'icon' => 'users',
+                'route_name' => 'pre-signup-users.index',
+                'params' => '',
+                'title' => 'Pre Signup Users'
+            ],
+
 
             'team' => [
                 'icon' => 'users',
@@ -45,6 +53,14 @@ class SideMenu
                 // ],
                 'title' => 'Payments'
             ],
+
+            'order-payment' => [
+                'icon' => 'dollar-sign',
+                'route_name' => 'admin/order-payments',
+                'params' => '',
+                'title' => 'Order Payments'
+            ],
+
             'region' => [
                 'icon' => 'settings',
                 'route_name' => 'region.index',
@@ -68,11 +84,11 @@ class SideMenu
                 'route_name' => 'fixtures.index',
                 'params' => '',
                 'title' => 'Fixtures'
-             ],
+            ],
 
 
 
-             'team_result' => [
+            'team_result' => [
                 'icon' => 'settings',
                 'route_name' => 'admin/teams/result',
                 'params' => '',
@@ -110,22 +126,59 @@ class SideMenu
 
 
 
-            'coupons' => [
-                'icon' => 'gift',
-                'route_name' => 'coupons.index',
+            // 'coupons' => [
+            //     'icon' => 'gift',
+            //     'route_name' => 'coupons.index',
+            //     'params' => '',
+            //     'title' => 'Coupons'
+            // ],
+
+
+            // 'Jersey' => [
+            //     'icon' => 'gift',
+            //     'route_name' => 'jerseys.index',
+            //     'params' => '',
+            //     'title' => 'Jersey'
+            // ],
+
+            'Products' => [
+                'icon' => 'shopping-bag',
+                'route_name' => 'products.index',
                 'params' => '',
-                'title' => 'Coupons'
+                'title' => 'Products'
             ],
+
+            // 'ProductVariations' => [
+            //     'icon' => 'shopping-bag',
+            //     'route_name' => 'product-variations.index',
+            //     'params' => '',
+            //     'title' => 'Product Variations'
+            // ],
+
+            'product-size' => [
+                'icon' => 'shopping-bag',
+                'route_name' => 'product-sizes.index',
+                'params' => '',
+                'title' => 'Product Size'
+            ],
+
+            'greek-store' => [
+                'icon' => 'shopping-bag',
+                'route_name' => 'greek-store.index',
+                'params' => '',
+                'title' => 'Greek Store'
+            ],
+
 
             'setting' => [
                 'icon' => 'settings',
                 'route_name' => 'admin/profile',
                 'params' => '',
-                'title' => 'Setting'
+                'title' => 'Admin Settings'
             ],
 
 
-             'devider',
+            'devider',
             'site_setting' => [
                 'icon' => 'edit',
                 'title' => 'Site Setting',
@@ -140,17 +193,17 @@ class SideMenu
                     'general' => [
                         'icon' => '',
                         'route_name' => 'admin/general',
-                        'params' =>'',
+                        'params' => '',
                         'title' => 'General'
                     ],
                     'banner' => [
                         'icon' => '',
                         'route_name' => 'banner.index',
-                        'params' =>'',
+                        'params' => '',
                         'title' => 'Banner'
                     ],
 
-                     'vacationPac' => [
+                    'vacationPac' => [
                         'icon' => 'settings',
                         'route_name' => 'vacation.index',
                         'params' => '',
@@ -174,14 +227,14 @@ class SideMenu
                     'match-result' => [
                         'icon' => '',
                         'route_name' => 'admin/match_result',
-                        'params' =>'',
+                        'params' => '',
                         'title' => 'Match Result By Region'
                     ],
 
                     'match-fixture' => [
                         'icon' => '',
                         'route_name' => 'admin/match_fixture',
-                        'params' =>'',
+                        'params' => '',
                         'title' => 'Match Fixture'
                     ],
 
@@ -215,6 +268,16 @@ class SideMenu
                         'params' => '',
                         'title' => 'News Alerts'
                     ],
+
+                    'pony_express_flag' => [
+                        'icon' => 'phone',
+                        'route_name' => 'admin.edit.pony-express-flag-football',
+                        'params' => '',
+                        'title' => 'Pony Express Flag Football League'
+                    ],
+
+
+
 
                     'landing_count' => [
                         'icon' => 'phone',

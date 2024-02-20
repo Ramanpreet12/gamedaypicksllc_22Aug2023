@@ -40,20 +40,37 @@ class SeasonController extends Controller
     public function store(SeasonRequest $request)
     {
 
-        if ($request->isMethod('post')) {
+        // if ($request->isMethod('post')) {
 
             $starting_date= Carbon::parse($request->starting)->format('Y-m-d');
              $ending_date = Carbon::parse($request->ending)->format('Y-m-d');
+                // update all expired season's status as inactive
+
+                $get_season = Season::where('starting' , '!=' , $starting_date )->where('ending' , '!=' , $ending_date  )
+                ->update(['status' =>'inactive']);
+            //  (Only one season should be active for each NFL season.)
+            // first make only current year season active and all other inactive ,
+            // by matching requested starting date year with current year of calender
+
+            // get the current year
+            $get_current_year = Carbon::parse($request->starting)->format('Y');
+
+            if ( $get_current_year == Carbon::now()->format('Y')) {
+               $status = 'active';
+            } else {
+                $status = 'inactive';
+            }
+
             Season::create([
                 'season_name' => $request->season_name,
                 'league' => $request->league,
                 'starting' => $starting_date,
                 'ending' => $ending_date,
                 'season_amount' => $request->season_amount,
-                'status' => $request->status
+                'status' => $status
               ]);
               return redirect()->route('season.index')->with('success' , 'Season Created successfully');
-        }
+        // }
     }
 
     /**
@@ -116,6 +133,17 @@ class SeasonController extends Controller
 
     public function destroy($id)
     {
+        // $del = Season::find($id)->delete();
+
+        // if ($del) {
+        //     return redirect()->route('season.index')->with('success', 'Season Deleted Successfully');
+        // } else {
+        //     return redirect()->route('season.index')->with('error_message', 'Something went wrong');
+        // }
+    }
+
+    public function deleteSeason($id)
+    {
         $del = Season::find($id)->delete();
 
         if ($del) {
@@ -124,5 +152,7 @@ class SeasonController extends Controller
             return redirect()->route('season.index')->with('error_message', 'Something went wrong');
         }
     }
+
+
 
 }

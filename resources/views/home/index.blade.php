@@ -7,7 +7,6 @@
         <div class="owl-carousel owl-heroSlider">
 
             @forelse ($banners as $banner)
-
                 <div class="owlItem" style="background-image:url({{ asset('storage/images/banners/' . $banner->image) }})">
 
                     <div class="bannerCaption">
@@ -18,17 +17,9 @@
 
                                 <div class="col-sm-12 col-md-8 col-lg-5 ">
 
-
-
-
-
-                                    {{-- <h1 style="color:{{ $colorSection['header']["header_color"] }};">We Love<span class="#textColor">Football</span></h1> --}}
-
                                     <h1 style="color:{{ $colorSection['header']['header_color'] }};">
 
                                         {{ $general->homepage_title }}</h1>
-
-
 
                                     <p style="color:{{ $colorSection['header']['text_color'] }};">
 
@@ -39,7 +30,6 @@
                                         <a href="{{ route('register') }}">
 
                                             <button type="button" class="btn btn-primary  btn-lg"
-
                                                 style="color:{{ $colorSection['header']['text_color'] }};">SUBSCRIBE</button>
 
                                         </a>
@@ -87,7 +77,6 @@
                                         <a href="{{ route('register') }}">
 
                                             <button type="button" class="btn btn-primary  btn-lg"
-
                                                 style="color:{{ $colorSection['scoreboard']['text_color'] }};">SUBSCRIBE
 
                                             </button>
@@ -117,7 +106,6 @@
                                 <div class="col-sm-12 col-md-8 col-lg-5 ">
 
                                     <h1 style="color:{{ $colorSection['scoreboard']['text_color'] }};">We Love<span
-
                                             class="#textColor">Football</span></h1>
 
                                     <p style="color:{{ $colorSection['scoreboard']['text_color'] }};">Don't walk through
@@ -145,7 +133,6 @@
                     </div>
 
                 </div>
-
             @endforelse
 
         </div>
@@ -155,85 +142,44 @@
 
 
     <!-- matchBoard with header -->
-
-
-
-    {{-- {{dd($matchBoards_win_loss)}} --}}
-
-    {{-- @foreach ($matchBoards as $matchBoard_team) --}}
-
-        <section id="matchBoard" style="color:{{ $colorSection['scoreboard']['text_color'] }};">
-
-            <div class="container text-center">
-
+    <section id="matchBoard" style="color:{{ $colorSection['scoreboard']['text_color'] }};">
+        <div class="container text-center">
+            @if ($matchBoards_win_loss->isNotEmpty())
                 <div class="row g-0 team-vs">
-
-                    @if (!empty($matchBoards_win_loss[0]->win_team_id) && (!empty($matchBoards_win_loss[1]->loss_team_id)))
-
-                    <span class="score">{{ $matchBoards_win_loss[0]->total_win_pts_of_team }}-{{ $matchBoards_win_loss[1]->total_loss_pts_of_team }}</span>
-
+                    @if (!empty($matchBoards_win_loss[0]->win_team_id) && !empty($matchBoards_win_loss[1]->loss_team_id))
+                        <span
+                            class="score">{{ $matchBoards_win_loss[0]->total_win_pts_of_team }}-{{ $matchBoards_win_loss[1]->total_loss_pts_of_team }}</span>
                     @else
-
-                    <span class="score">0 - 0</span>
-
+                        <span class="score">0 - 0</span>
                     @endif
 
-
-
                     <div class="col-sm-6">
-
                         <div class="firstBoard boardItem"
-
                             style="background-color:{{ $colorSection['scoreboard']['bg_color'] }};">
-
                             <div class="boardItem-inner">
 
-                                @if ($matchBoards_win_loss)
+                                {{-- @if ($matchBoards_win_loss) --}}
+                                    @if (!empty($matchBoards_win_loss[0]->win_team_id))
+                                        <img src="{{ asset('storage/images/team_logo/' . $matchBoards_win_loss[0]->win_team_logo) }}"
+                                            alt="" class="img-fluid">
+                                    {{-- @else
+                                        <img src="{{ asset('storage/images/team_logo/Lions.png') }}" alt=""
+                                            class="img-fluid"> --}}
+                                    @endif
+                                {{-- @else
+                                    <img src="{{ asset('dist/images/no-image.png') }}" alt="" class="img-fluid">
+                                @endif --}}
+
+
 
                                 @if (!empty($matchBoards_win_loss[0]->win_team_id))
-
-                                <img src="{{ asset('storage/images/team_logo/' . $matchBoards_win_loss[0]->win_team_logo) }}"
-
-                                alt="" class="img-fluid">
-
-                                @else
-
-                                <img src="{{ asset('storage/images/team_logo/Lions.png') }}"
-
-                                alt="" class="img-fluid">
-
+                                    <h3 class="mt-3">
+                                        {{ $matchBoards_win_loss[0]->win_team_name }}</h3>
+                                {{-- @else
+                                    <h3 class="mt-3">Detroit Lions</h3> --}}
                                 @endif
-
-
-
-                                @else
-
-                                    <img src="{{ asset('dist/images/no-image.png') }}" alt=""
-
-                                        class="img-fluid">
-
-                                @endif
-
-
-
-                                @if (!empty($matchBoards_win_loss[0]->win_team_id ))
-
-                                <h3 class="mt-3">
-
-                                    {{ $matchBoards_win_loss[0]->win_team_name  }}</h3>
-
-
-
-                                    @else
-
-                                    <h3 class="mt-3">Detroit  Lions</h3>
-
-                                    @endif
 
                                 {{-- <h4>{{ $matchBoard_team->first_team_id->win > $matchBoard_team->second_team_id->loss ? 'Win' : 'Loss' }}</h4> --}}
-
-
-
                             </div>
 
                         </div>
@@ -243,46 +189,29 @@
                     <div class="col-sm-6">
 
                         <div class="secondBoard boardItem"
-
                             style="background-color:{{ $colorSection['scoreboard']['bg_color'] }};">
 
                             <div class="boardItem-inner">
 
-                                @if ($matchBoards_win_loss)
-
-                                @if (!empty($matchBoards_win_loss[1]->loss_team_id))
-
-                                <img src="{{ asset('storage/images/team_logo/' . $matchBoards_win_loss[1]->loss_team_logo) }}"
-
-                                alt="" class="img-fluid">
-
-                                @else
-
-                                <img src="{{ asset('storage/images/team_logo/Chiefs.png') }}"
-
-                                alt="" class="img-fluid">
-
-                                @endif
-
-
-
-                                @else
-
+                                {{-- @if ($matchBoards_win_loss) --}}
+                                    @if (!empty($matchBoards_win_loss[1]->loss_team_id))
+                                        <img src="{{ asset('storage/images/team_logo/' . $matchBoards_win_loss[1]->loss_team_logo) }}"
+                                            alt="" class="img-fluid">
+                                    {{-- @else
+                                        <img src="{{ asset('storage/images/team_logo/Chiefs.png') }}" alt=""
+                                            class="img-fluid"> --}}
+                                    @endif
+                                {{-- @else
                                     <img src="{{ asset('front/img/Philly-Eagles.png') }}" alt="" class="img-fluid">
-
-                                @endif
+                                @endif --}}
 
 
 
                                 @if (!empty($matchBoards_win_loss[1]->loss_team_id))
-
-                                <h3 class="mt-3">{{ $matchBoards_win_loss[1]->loss_team_name }}</h3>
-
-                            @else
-
-                                <h3 class="mt-3">Chiefs</h3>
-
-                            @endif
+                                    <h3 class="mt-3">{{ $matchBoards_win_loss[1]->loss_team_name }}</h3>
+                                {{-- @else
+                                    <h3 class="mt-3">Chiefs</h3> --}}
+                                @endif
 
                                 {{-- <h4>{{ $matchBoard_team->second_team_id->win > $matchBoard_team->first_team_id->loss ? 'Win' : 'Loss' }}</h4> --}}
 
@@ -293,49 +222,57 @@
                     </div>
 
                 </div>
+            @else
 
+            <div class="row g-0 team-vs">
+                    <span class="score">0 - 0</span>
+                <div class="col-sm-6">
+                    <div class="firstBoard boardItem"
+                        style="background-color:{{ $colorSection['scoreboard']['bg_color'] }};">
+                        <div class="boardItem-inner">
+                            <img src="{{ asset('storage/images/team_logo/Lions.png') }}" alt=""
+                            class="img-fluid">
+                                <h3>Detroit Lions</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="secondBoard boardItem"
+                        style="background-color:{{ $colorSection['scoreboard']['bg_color'] }};">
+                        <div class="boardItem-inner">
+                            <img src="{{ asset('storage/images/team_logo/Chiefs.png') }}" alt=""
+                            class="img-fluid">
+                                <h3>Kansas City Chiefs</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-        </section>
-
-    {{-- @endforeach --}}
+            @endif
+        </div>
+    </section>
 
     <section id="nextmatchBoard"
-
         style="background-image:url({{ asset('front/img/football-2-bg.jpg') }});color:{{ $colorSection['leaderboard']['text_color'] }};">
 
         <div class="container text-center">
 
             <div class="row">
-
-
-
                 <div class="col-md-5">
 
                     <div class="upcomingMatchBlock">
 
                         <h2 style="color:{{ $colorSection['leaderboard']['header_color'] }};">
-
-
-
                             @if (!empty($fixtureHeading->value))
-
                                 {{ strtoupper($fixtureHeading->value) }}
-
                             @else
-
                                 UPCOMING MATCHES
-
                             @endif
-
-
 
                         </h2>
 
-                        @if (!empty($upcoming_matches))
-
+                        @if ($upcoming_matches->isNotEmpty())
                             @foreach ($upcoming_matches as $upcoming_match)
-
                                 <div class="tabletwo">
 
                                     <div class="matchTable align-items-center justify-content-center">
@@ -343,39 +280,25 @@
                                         <div class="firstTeam teamCard">
 
                                             @if ($upcoming_match)
-
                                                 @if (!empty($upcoming_match->first_team_id))
-
                                                     <img src="{{ asset('storage/images/team_logo/' . $upcoming_match->first_team_id->logo) }}"
-
                                                         alt="" class="img-fluid">
-
                                                 @else
-
-                                                    {{' '}}
-
+                                                    {{ ' ' }}
                                                 @endif
-
                                             @else
-
                                                 <img src="{{ asset('dist/images/no-image.png') }}" alt=""
-
                                                     class="img-fluid">
-
                                             @endif
 
                                             @if (!empty($upcoming_match->first_team_id))
+                                                <h5 style="word-wrap: break-word;">
 
-                                            <h5 style="word-wrap: break-word;">
+                                                    {{ $upcoming_match->first_team_id->name ? $upcoming_match->first_team_id->name : '' }}
 
-                                                {{ $upcoming_match->first_team_id->name ? $upcoming_match->first_team_id->name : '' }}
-
-                                            </h5>
-
+                                                </h5>
                                             @else
-
-                                            <h5 style="word-wrap: break-word;">{{'TBD'}}</h5>
-
+                                                <h5 style="word-wrap: break-word;">{{ 'TBD' }}</h5>
                                             @endif
 
                                         </div>
@@ -389,41 +312,28 @@
                                         <div class="secondTeam teamCard">
 
                                             @if ($upcoming_match)
-
                                                 @if (!empty($upcoming_match->second_team_id))
-
                                                     <img src="{{ asset('storage/images/team_logo/' . $upcoming_match->second_team_id->logo) }}"
-
                                                         alt="" class="img-fluid">
-
                                                 @else
-
-                                                    {{ ' '}}
-
+                                                    {{ ' ' }}
                                                 @endif
-
                                             @else
-
                                                 <img src="{{ asset('dist/images/no-image.png') }}" alt=""
-
                                                     class="img-fluid">
-
                                             @endif
 
 
 
                                             @if (!empty($upcoming_match->second_team_id))
+                                                <h5 style="word-wrap: break-word;">
+                                                    {{ $upcoming_match->second_team_id->name ? $upcoming_match->second_team_id->name : '' }}
 
-                                            <h5 style="word-wrap: break-word;">{{ $upcoming_match->second_team_id->name ? $upcoming_match->second_team_id->name : '' }}
-
-                                            </h5>
-
+                                                </h5>
                                             @else
+                                                <h5 style="word-wrap: break-word;">{{ 'TBD' }}
 
-                                            <h5 style="word-wrap: break-word;">{{ 'TBD' }}
-
-                                            </h5>
-
+                                                </h5>
                                             @endif
 
                                         </div>
@@ -431,50 +341,95 @@
                                     </div>
 
                                     <div class="matchTime d-flex justify-content-between">
-
-                                        {{-- @php
-
-                                        $splitDate = explode(' ', $upcoming_match->date, 2);
-
-                                        $date = $splitDate[0];
-
-                                        $formatted_date = \Carbon\Carbon::parse($date)->format('j F, Y');
-
-                                        $dayname = Carbon\Carbon::parse($date)->dayName;
-
-                                        $time = $splitDate[1];
-
-                                    @endphp
-
-                                    <div>{{$dayname}} , {{$formatted_date }}</div>
-
-                                    <div>{{$time }}</div> --}}
-
-
-
-
-
                                         <div> {{ \Carbon\Carbon::parse($upcoming_match->date)->format('j F, Y') }}</div>
-
-                                        <div>
-
-                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $upcoming_match->time)->format('H:i') }}
-
-                                            {{ ucfirst($upcoming_match->time_zone) }} ET</div>
-
+                                        <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $upcoming_match->time)->format('H:i') }}
+                                                {{ ucfirst($upcoming_match->time_zone) }} ET</div>
                                     </div>
 
                                 </div>
-
                             @endforeach
+                        @else
 
+                        @for ($i = 1; $i <= 5 ; $i++)
+                        <div class="tabletwo">
+                            <div class="matchTable align-items-center justify-content-center">
+                                <div class="firstTeam teamCard">
+
+                                    @if ($i == 1)
+                                    <img src="{{ asset('front/img/team_logo/New-York-Gaints.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'New York Giants' }}</h5>
+                                    @endif
+
+                                    @if ($i == 2)
+                                    <img src="{{ asset('front/img/team_logo/Seahaws.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'Seattle Seahawks' }}</h5>
+                                    @endif
+                                    @if ($i == 3)
+                                    <img src="{{ asset('front/img/team_logo/Jets.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'New York Jets' }}</h5>
+                                    @endif
+                                    @if ($i == 4)
+                                    <img src="{{ asset('front/img/team_logo/Dolphins.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'Miami Dolphins' }}</h5>
+                                    @endif
+                                    @if ($i == 5)
+                                    <img src="{{ asset('front/img/team_logo/Patriots.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'New England Patriots' }}</h5>
+                                    @endif
+
+                                </div>
+
+                                <div class="teamVs">
+                                    <h5>VS</h5>
+                                </div>
+                                <div class="secondTeam teamCard mt-1">
+
+                                    @if ($i == 1)
+                                    <img src="{{ asset('front/img/team_logo/AZ-Cardinals.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5  style="word-wrap: break-word;">{{ 'Arizona Cardinals' }} </h5>
+                                    @endif
+
+                                    @if ($i == 2)
+                                    <img src="{{ asset('front/img/team_logo/Lions.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'Detroit Lions' }}</h5>
+                                    @endif
+                                    @if ($i == 3)
+                                    <img src="{{ asset('front/img/team_logo/Dallas-Cowboys.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'Dallas-Cowboys' }}</h5>
+                                    @endif
+                                    @if ($i == 4)
+                                    <img src="{{ asset('front/img/team_logo/Jaguars.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'Jacksonville Jaguars' }}</h5>
+                                    @endif
+                                    @if ($i == 5)
+                                    <img src="{{ asset('front/img/team_logo/Browns.png') }}" alt=""
+                                    class="img-fluid">
+                                        <h5 style="word-wrap: break-word;">{{ 'Cleveland Browns' }}</h5>
+                                    @endif
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="matchTime d-flex justify-content-between">
+
+                                <div>TBD</div>
+                            </div>
+                        </div>
+                        @endfor
                         @endif
-
                     </div>
-
                 </div>
-
-
 
                 <div class="col-md-7">
 
@@ -483,25 +438,12 @@
                         <h2 style="color:{{ $colorSection['leaderboard']['header_color'] }};">
 
                             @if (!empty($leaderboardHeading->value))
-
                                 {{ strtoupper($leaderboardHeading->value) }}
-
                             @else
-
                                 LEADERBOARD
-
                             @endif
-
-
-
                         </h2>
-
-
-
                         <div class="tabletwo">
-
-
-
                             @php
 
                                 $faker = Faker\Factory::create();
@@ -510,8 +452,6 @@
 
                                 $logos = DB::table('teams')->pluck('logo');
 
-
-
                                 $randomTeamLogo = ['AZ-Cardinals.png', 'Bears.png', 'Bengals.png', 'Bills.png', 'Broncos.png', 'Browns.png', 'Buccaneers.png', 'Chargers.png', 'Chiefs.png', 'Colts.png', 'Dolphins.png'];
 
                             @endphp
@@ -519,7 +459,6 @@
                             <div class="table-responsive">
 
                                 <table class="table table-dark table-striped  tableBoard"
-
                                     style="background-color:{{ $colorSection['leaderboard']['bg_color'] }};color:{{ $colorSection['leaderboard']['text_color'] }};">
 
                                     <thead>
@@ -549,15 +488,10 @@
                                     <tbody class="table-group-divider">
 
                                         @foreach ($leader_board_regions_wise_users_results as $regions => $players)
-
-                                       
-
                                             @php $random_key = random_int(100000000, 9999999999); @endphp
 
                                             @if (count($players) == 0)
-
                                                 @for ($i = $random_key; $i <= $random_key + 2; $i++)
-
                                                     @php
 
                                                         $players[$i]['user_name'] = $faker->name;
@@ -567,13 +501,9 @@
                                                         $players[$i]['user_points'] = ['win' => 0, 'loss' => 0];
 
                                                     @endphp
-
                                                 @endfor
-
                                             @elseif(count($players) == 1)
-
                                                 @for ($i = $random_key; $i <= $random_key + 1; $i++)
-
                                                     @php
 
                                                         $players[$i]['user_name'] = $faker->name;
@@ -583,13 +513,9 @@
                                                         $players[$i]['user_points'] = ['win' => 0, 'loss' => 0];
 
                                                     @endphp
-
                                                 @endfor
-
                                             @elseif(count($players) == 2)
-
                                                 @for ($i = $random_key; $i < $random_key + 1; $i++)
-
                                                     @php
 
                                                         $players[$i]['user_name'] = $faker->name;
@@ -599,39 +525,29 @@
                                                         $players[$i]['user_points'] = ['win' => 0, 'loss' => 0];
 
                                                     @endphp
-
                                                 @endfor
-
                                             @endif
 
                                             @if ($players)
-
                                                 @php $incrementor = 0; @endphp
 
                                                 @foreach ($players as $player)
-
                                                     <tr>
 
 
 
                                                         @if ($loop->first)
-
                                                             <th class="teamRegion region_{{ $regions }}"
-
                                                                 scope="row" rowspan="{{ sizeof($players) }}">
 
                                                                 {{ $regions }}</th>
-
                                                         @endif
 
                                                         <td class="teamLogo">
 
                                                             @if ($player['team_logo'])
-
                                                                 <img src="{{ asset('storage/images/team_logo/' . $player['team_logo']) }}"
-
                                                                     alt="{{ $player['team_logo'] }}" class="img-fluid">
-
                                                             @endif
 
 
@@ -653,11 +569,8 @@
                                                         <td class="teamPts">{{ $player['user_points']['win'] }}</td>
 
                                                     </tr>
-
                                                 @endforeach
-
                                             @endif
-
                                         @endforeach
 
                                     </tbody>
@@ -687,7 +600,6 @@
 
 
     <section id="nextmatchBoard"
-
         style="background-image:url({{ asset('front/img/football-2-bg.jpg') }});color:{{ $colorSection['leaderboard']['text_color'] }};">
 
         <div class="container text-center">
@@ -703,13 +615,9 @@
                         <h2 style="color:{{ $colorSection['players']['header_color'] }};">
 
                             @if (!empty($playerRosterHeading->value))
-
                                 {{ strtoupper($playerRosterHeading->value) }}
-
                             @else
-
                                 Player's Roster
-
                             @endif
 
 
@@ -811,7 +719,6 @@
                         <div class="loader d-none">
 
                             <img height="100px" width="100px" src="{{ asset('front/img/orange_circles.gif') }}"
-
                                 alt="loader">
 
                         </div>
@@ -885,27 +792,17 @@
                     {{-- {{dd($videosHeading->value)}} --}}
 
                     <h2 style="color:{{ $colorSection['video']['header_color'] }};">
-
                         @if (!empty($videosHeading->value))
-
                             {{ strtoupper($videosHeading->value) }}
-
                         @else
-
-                            VIDEOS
-
+                            VACATION PAC
                         @endif
-
-
-
                     </h2>
 
                     <div class="owl-carousel owl-videoslider">
-
-                        @if (!empty($vacations))
-
+                        {{-- @if (!empty($vacations)) --}}
+                        @if ($vacations->isNotEmpty())
                             @foreach ($vacations as $vacation)
-
                                 <div class="item">
 
                                     <div class="video-container" id="video-container">
@@ -921,25 +818,18 @@
                                         @endphp
 
                                         @if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'svg' || $ext == 'webp')
-
                                             <img src="{{ asset('storage/images/vacation/' . $vacation->image_video) }}"
-
                                                 alt="" height="100%" width="100%">
-
                                         @else
-
-                                            <video width="250" height="250" controls id="video"
-
-                                                preload="metadata" poster="{{ asset('front/img/poster 1.png') }}">
+                                            <video width="250" height="250" loop="true" autoplay="autoplay"
+                                                controls muted id="video" preload="metadata"
+                                                poster="{{ asset('front/img/poster 1.png') }}">
 
                                                 <source
-
                                                     src="{{ asset('storage/images/vacation/' . $vacation->image_video) }}"
-
                                                     type="video/mp4">
 
                                             </video>
-
                                         @endif
 
 
@@ -965,15 +855,21 @@
                                     </div>
 
                                 </div>
-
                             @endforeach
-
+                        @else
+                            <div class="item">
+                                <div class="video-container" id="video-container">
+                                    <img src="{{ asset('dist/images/no-image.png') }}" alt="" height="100%"
+                                        width="100%">
+                                    <div class="play-button-wrapper">
+                                        <div title="Play video" class="play-gif" id="circle-play-b">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
-
                     </div>
-
                 </div>
-
             </div>
 
         </div>
@@ -995,32 +891,22 @@
                     <h2 style="color:{{ $colorSection['news']['header_color'] }};">
 
                         @if (!empty($newsHeading->value))
-
                             {{ strtoupper($newsHeading->value) }}
-
                         @else
-
                             NEWS
-
                         @endif
-
-
-
                     </h2>
 
                     <div class="owl-carousel owl-videoslider owl-theme mt-10">
 
-                        @if (!empty($news))
-
+                        @if ($news->isNotEmpty())
                             @foreach ($news as $news_item)
-
                                 <div class="newsBanner">
 
                                     <div class="mainImage">
 
-                                        <img src="{{ asset('storage/images/news/' . $news_item->image) }}" alt=""
-
-                                            class="img-fluid">
+                                        <img src="{{ asset('storage/images/news/' . $news_item->image) }}"
+                                            alt="" class="img-fluid">
 
                                     </div>
 
@@ -1035,7 +921,6 @@
                                                 <div class="imgRound me-3">
 
                                                     <img src="{{ asset('storage/images/news/' . $news_item->image) }}"
-
                                                         alt="" class="img-fluid">
 
                                                 </div>
@@ -1055,23 +940,20 @@
                                     </div>
 
                                 </div>
-
                             @endforeach
-
+                        @else
+                            <div class="newsBanner">
+                                <div class="mainImage">
+                                    <img src="{{ asset('dist/images/no-image.png') }}" alt=""
+                                        class="img-fluid">
+                                </div>
+                            </div>
                         @endif
-
-
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
-
 
 
     <!-- Reviews section  ------------------Reviews section -------------------->
@@ -1089,13 +971,9 @@
                     <!-- <h2 id="reviews_head">Reviews</h2> -->
 
                     @if (!empty($reviewsHeading->value))
-
                         <h2 id="reviews_head">{{ strtoupper($reviewsHeading->value) }}</h2>
-
                     @else
-
                         <h2 id="reviews_head">Reviews</h2>
-
                     @endif
 
                 </div>
@@ -1111,7 +989,6 @@
                     <div class="owl-carousel owl-testimonial owl-theme mt-10">
 
                         @forelse ($get_reviews as $review)
-
                             <div class="item">
 
                                 <div class="testimonialPart">
@@ -1122,7 +999,7 @@
 
                                         {{-- <p class="review_name">{{$review->comment}}</p> --}}
 
-                                        <p class="review_name">{!! \Str::words($review->comment, 28, ' ...') !!}</p>
+                                        <p class="review_name">{!! \Str::words($review->comment, 10, ' ...') !!}</p>
 
                                     </div>
 
@@ -1133,17 +1010,11 @@
 
 
                                         @for ($i = 0; $i < 5; $i++)
-
                                             @if ($i < $review->rating)
-
                                                 <i class="fa-solid fa-star text-warning"></i>
-
                                             @else
-
                                                 <i class="fa-solid fa-star"></i>
-
                                             @endif
-
                                         @endfor
 
                                     </div>
@@ -1195,7 +1066,6 @@
                                 </div>
 
                             </div>
-
                         @endforelse
 
 
@@ -1349,7 +1219,6 @@
 
 
     <style type="text/css">
-
         /* players roatsers css  */
 
         #alphabets_links {
@@ -1500,9 +1369,9 @@
 
         /* #nextmatchBoard .table>:not(caption)>*>* {
 
-        background-color: <?php echo $colorSection['leaderboard']['bg_color']; ?>;
+            background-color: <?php echo $colorSection['leaderboard']['bg_color']; ?>;
 
-      }*/
+          }*/
 
 
 
@@ -1586,51 +1455,47 @@
 
         .table-striped>tbody>tr:nth-of-type(odd)>th {
 
-        --bs-table-accent-bg: #44455b;
+            --bs-table-accent-bg: #44455b;
 
-    }
-
-    
+        }
 
 
 
-/*  */
+
+
+        /*  */
 
 
 
-.matchTable .teamCard h5 {
+        .matchTable .teamCard h5 {
 
-    min-height: 48px;
+            min-height: 48px;
 
-}
+        }
 
-@media (min-width:1367px){
+        @media (min-width:1367px) {
 
-.matchTable img.img-fluid {
+            .matchTable img.img-fluid {
 
-    margin-bottom: 7px;
+                margin-bottom: 7px;
 
-}
-
-
-
-}
+            }
 
 
 
-@media (max-width:1366px){
-
-.tabletwo .tableBoard tr {
-
-    height: 57.7px;
-
-}
-
-}
+        }
 
 
 
+        @media (max-width:1366px) {
+
+            .tabletwo .tableBoard tr {
+
+                height: 57.7px;
+
+            }
+
+        }
     </style>
 
 @endsection
-

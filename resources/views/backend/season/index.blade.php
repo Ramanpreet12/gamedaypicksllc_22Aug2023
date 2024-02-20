@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Season</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Season</title>
 @endsection
 
 @section('subcontent')
@@ -34,12 +34,13 @@
     <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
 
 
-        <h2 class="text-lg font-medium mr-auto">Season Management</h2>
+        <h2 class="text-lg font-medium mr-auto">Season Management </h2>
+
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
             <a class="btn btn-primary shadow-md mr-2" href="{{route('season.create')}}" id="season">Add New Season</a>
         </div>
     </div>
-
+    <div class="text-xs text-gray-500 mt-2">(Only one season should be active for each NFL season.)</div>
     <div class="grid grid-cols-12 gap-6 mt-5 p-5 bg-white mb-5">
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
@@ -79,16 +80,17 @@
                                     <a class="flex items-center mr-3" href="{{ route('season.edit',$season->id) }}">
                                         <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit
                                     </a>
-                                    <form action="{{ route('season.destroy', $season->id)}}" method="post">
+                                    {{-- <form action="{{ route('season.destroy', $season->id)}}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        {{-- <a class="flex items-center text-danger" href="" data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal">
-                                            <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete
-                                        </a> --}}
                                             <button class="btn btn-danger show_sweetalert" type="submit" data-toggle="tooltip">  <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
+                                      </form> --}}
 
-                                      </form>
-
+                                      <a data-toggle="tooltip" title="Delete">
+                                        <button class="btn btn-danger confirmDelete" data-toggle="tooltip"
+                                        title="Delete" module="season" module_id={{ $season->id }}>
+                                        <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
+                                    </a>
 
                                 </div>
                             </td>
@@ -103,37 +105,8 @@
                 </tbody>
             </table>
         </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
-
-        <!-- END: Pagination -->
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-feather="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Are you sure?</div>
-                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process
-                            cannot be undone.</div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                        <button type="button" class="btn btn-danger w-24">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END: Delete Confirmation Modal -->
-
 @endsection
-
-
-
    @section('script')
    <script>
     $(function() {

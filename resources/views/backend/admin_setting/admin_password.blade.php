@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Update Password</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Update Password</title>
 @endsection
 
 @section('subcontent')

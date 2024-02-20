@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Contact </title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Contact </title>
 @endsection
 
 @section('subcontent')
@@ -32,10 +32,9 @@
         @endif
 
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-            <h2 class="font-medium text-base mr-auto">Edit Contact Page  </h2>
+            <h2 class="font-medium text-base mr-auto">Edit Contact Page </h2>
         </div>
-        {{-- {{dd($contact_details)}} --}}
-        <form action="{{route('admin/contact_page')}}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('admin/contact_page') }}" method="post" enctype="multipart/form-data">
 
 
             @csrf
@@ -43,91 +42,104 @@
             <div id="horizontal-form" class="p-5">
                 <div class="preview  mr-5">
                     <div class="form-inline">
-                        <label for="contact_section_heading" class="font-medium form-label sm:w-60">Section Heading <span class="text-danger">*</span></label>
-                        <input id="contact_section_heading" type="text" class="form-control" placeholder="Section Heading" name="contact_section_heading" value="{{$contact_details['contact_section_heading']}}">
+                        <label for="contact_section_heading" class="font-medium form-label sm:w-60">Section Heading <span
+                                class="text-danger">*</span></label>
+                        <input id="contact_section_heading" type="text" class="form-control"
+                            placeholder="Section Heading" name="contact_section_heading"
+                            value="{{ old('contact_section_heading', $contact_details['contact_section_heading']) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="contact_section_heading" class="font-medium form-label sm:w-60"></label>
-                        @error('contact_section_heading')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('contact_section_heading')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="form-inline">
-                        <label for="contact_location_heading" class="font-medium form-label sm:w-60">Location Heading <span class="text-danger">*</span> </label>
-                        <input id="contact_location_heading" type="text" class="form-control" placeholder="Address Location Heading" name="contact_location_heading" value="{{$contact_details['contact_location_heading']}}">
+                        <label for="contact_location_heading" class="font-medium form-label sm:w-60">Location Heading <span
+                                class="text-danger">*</span> </label>
+                        <input id="contact_location_heading" type="text" class="form-control"
+                            placeholder="Address Location Heading" name="contact_location_heading"
+                            value="{{ old('contact_location_heading', $contact_details['contact_location_heading']) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('contact_location_heading')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('contact_location_heading')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="form-inline">
-                        <label for="contact_page_content" class="font-medium form-label sm:w-60">Content <span class="text-danger">*</span></label>
-                        <textarea name="contact_page_content" id="editor" cols="10" rows="5" class="form-control">{{$contact_details['contact_page_content']}}</textarea>
+                        <label for="contact_page_content" class="font-medium form-label sm:w-60">Content <span
+                                class="text-danger">*</span></label>
+                        <textarea name="contact_page_content" id="editor" cols="10" rows="5" class="form-control sm:w-60">{{ old('contact_page_content', $contact_details['contact_page_content']) }}</textarea>
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('contact_page_content')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('contact_page_content')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
 
                     <div class="form-inline mt-5">
-                        <label for="contact_page_image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
-                        <input id="contact_page_image" type="file" class="form-control" placeholder="Image" name="contact_page_image">
+                        <label for="contact_page_image" class="font-medium form-label sm:w-60">Image <span
+                                class="text-danger">*</span></label>
+                        <input id="contact_page_image" type="file" class="form-control" placeholder="Image"
+                            name="contact_page_image">
 
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('contact_page_image')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('contact_page_image')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
 
                     @if (!empty($contact_details['contact_page_image']))
-                    <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60"></label>
-                        <img src="{{asset('storage/images/static_page/'.$contact_details['contact_page_image'])}}" alt=""  class="img-fluid" srcset="" height="50px" width="200px">
+                        <div class="form-inline mt-5">
+                            <label for="image" class="font-medium form-label sm:w-60"></label>
+                            <img src="{{ asset('storage/images/static_page/' . $contact_details['contact_page_image']) }}"
+                                alt="" class="img-fluid" srcset="" height="50px" width="200px">
 
-                    </div>
+                        </div>
                     @else
-                            <div class="form-inline mt-5">
-                                <label for="contact_page_image" class="font-medium form-label sm:w-60"></label>
-                                <img src="{{asset('dist/images/no-image.png')}}" alt="" class="img-fluid" height="50px"  width="100px">
-                            </div>
-
+                        <div class="form-inline mt-5">
+                            <label for="contact_page_image" class="font-medium form-label sm:w-60"></label>
+                            <img src="{{ asset('dist/images/no-image.png') }}" alt="" class="img-fluid"
+                                height="50px" width="100px">
+                        </div>
                     @endif
 
 
                     <div class="form-inline">
-                        <label for="contact_form_heading" class="font-medium form-label sm:w-60">Contact Form Heading <span class="text-danger">*</span></label>
-                        <input id="contact_form_heading" type="text" class="form-control" placeholder="Contact Form Heading" name="contact_form_heading" value="{{$contact_details['contact_form_heading']}}">
+                        <label for="contact_form_heading" class="font-medium form-label sm:w-60">Contact Form Heading
+                            <span class="text-danger">*</span></label>
+                        <input id="contact_form_heading" type="text" class="form-control"
+                            placeholder="Contact Form Heading" name="contact_form_heading"
+                            value="{{ old('contact_form_heading', $contact_details['contact_form_heading']) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="contact_form_heading" class="font-medium form-label sm:w-60"></label>
-                        @error('contact_form_heading')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('contact_form_heading')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="form-inline">
-                        <label for="contact_social_links_heading" class="font-medium form-label sm:w-60">Social Links Heading <span class="text-danger">*</span></label>
-                        <input id="contact_social_links_heading" type="text" class="form-control" placeholder="Social Links Heading" name="contact_social_links_heading" value="{{$contact_details['contact_social_links_heading']}}">
+                        <label for="contact_social_links_heading" class="font-medium form-label sm:w-60">Social Links
+                            Heading <span class="text-danger">*</span></label>
+                        <input id="contact_social_links_heading" type="text" class="form-control"
+                            placeholder="Social Links Heading" name="contact_social_links_heading"
+                            value="{{ old('contact_social_links_heading', $contact_details['contact_social_links_heading']) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="contact_social_links_heading" class="font-medium form-label sm:w-60"></label>
-                        @error('contact_social_links_heading')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('contact_social_links_heading')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
-
-
-
-                    {{-- <div class="form-inline mt-5 mt-2">
-                        <label for="status" class="font-medium form-label sm:w-60">Status <span class="text-danger">*</span></label>
-                        <select class="form-control" id="status" name="status">
-
-                            <option value="active" {{$contact_details->status == 'active' ? 'selected' : ''}}>Active</option>
-                            <option value="inactive" {{$contact_details->status == 'inactive' ? 'selected' : ''}}>Inactive</option>
-                        </select>
-                    </div>
-                    <div class="form-inline mt-2">
-                        <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('status')<p class="text-danger">{{$message}}</p> @enderror
-                    </div> --}}
                 </div>
 
                 <br><br>
@@ -143,20 +155,16 @@
     </div>
 @endsection
 
-
-
 @section('script')
-
     <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
-<script>
-    ClassicEditor
-            .create( document.querySelector( '#editor' ) )
-            .then( editor => {
-                    console.log( editor );
-            } )
-            .catch( error => {
-                    console.error( error );
-            } );
-</script>
-
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection

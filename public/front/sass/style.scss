@@ -96,6 +96,7 @@
             font-family: $heading-font;
             font-weight: 600;
             text-transform: uppercase;
+
             .navHoverEffect {
                 position: absolute;
                 top: 50%;
@@ -156,9 +157,9 @@
     }
     .userDropdown ul.dropdown-menu {
         left: auto;
-        right: 0; 
+        right: 0;
         z-index: 9999;
-    } 
+    }
     }
 
     .navbar{
@@ -435,7 +436,7 @@
                 color: #da9a29;
                 text-align: right;
             }
-            
+
         }
         .table-primary{
             --bs-table-bg: #db9a29;
@@ -679,7 +680,7 @@
             .testimonialPart{
                 padding: 18px 24px 24px 24px;
                 background-color: #F5F5F5;
-                
+
                 i.fa-solid.fa-quote-left.leftQuote {
                     font-size: 30px;
                     color:#da9a29;
@@ -692,7 +693,7 @@
                         // color: #06083b;
                     }
                 }
-            
+
 
             }
             .owl-stage-outer {
@@ -718,7 +719,7 @@
             button{
                 top: 0;
                 transform: translateY(-100%);
-                margin: 0 !important;            
+                margin: 0 !important;
             }
             }
             &:hover .owl-nav{
@@ -791,9 +792,9 @@
     #abouttexting{
         padding: 70px 0;
         h2{
-            // @extend %extend-heading;  
+            // @extend %extend-heading;
         }
-    
+
     }
 
     // history section
@@ -923,7 +924,7 @@
                 vertical-align: middle;
             }
         }
-    
+
 
     // matchresult page
 
@@ -1175,7 +1176,7 @@
     }
     .resultDetail{
     background-image: url(https://nfl.kloudexpert.com/front/img/resultBoard.png);
-    background-size:  83% 100%; 
+    background-size:  83% 100%;
     background-position: top right;
     }
     .teamInfo {
@@ -1239,7 +1240,7 @@
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: top left;
-        content: ""; 
+        content: "";
         left: -15px;
         position: absolute;
         top: -15px;
@@ -1247,7 +1248,7 @@
         z-index: -1;
         bottom: -30px;
     }
-    
+
     .teamlogoImg{
     max-width:40px;
     }
@@ -1403,7 +1404,7 @@
     // matchresult page 30-05-23
 
     #resultLeaderboard{
-    
+
         .modrenFixture{
             // background-color: #da9a29;
             padding: 30px 0px 30px;
@@ -1417,13 +1418,13 @@
                 height: 150px;
                 max-width: 160px;
                 position: relative;
-            
+
             .fixtureLogoIntro{
                 background-color: #292c31;
                 text-align: center;
                 padding: 40px 25px 40px 26px;
                 position: relative;
-                margin: 0px 0px 0px -15px;  
+                margin: 0px 0px 0px -15px;
                 height: 100%;
                 // display: flex;
                 // justify-content: center;
@@ -1437,7 +1438,7 @@
                 span.scoreMatch {
                     font-size: 24px;
                     font-weight: 800;
-                } 
+                }
                 h3{
                     position:relative;
                     &:after{
@@ -1451,7 +1452,7 @@
                         transform: translateX(-50%);
                     }
                 }
-                   
+
             }
 
             &:before{
@@ -1482,7 +1483,7 @@
                     -webkit-clip-path: polygon(30% 0%, 100% 0, 100% 100%, 30% 100%, 0% 70%, 0% 30%);
                     clip-path: polygon(30% 0%, 100% 0, 100% 100%, 30% 100%, 0% 65%, 0% 35%);
                 }
-                &:before{ 
+                &:before{
                     right: -14px;
                     top: -15px;
                     border-bottom: 16px solid #27282a;
@@ -1490,7 +1491,7 @@
                     border-left: inherit;
                     left: auto;
                 }
-                &:after{ 
+                &:after{
                     right: -14px;
                     bottom: -15px;
                     border-top: 16px solid #27282a;
@@ -1503,7 +1504,7 @@
             .fixtureContent{
                 text-align: center;
                 line-height: 1.5;
-            
+
                 h4{
                     color: #2f2f2f;
                 }
@@ -1577,15 +1578,15 @@
     }
 .teamCard .img-fluid, .tableBoard .img-fluid{
         max-width: 40px;
-    } 
+    }
 .tableBoard thead th {
     white-space: pre;
 }
-.inner_form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+// .inner_form {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }
 
 .headerMenu {
     display: flex;
@@ -1656,9 +1657,9 @@ nav.navbarMobile .navbar-nav .nav-item {
     padding: 15px 20px;
 }
 nav.navbarMobile .navbar-nav .nav-item .nav-link {
-    padding: 0; 
+    padding: 0;
 }
- 
+
 nav.navbarMobile .navbar-nav .nav-item .dropdown-toggle {
     color: #fff;
     width: 20px;
@@ -1706,19 +1707,19 @@ display: none;
 
 /*  fixture file*/
 
-.inner_form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+// .inner_form {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }
 
-.headerMenu {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
+// .headerMenu {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     margin-bottom: 20px;
+//     flex-wrap: wrap;
+// }
 
 /* contact page  */
 .input-error {
@@ -1744,7 +1745,7 @@ display: none;
             }
         }
 
-    
+
 
         #cardBlock{
             .selectTeam{
@@ -1955,7 +1956,7 @@ display: none;
             .fixtureLogo
             {
             .fixtureLogoIntro{
-                margin: -15px 0px 0px 0px; 
+                margin: -15px 0px 0px 0px;
                 -webkit-clip-path: polygon(100% 0, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0 0);
                 clip-path: polygon(100% 0, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0 0);
                 img{
@@ -1982,7 +1983,7 @@ display: none;
 
 
         }
-        .fixtureContent { 
+        .fixtureContent {
             width: 100%;
         }
         .fixtureRight {
@@ -2026,7 +2027,7 @@ display: none;
     // }
     // }
     // }
- 
+
         .headerMenu {
             h5#set_week {
                 text-align: end;
@@ -2046,8 +2047,8 @@ display: none;
                 }
             }
         }
-    
-    #footerPart .formInput input { 
+
+    #footerPart .formInput input {
         width: 100px;
     }
 
@@ -2080,17 +2081,17 @@ display: none;
     #footerPart .headerPart {
         margin-bottom: 0px;
     }
-   
+
     .btn {
         padding: 6px 15px;
-        font-size: 16px; 
-   
+        font-size: 16px;
+
 }
     .btn-primary:after {
         background-color: #e4a101;
     }
- 
-   
+
+
     #fixtureContentPart{
         .modrenFixture{
             h3{
@@ -2201,8 +2202,8 @@ display: none;
                     }
                 }
             }
-        }  
-            
+        }
+
 #resultLeaderboard{
     .seasonWeek{
         .totalPlayer{
@@ -2239,7 +2240,7 @@ display: none;
         }
         #footerPart{
             .formInput{
-                
+
                 input{
                     flex: 1 0 0%;
                 }
@@ -2352,7 +2353,7 @@ display: none;
     // tableCard
     .tableCardMobile thead {
         display: none;
-    } 
+    }
     .tableCardMobile  tr td:before {
         content: attr(data-label);
         float: left;
@@ -2378,11 +2379,11 @@ display: none;
         width: 3px;
         transform: skewX(-10deg);
     }
-    &:after { 
-        transform: skewX(-10deg); 
-    } 
+    &:after {
+        transform: skewX(-10deg);
+    }
 }
-    } 
+    }
 
     @media only screen and (min-width: 768px) and (max-width: 991px) {
 
@@ -2473,8 +2474,8 @@ display: none;
         .resultteamLogo:before{
                 display:none;
             }
-          
-        
+
+
 
     }
 
@@ -2582,7 +2583,7 @@ display: none;
         flex: 0 0 100px;
     padding: 0 15px;
     }
-   
+
     }
 
 

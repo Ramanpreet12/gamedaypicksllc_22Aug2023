@@ -1,14 +1,9 @@
 @extends('../layout/' . $layout)
-
-
-
 @section('subhead')
 
-    <title>NFL |  Menu Setting</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} |  Menu Setting</title>
 
 @endsection
-
-
 
 @section('subcontent')
 
@@ -173,56 +168,6 @@
                         @error('status')<p class="text-danger">{{$message}}</p> @enderror
 
                     </div>
-
-
-
-                    {{-- @if (!empty($general->logo))
-
-                        <div class="form-inline mt-5">
-
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-
-                            <img src="{{asset('storage/images/general/'.$general->logo)}}" alt="" height="50px" width="100px">
-
-                        </div>
-
-
-
-                    @else
-
-                        <div class="form-inline mt-5">
-
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-
-                            <img alt="Admin Image" class="rounded-full" height="50px" width="100px"
-
-                            src="{{asset('dist/images/dummy_image.webp')}}">
-
-                        </div>
-
-
-
-                    @endif --}}
-
-
-
-
-
-
-
-
-
-                    {{-- <div class="form-inline mt-5">
-
-                        <label for="logo" class="font-medium form-label sm:w-60"></label>
-
-                        <img src="{{asset('public/images/general/'.$general->favicon)}}" alt="" height="50px" width="100px">
-
-
-
-                    </div> --}}
-
-
 
 
 

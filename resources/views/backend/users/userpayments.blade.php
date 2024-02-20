@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Users</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Users</title>
 @endsection
 
 @section('subcontent')
@@ -31,93 +31,70 @@
 </div>
 @endif
 
+    <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
+        <h2 class="text-lg font-medium mr-auto">Users Payment Details</h2>
+        <a href="{{route('admin/user')}}"><button class="btn btn-primary">Back</button></a>
+    </div>
 
     <div class="grid grid-cols-12 gap-6 mt-5 p-5 bg-white mb-5">
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-            <table class="table table-report -mt-2" id="user_table">
-                <thead class="bg-primary text-white">
-                    <tr>
-                        <th class="text-center whitespace-nowrap">S.no.</th>
-                        <th class="text-center whitespace-nowrap">Season</th>
-                        <th class="text-center whitespace-nowrap">Transaction Id</th>
-                        <th class="text-center whitespace-nowrap"> Payment Status</th>
-                        <th class="text-center whitespace-nowrap"> Payment Method</th>
-                        <th class="text-center whitespace-nowrap"> Amount</th>
-                        <th class="text-center whitespace-nowrap">Payment Expire Date</th>
-                        <th class="text-center whitespace-nowrap">Payment Date</th>
-                        <th class="text-center whitespace-nowrap">Biller Name</th>
-                        <th class="text-center whitespace-nowrap">Biller Address </th>
-                        <th class="text-center whitespace-nowrap">Biller City </th>
-                        <th class="text-center whitespace-nowrap">Biller Country </th>
-                        <th class="text-center whitespace-nowrap">Action</th>
-                    </tr>
-                </thead>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover table-bordered">
 
-                <tbody>
-                @if ($userPaymentData->isNotEmpty())
-                    @php
-                    $count = '';
-                    @endphp
-                    @foreach ($userPaymentData as $PayData)
-                            <tr class="intro-x">
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{++$count}} </div>
-                                </td>
 
-                                <td> 
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->season_name}} </div>
-                                </td>
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->transaction_id}} </div>
-                                </td>
+                {{-- {{dd($userPaymentData)}} --}}
+                <tr>
+                    <td> <b> Season :</b> </td>
+                    <td>{{$userPaymentData->season_name }}</td>
+                </tr>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->status}} </div>
-                                </td>
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->payment_method}} </div>
-                                </td>
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->amount}}{{$PayData->currency}} </div>
-                                </td>
+                <tr>
+                    <td> <b> Transaction Id  :</b> </td>
+                    <td>{{$userPaymentData->transaction_id }}</td>
+                </tr>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{ \Carbon\Carbon::parse($PayData->expire_on)->format('j F, Y') }} </div>
-                                </td>
+                <tr>
+                    <td><b>  Payment Status: </b></td>
+                    <td>{{$userPaymentData->status }}</td>
+                </tr>
+                <tr>
+                    <td><b>  Payment Method : </b></td>
+                    <td>{{$userPaymentData->payment_method }}</td>
+                </tr>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{ \Carbon\Carbon::parse($PayData->created_at)}} </div>
-                                </td>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->name}} </div>
-                                </td>
+                <tr>
+                    <td><b>Amount : </b></td>
+                    <td>{{$userPaymentData->amount }}</td>
+                </tr>
+                <tr>
+                    <td><b> Payment Expire Date  : </b></td>
+                    <td>{{$userPaymentData->exp_month_card }} {{$userPaymentData->exp_year_card}}</td>
+                </tr>
+                <tr>
+                    <td><b>Biller Name  : </b></td>
+                    <td>{{$userPaymentData->name ?? ''}} </td>
+                </tr>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->address}} </div>
-                                </td>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->city}} </div>
-                                </td>
+                <tr>
+                    <td><b> Biller Address  : </b></td>
+                    <td>{{$userPaymentData->address}}</td>
+                </tr>
+                <tr>
+                    <td><b> Biller City : </b></td>
+                    <td>{{$userPaymentData->city}}</td>
+                </tr>
 
-                                <td>
-                                    <div class="text-slate-500 font-medium whitespace-nowrap mx-4">  {{$PayData->country}} </div>
-                                </td>
-                                <td><a href="{{ route('admin/PaymentInvoice',['id'=>$PayData->id])}}" class="btn btn-primary">Download</a></td>
-                            </tr>
+                <tr>
+                    <td><b> Biller Country : </b></td>
+                    <td>{{$userPaymentData->country}}</td>
+                </tr>
 
-                        @endforeach
-                        @else
-                        <tr>
-                            <td colspan="12" class="text-center">No Records found</td>
 
-                        </tr>
-                        @endif
-
-                </tbody>
-            </table>
+              </table>
+        </div>
         </div>
         <!-- END: Data List -->
         <!-- BEGIN: Pagination -->

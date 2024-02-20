@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Craftsmen-Wanted-Ad</title>
+      <title>{{ $general->name ? $general->name : 'NFL' }}</title>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <link href="{{ asset('landing_pages/assets/css/bootstrap.min.css') }}" rel="stylesheet">
       <link href="{{ asset('landing_pages/assets/css/style.css') }}" rel="stylesheet">
@@ -21,7 +21,7 @@
          </script>
    </head>
    <body>
-    
+
    <section class="craftsmenWantedAd">
       <div class="container">
       <img src="{{asset('landing_pages/assets/images/Craftsmen-Wanted-Ad.gif')}}" class="img-fluid" alt="">
@@ -42,16 +42,16 @@
                  <form action="{{ route('store/craftman_visitors') }}" method="post">
                      @csrf
                      <button class="btn btn-outline-primary next_btn" type="submit">Advance</button>
- 
+
                  </form>
          </div>
      </div>
 
       </div>
    </section>
-   
 
-      
+
+
 <style>
   .craftsmenWantedAd  .container{
    max-width: 1300px;
@@ -74,7 +74,7 @@ h4.HeadingText{
     border: 4px solid #cb000a;
 }
 .button-link .next_btn:hover {
-    background: #cb000a; 
+    background: #cb000a;
 }
 </style>
 
@@ -103,7 +103,7 @@ h4.HeadingText{
                         @endif
                         @if ($social_links['Pinterest'] != '')
                         <a href="{{ $social_links['Pinterest'] }}" target="_blank" class="fa fa-pinterest"></a>
-                        
+
                         @endif
                      @endif
                      </div>
@@ -114,18 +114,19 @@ h4.HeadingText{
          <div class="copyright">
             <div class="container">
                <div class="row">
-                  <div class="col">© Copyright 2023 <a href="{{ route('home') }}">gamedaypicksllc.com</a>. All Rights Reserved</div>
+                {{-- {{ dd($general) }} --}}
+                  <div class="col">{{ $general->footer_bar  ? $general->footer_bar : 'GAMEDAY PICKS, LLC © 2023. All Rights Reserved' }}</div>
                </div>
             </div>
          </div>
       </footer>
-	  
-	  
-		   
-		   
+
+
+
+
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-	  
-	  
+
+
    </body>
 </html>

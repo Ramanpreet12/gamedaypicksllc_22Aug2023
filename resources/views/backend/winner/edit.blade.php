@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Winner</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Winner</title>
 @endsection
 
 @section('subcontent')
@@ -50,12 +50,8 @@
                     </div>
                     <div class="form-inline mt-5">
                         <label for="name" class="font-medium form-label sm:w-60">User Email <span class="text-danger">*</span></label>
-                        {{-- <input type="hidden" value="{{$get_prize_assigned_to_user->user_id}}" name="user_id" > --}}
                         <input id="name" name="" type="text" class="form-control" placeholder="Enter Team name"  value="{{$get_prize_assigned_to_user->user->email}}" readonly>
                     </div>
-
-
-
                     <div class="form-inline mt-5">
                         <input type="hidden"  name="total_points" value="{{$get_prize_assigned_to_user->total_points}}" >
                         <label for="points" class="font-medium form-label sm:w-60">Points <span class="text-danger">*</span></label>
@@ -108,11 +104,6 @@
                             <p class="text-danger">{{$message}}</p>
                         @enderror
                     </div>
-
-                    {{-- <div class="form-inline mt-2">
-                        <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('status')<p class="text-danger">{{$message}}</p> @enderror
-                    </div> --}}
                 </div>
                 <br><br>
                 <div

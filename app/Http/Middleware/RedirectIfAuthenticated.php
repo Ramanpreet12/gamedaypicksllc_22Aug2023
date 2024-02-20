@@ -22,12 +22,15 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
+           
             if (Auth::guard($guard)->check()) {
                 // return redirect(RouteServiceProvider::HOME);
                 if(auth()->user()->role_as == 1){
                     return redirect()->route('admin/dashboard');
-                }else if(auth()->user()->role_as == 0){
+                }else if(auth()->user()->role_as == 0 && auth()->user()->age !=null && auth()->user()->age > config('app.jersey_kid_age_limit')){
+                  
                     return redirect()->route('dashboard');
+                
                 }
             }
         }

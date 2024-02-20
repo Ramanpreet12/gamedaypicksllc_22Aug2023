@@ -100,7 +100,15 @@ class RegionController extends Controller
      */
     public function destroy($id)
     {
+        // Region::find($id)->delete();
+        // return redirect()->route('region.index')->with('success' , 'Region Delete Successfully');
+    }
+
+    public function deleteRegion($id)
+    {
         Region::find($id)->delete();
         return redirect()->route('region.index')->with('success' , 'Region Delete Successfully');
     }
+
+
 }

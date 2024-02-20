@@ -13,6 +13,9 @@ return [
     |
     */
 
+    'jersey_amount' => '150',
+    'youth_age_limit' => '17',
+    'kid_product_limit_for_each_group' => '2',
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

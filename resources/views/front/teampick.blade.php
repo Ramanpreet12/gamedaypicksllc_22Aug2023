@@ -17,12 +17,13 @@
                     </div>
                 </div>
 
-                @include('front.layout.sidebar')
+                @include('front.layout.user_layout.user_sidebar')
                 <div class="col-sm-8 col-md-9">
                     <h2 class="mb-3 text-center" style="color:{{ $colorSection['leaderboard']['header_color'] }};">
                         Pick The Team
                     </h2>
 
+                    {{-- @if (isset($fixtures)) --}}
                     <div class="headerMenu row">
                         @if (session()->has('success'))
                             <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
@@ -71,40 +72,46 @@
                             </h5>
                         </div>
                         <div class="col">
-                            {{-- @if (Request::url() == config('app.url') . '/fixtures/weeks') --}}
-                            @foreach ($fixtures as $week => $data)
-                                <h5 style="color:#fff" id="set_week" class="seasonFixed selectWeekPart">Week :
-                                    {{ $week }}</h5>
-                            @endforeach
-                            {{-- @endif --}}
+
+                            @if (isset($fixtures))
+                                @foreach ($fixtures as $week => $data)
+                                    <h5 style="color:#fff" id="set_week" class="seasonFixed selectWeekPart">Week :
+                                        {{ $week }}</h5>
+                                @endforeach
+                            @else
+                                {{ '' }}
+                            @endif
+
                         </div>
+
                         <div class="fixtureForms col">
                             <form action="{{ url('teams') }}" method="get" class="seasonFixed formSpacing">
                                 <div class="inner_form">
-                                    @csrf
                                     <label for=""
                                         style="color:#fff; margin-right:10px; font-weight:800; font-size: 20px; font-family: 'Oxanium', 'cursive';">Seasons:
                                     </label>
                                     <select class="form-control" name="seasons" id="seasons">
-                                        {{-- <option value="">{{$c_season->season_name ?? ''}}</option> --}}
-                                        {{-- <input type="text" name="" value=""> --}}
-                                        {{-- <option value="">select </option> --}}
-                                        @foreach ($get_all_seasons as $season)
-                                            <option value="{{ $season->id ?? '' }}"
-                                                {{ $c_season->id == $season->id ? 'selected' : '' }}>
-                                                {{ $season->season_name }}</option>
-                                        @endforeach
+
+                                        @if (isset($get_all_seasons) && $get_all_seasons->isNotEmpty())
+                                            @foreach ($get_all_seasons as $season)
+                                                <option value="{{ $season->id ?? '' }}"
+                                                    {{ $c_season->id == $season->id ? 'selected' : '' }}>
+                                                    {{ $season->season_name }}</option>
+                                            @endforeach
+                                        @endif
+
                                         <i class="fa-solid fa-angle-down"></i>
                                     </select>
                                 </div>
                             </form>
                         </div>
                         {{-- for weeks --}}
-                        <div class=" col">
+                        <div class="col">
                             <form action="{{ url('teams') }}" method="get" class="seasonFixed ">
                                 <div class="inner_form">
-                                    @csrf
-                                    <input type="hidden" value="{{ $c_season->id ?? '' }}" name="season_id">
+                                    {{-- @csrf --}}
+                                    <input type="hidden" value="{{ $c_season->id ?? '' }}" name="seasons">
+                                    {{-- <input type="hidden" value="{{ $c_season->id ?? '' }}" name="season_id"> --}}
                                     <label for=""
                                         style="color:#fff; margin-right:10px; font-weight:800; font-size: 20px; font-family: 'Oxanium', 'cursive';">Weeks:
                                     </label>
@@ -120,8 +127,6 @@
                         </div>
                     </div>
 
-
-
                     <div class="row">
                         <div class="col-12">
                             <div class="table-responsive">
@@ -134,59 +139,65 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($fixtures as $week => $weakData)
-                                            <tr>
-                                                <td style="color: #db9a29;font-weight:bold;" colspan="3">Week :
-                                                    {{ $week }}</td>
-                                                <td class="matchFColDate"></td>
-                                                <td class="matchFColTime"></td>
-                                            </tr>
-                                            @foreach ($weakData as $weaks => $team)
-                                                {{-- {{dd($team->first_team_id->name)}} --}}
-                                                @if ((!empty($team->first_team_id)) && (!empty($team->second_team_id)))
-                                                @php
-                                                    $formatted_first_team_name = str_replace(' ', '_', $team->first_team_id->name);
-                                                @endphp
-                                                @php
-                                                    $formatted_second_team_name = str_replace(' ', '_', $team->second_team_id->name);
-                                                @endphp
-                                                @endif
-                                                {{-- {{dd($formatted_team_name)}} --}}
-                                                @if ($week == $team->week)
-                                                    <tr>
-                                                        <td>
+                                        @if (isset($fixtures) && $fixtures->isNotEmpty())
+                                            @foreach ($fixtures as $week => $weakData)
+                                                <tr>
+                                                    <td style="color: #db9a29;font-weight:bold;" colspan="3">Week :
+                                                        {{ $week }}</td>
+                                                    <td class="matchFColDate"></td>
+                                                    <td class="matchFColTime"></td>
+                                                </tr>
+                                                @foreach ($weakData as $weaks => $team)
+                                                    {{-- {{dd($team->first_team_id->name)}} --}}
+                                                    @if (!empty($team->first_team_id) && !empty($team->second_team_id))
+                                                        @php
+                                                            $formatted_first_team_name = str_replace(' ', '_', $team->first_team_id->name);
+                                                        @endphp
+                                                        @php
+                                                            $formatted_second_team_name = str_replace(' ', '_', $team->second_team_id->name);
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $formatted_first_team_name = 'TBD';
+                                                        @endphp
 
-                                                            @if (!empty($team->first_team_id))
-                                                                <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
-                                                                    alt="" class="img-fluid">
-                                                            @else
-                                                                {{ '' }}
-                                                            @endif
+                                                        @php
+                                                            $formatted_second_team_name = 'TBD';
+                                                        @endphp
+                                                    @endif
+                                                    {{-- {{dd($formatted_team_name)}} --}}
+                                                    @if ($week == $team->week)
+                                                        <tr>
+                                                            <td>
 
-                                                            <div style="">
                                                                 @if (!empty($team->first_team_id))
-                                                                    {{ $team->first_team_id->name }}
+                                                                    <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
+                                                                        alt="" class="img-fluid">
                                                                 @else
-                                                                    {{ 'TBD' }}
+                                                                    {{ '' }}
                                                                 @endif
 
-                                                            </div>
+                                                                <div style="">
+                                                                    @if (!empty($team->first_team_id))
+                                                                        {{ $team->first_team_id->name }}
+                                                                    @else
+                                                                        {{ 'TBD' }}
+                                                                    @endif
 
-                                                            @if (\Carbon\Carbon::now() > $team->season->ending)
-                                                                {{ '' }}
-                                                            @else
-                                                                @if (!empty($team->first_team_id))
-                                                                    @if (get_selected_teams($team->first_team_id->id, $team->season_id, $team->id, $team->week))
-                                                                        <button disabled
-                                                                            style="background:none;  border:none; color:#2c9412"
-                                                                            class="btn btn-selected-team my-4"
-                                                                            @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
+                                                                </div>
+
+                                                                @if (\Carbon\Carbon::now() > $team->season->ending)
+                                                                    {{ '' }}
+                                                                @else
+                                                                    @if (!empty($team->first_team_id))
+                                                                        @if (get_selected_teams($team->first_team_id->id, $team->season_id, $team->id, $team->week))
+                                                                            <button disabled
+                                                                                style="background:none;  border:none; color:#2c9412"
+                                                                                class="btn btn-selected-team my-4"
+                                                                                @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
                                                                                     @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                            @if ($upcoming_season_date < $team->date)
-                                                                            fixture_id={{ $team->id }}
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                                @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                             team_id={{ $team->first_team_id->id }}
                                                                             season_id={{ $team->season_id }}
                                                                             week={{ $team->week }}
@@ -194,21 +205,17 @@
                                                                             first_teamName={{ $formatted_first_team_name }}
                                                                             second_teamName={{ $formatted_second_team_name }}
                                                                             fixture_date={{ $team->date }}
-                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                            @endif>
-                                                                            {{ 'Picked Team' }}
-                                                                        </button>
-                                                                    @else
-                                                                        <button
-                                                                            style="background:none;  border:none; color:#212529"
-                                                                            class="btn btn-primary my-4 team_name"
-                                                                            @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
+                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
+                                                                                {{ 'Picked Team' }}
+                                                                            </button>
+                                                                        @else
+                                                                            <button
+                                                                                style="background:none;  border:none; color:#212529"
+                                                                                class="btn btn-primary my-4 team_name"
+                                                                                @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
                                                                                     @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                             @if ($upcoming_season_date < $team->date)
-                                                                            fixture_id={{ $team->id }}
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                                @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                             team_id={{ $team->first_team_id->id }}
                                                                             season_id={{ $team->season_id }}
                                                                             week={{ $team->week }}
@@ -217,79 +224,55 @@
                                                                             second_teamName={{ $formatted_second_team_name }}
                                                                             first_team_name={{ $formatted_first_team_name }}
                                                                             fixture_date={{ $team->date }}
-                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                            @endif>
-                                                                            {{ 'Pick Team' }}
-                                                                        </button>
-                                                                    @endif
-                                                                @else
-                                                                    {{ ' ' }}
-                                                                @endif
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <div class="versis">
-                                                                <h5>VS</h5>
-                                                            </div>
-
-                                                            <div class="d-md-none">
-                                                                <span class="matchFixtureDate" data-title="Date">
-                                                                    {{ \Carbon\Carbon::createFromFormat('Y-m-d', $team->date)->format('M d , Y') }}</span>
-                                                                <span class="matchFixtureTime"
-                                                                    data-title="Time">{{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-
-                                                            @if (!empty($team->second_team_id))
-                                                                <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
-                                                                    alt="" class="img-fluid">
-                                                            @else
-                                                                {{ ' ' }}
-                                                            @endif
-
-                                                            <div style="">
-                                                                @if (!empty($team->second_team_id))
-                                                                    {{ $team->second_team_id->name }}
-                                                                @else
-                                                                    {{ 'TBD ' }}
-                                                                @endif
-                                                            </div>
-                                                            @if (\Carbon\Carbon::now() > $team->season->ending)
-                                                                {{ '' }}
-                                                            @else
-                                                                @if (!empty($team->second_team_id))
-                                                                    @if (get_selected_teams($team->second_team_id->id, $team->season_id, $team->id, $team->week))
-                                                                        <button disabled class="btn btn-selected-team my-4"
-                                                                            style="background:none;  border:none;  color:#2c9412"
-                                                                            @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
-                                                                                    @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                             @if ($upcoming_season_date < $team->date)
-                                                                            fixture_id={{ $team->id }}
-                                                                            team_id={{ $team->second_team_id->id }}
-                                                                            season_id={{ $team->season_id }}
-                                                                            week={{ $team->week }}
-                                                                            teamName={{ $formatted_second_team_name }}
-                                                                            first_teamName={{ $formatted_first_team_name }}
-                                                                            second_teamName={{ $formatted_second_team_name }}
-                                                                            fixture_date={{ $team->date }}
-                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                            @endif>
-                                                                            {{ 'Picked Team' }}
-                                                                        </button>
+                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
+                                                                                {{ 'Pick Team' }}
+                                                                            </button>
+                                                                        @endif
                                                                     @else
-                                                                        <button class="btn btn-primary my-4 team_name"
-                                                                            style="background:none;  border:none; color:#212529"
-                                                                            @if ($upcoming_week > $team->date)
-                                                                                    upcoming_selectable_week = "true"
+                                                                        {{ ' ' }}
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                <div class="versis">
+                                                                    <h5>VS</h5>
+                                                                </div>
+
+                                                                <div class="d-md-none">
+                                                                    <span class="matchFixtureDate" data-title="Date">
+                                                                        {{ \Carbon\Carbon::createFromFormat('Y-m-d', $team->date)->format('M d , Y') }}</span>
+                                                                    <span class="matchFixtureTime"
+                                                                        data-title="Time">{{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+
+                                                                @if (!empty($team->second_team_id))
+                                                                    <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
+                                                                        alt="" class="img-fluid">
+                                                                @else
+                                                                    {{ ' ' }}
+                                                                @endif
+
+                                                                <div style="">
+                                                                    @if (!empty($team->second_team_id))
+                                                                        {{ $team->second_team_id->name }}
+                                                                    @else
+                                                                        {{ 'TBD ' }}
+                                                                    @endif
+                                                                </div>
+                                                                @if (\Carbon\Carbon::now() > $team->season->ending)
+                                                                    {{ '' }}
+                                                                @else
+                                                                    @if (!empty($team->second_team_id))
+                                                                        @if (get_selected_teams($team->second_team_id->id, $team->season_id, $team->id, $team->week))
+                                                                            <button disabled
+                                                                                class="btn btn-selected-team my-4"
+                                                                                style="background:none;  border:none;  color:#2c9412"
+                                                                                @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
                                                                                     @else
-                                                                                    upcoming_selectable_week = "false"
-                                                                                    @endif
-                                                                            @if ($upcoming_season_date < $team->date)
-                                                                            fixture_id={{ $team->id }}
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                                @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
                                                                             team_id={{ $team->second_team_id->id }}
                                                                             season_id={{ $team->season_id }}
                                                                             week={{ $team->week }}
@@ -297,41 +280,68 @@
                                                                             first_teamName={{ $formatted_first_team_name }}
                                                                             second_teamName={{ $formatted_second_team_name }}
                                                                             fixture_date={{ $team->date }}
-                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }}
-                                                                            @endif>
-                                                                            {{ 'Pick Team' }}
-                                                                        </button>
+                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
+                                                                                {{ 'Picked Team' }}
+                                                                            </button>
+                                                                        @else
+                                                                            <button class="btn btn-primary my-4 team_name"
+                                                                                style="background:none;  border:none; color:#212529"
+                                                                                @if ($upcoming_week > $team->date) upcoming_selectable_week = "true"
+                                                                                    @else
+                                                                                    upcoming_selectable_week = "false" @endif
+                                                                                @if ($upcoming_season_date < $team->date) fixture_id={{ $team->id }}
+                                                                            team_id={{ $team->second_team_id->id }}
+                                                                            season_id={{ $team->season_id }}
+                                                                            week={{ $team->week }}
+                                                                            teamName={{ $formatted_second_team_name }}
+                                                                            first_teamName={{ $formatted_first_team_name }}
+                                                                            second_teamName={{ $formatted_second_team_name }}
+                                                                            fixture_date={{ $team->date }}
+                                                                            fixture_time={{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ $team->time_zone }} @endif>
+                                                                                {{ 'Pick Team' }}
+                                                                            </button>
+                                                                        @endif
+                                                                    @else
+                                                                        {{ ' ' }}
                                                                     @endif
-                                                                @else
-                                                                    {{ ' ' }}
                                                                 @endif
-                                                            @endif
-                                                        </td>
-                                                        </td>
-
-                                                        <td class="matchFColDate"> <span
-                                                                class="matchFixtureDate">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $team->date)->format('M d , Y') }}</span>
-                                                        </td>
-                                                        @if ($team->time == '12:00:00' && ($team->time_zone = 'am'))
-                                                            <td class="matchFColTime"><span class="matchFixtureTime">TBD
                                                             </td>
-                                                        @else
-                                                            <td class="matchFColTime"><span
-                                                                    class="matchFixtureTime">{{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ ucfirst($team->time_zone) }}
-                                                                    ET</span> </td>
-                                                        @endif
-                                                        </td>
+                                                            </td>
+
+                                                            <td class="matchFColDate"> <span
+                                                                    class="matchFixtureDate">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $team->date)->format('M d , Y') }}</span>
+                                                            </td>
+                                                            @if ($team->time == '12:00:00' && ($team->time_zone = 'am'))
+                                                                <td class="matchFColTime"><span
+                                                                        class="matchFixtureTime">TBD
+                                                                </td>
+                                                            @else
+                                                                <td class="matchFColTime"><span
+                                                                        class="matchFixtureTime">{{ \Carbon\Carbon::createFromFormat('H:i:s', $team->time)->format('H:i') }}{{ ucfirst($team->time_zone) }}
+                                                                        ET</span> </td>
+                                                            @endif
+                                                            </td>
 
 
-                                                    </tr>
-                                                @endif
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
                                             @endforeach
-                                        @endforeach
+
+
+                                        @else
+                                        <tr><td colspan="5">No Data Found</td></tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+
+                    {{-- @else --}}
+
+                    {{-- @include('no-data-found')
+                    @endif --}}
                 </div>
             </div>
         </div>
@@ -460,7 +470,12 @@
                         } else {
                             Swal.fire({
                                 title: 'Are you sure?',
-                                html: "Do you really want to pick the <span style='color:#3085d6'>"+formatted_team_name+" </span> team for the nfl battle between <span style='color:#3085d6'>"+formatted_first_team_name+"</span> and <span style='color:#3085d6'>"+formatted_second_team_name+" </span>?",
+                                html: "Do you really want to pick the <span style='color:#3085d6'>" +
+                                    formatted_team_name +
+                                    " </span> team for the nfl battle between <span style='color:#3085d6'>" +
+                                    formatted_first_team_name +
+                                    "</span> and <span style='color:#3085d6'>" +
+                                    formatted_second_team_name + " </span>?",
                                 icon: 'question',
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
@@ -483,10 +498,14 @@
                                             console.log(resp);
 
                                             //check if user is selecting the team on the day of match
-                                            if (resp.message == 'Time_is_over_for_thursday_12AM') {
+                                            if (resp.message ==
+                                                'Time_is_over_for_thursday_12AM'
+                                            ) {
                                                 Swal.fire({
                                                     title: 'Your Time is over ',
-                                                     html: "Your Time is over to pick the team for week " + week + "  as you can pick the team <span style='color:#f27474'> till Thursday 12:00 AM </span> .  You will receive <span style='color:#f27474'> loss </span> for this week . You can pick the team from next week .  ",
+                                                    html: "Your Time is over to pick the team for week " +
+                                                        week +
+                                                        "  as you can pick the team <span style='color:#f27474'> till Thursday 12:00 AM </span> .  You will receive <span style='color:#f27474'> loss </span> for this week . You can pick the team from next week .  ",
                                                     icon: 'error',
                                                     // showCancelButton: true,
 
@@ -494,15 +513,19 @@
                                                 });
                                                 setTimeout(() => {
                                                     location
-                                                    .reload();
+                                                        .reload();
                                                 }, 6000);
                                             }
 
                                             //User can't select previous weeks
-                                            if (resp.message == 'Time_is_over_to_select_previous_weeks') {
+                                            if (resp.message ==
+                                                'Time_is_over_to_select_previous_weeks'
+                                            ) {
                                                 Swal.fire({
                                                     title: 'Your Time is over !',
-                                                     html: "Can't select previous week. Your Time is over to pick the team for week " +week+" . You will receive <span style='color:#f27474'> loss </span> for this week . You can pick the team from next week .",
+                                                    html: "Can't select previous week. Your Time is over to pick the team for week " +
+                                                        week +
+                                                        " . You will receive <span style='color:#f27474'> loss </span> for this week . You can pick the team from next week .",
                                                     icon: 'error',
                                                     // showCancelButton: true,
 
@@ -510,14 +533,18 @@
                                                 });
                                                 setTimeout(() => {
                                                     location
-                                                    .reload();
+                                                        .reload();
                                                 }, 5000);
                                             }
 
-                                            if (resp.message == 'Cannot_select_next_to_next_week') {
+                                            if (resp.message ==
+                                                'Cannot_select_next_to_next_week'
+                                            ) {
                                                 Swal.fire({
-                                                    title: "Can't pick the team in advance ! ",
-                                                     html: "You can't pick the team from week <span style='color:#f27474'> "+week+" </span> before it's starts. Please wait for the week to come.",
+                                                    title: "Can't pick the team in advance!",
+                                                    html: "You can't pick the team from week <span style='color:#f27474'> " +
+                                                        week +
+                                                        " </span> before it's starts. Please wait for the week to come.",
                                                     icon: 'error',
                                                     // showCancelButton: true,
 
@@ -525,14 +552,22 @@
                                                 });
                                                 setTimeout(() => {
                                                     location
-                                                    .reload();
+                                                        .reload();
                                                 }, 6000);
                                             }
 
                                             if (resp.message == 'update') {
                                                 Swal.fire({
                                                     title: 'Your Pick team has been updated',
-                                                    html: "You have pick <span style='color:#3085d6'>"+formatted_team_name+" </span> team for  week <span style='color:#3085d6'>"+week+" </span> on <span style='color:#3085d6'>"+fixture_date+" </span> at <span style='color:#3085d6'>"+fixture_time+" </span>",
+                                                    html: "You have pick <span style='color:#3085d6'>" +
+                                                        formatted_team_name +
+                                                        " </span> team for  week <span style='color:#3085d6'>" +
+                                                        week +
+                                                        " </span> on <span style='color:#3085d6'>" +
+                                                        fixture_date +
+                                                        " </span> at <span style='color:#3085d6'>" +
+                                                        fixture_time +
+                                                        " </span> ",
                                                     icon: 'success',
                                                     // showCancelButton: true,
 
@@ -540,20 +575,28 @@
                                                 });
                                                 setTimeout(() => {
                                                     location
-                                                    .reload();
+                                                        .reload();
                                                 }, 5000);
                                             }
                                             if (resp.message == 'added') {
                                                 Swal.fire({
                                                     title: 'You have pick the team',
-                                                    html: "You have pick <span style='color:#3085d6'>"+formatted_team_name+" </span> team for  week <span style='color:#3085d6'>"+week+" </span> on <span style='color:#3085d6'>"+fixture_date+" </span> at <span style='color:#3085d6'>"+fixture_time+" </span>",
+                                                    html: "You have pick <span style='color:#3085d6'>" +
+                                                        formatted_team_name +
+                                                        " </span> team for  week <span style='color:#3085d6'>" +
+                                                        week +
+                                                        " </span> on <span style='color:#3085d6'>" +
+                                                        fixture_date +
+                                                        " </span> at <span style='color:#3085d6'>" +
+                                                        fixture_time +
+                                                        " </span>",
                                                     icon: 'success',
                                                     // showCancelButton: true,
 
                                                 });
                                                 setTimeout(() => {
                                                     location
-                                                    .reload();
+                                                        .reload();
                                                 }, 5000);
                                             }
 

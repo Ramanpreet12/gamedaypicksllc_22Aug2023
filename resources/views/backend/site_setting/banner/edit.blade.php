@@ -1,10 +1,22 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Banners</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Banners</title>
 @endsection
 
 @section('subcontent')
+@if (session('message_error'))
+<div class="alert alert-danger-soft show flex items-center mb-2 alert_messages" role="alert">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-alert-octagon w-6 h-6 mr-2">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    {{ session('message_error') }}
+</div>
+@endif
     <div class="intro-y box mt-5">
         @if (session()->has('success'))
             <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
@@ -18,18 +30,7 @@
                 &nbsp; {{ session()->get('success') }}
             </div>
         @endif
-        @if (session('message_error'))
-            <div class="alert alert-danger-soft show flex items-center mb-2 alert_messages" role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-alert-octagon w-6 h-6 mr-2">
-                    <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                {{ session('message_error') }}
-            </div>
-        @endif
+
 
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
             <h2 class="font-medium text-base mr-auto">Edit Banner</h2>
@@ -42,7 +43,7 @@
                 <div class="preview">
                     <div class="form-inline">
                         <label for="heading" class="font-medium form-label sm:w-60">Heading <span class="text-danger">*</span></label>
-                        <input id="heading" type="text" class="form-control" placeholder="Banner Heading" name="heading" value="{{$banners->heading}}">
+                        <input id="heading" type="text" class="form-control" placeholder="Banner Heading" name="heading" value="{{old('heading' , $banners->heading) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
@@ -51,7 +52,7 @@
 
 
                     <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
+                        <label for="image" class="font-medium form-label sm:w-60">Image <br> (min. width=1500px & min. height=500px) <span class="text-danger">*</span></label>
                         <input id="image" type="file" class="form-control" placeholder="Banner Image" name="image">
 
                     </div>
@@ -74,7 +75,7 @@
 
                     <div class="form-inline mt-5">
                         <label for="serial" class="font-medium form-label sm:w-60">Serial  <span class="text-danger">*</span></label>
-                        <input id="serial" type="number" class="form-control" placeholder="Banner Serial" name="serial" value="{{$banners->serial}}">
+                        <input id="serial" type="number" class="form-control" placeholder="Banner Serial" name="serial" value="{{old('serial' , $banners->serial) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
@@ -95,31 +96,6 @@
                         <label for="" class="font-medium form-label sm:w-60"></label>
                         @error('status')<p class="text-danger">{{$message}}</p> @enderror
                     </div>
-                    {{-- @if (!empty($general->logo))
-                        <div class="form-inline mt-5">
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-                            <img src="{{asset('storage/images/general/'.$general->logo)}}" alt="" height="50px" width="100px">
-                        </div>
-
-                    @else
-                        <div class="form-inline mt-5">
-                            <label for="logo" class="font-medium form-label sm:w-60"></label>
-                            <img alt="Admin Image" class="rounded-full" height="50px" width="100px"
-                            src="{{asset('dist/images/dummy_image.webp')}}">
-                        </div>
-
-                    @endif --}}
-
-
-
-
-                    {{-- <div class="form-inline mt-5">
-                        <label for="logo" class="font-medium form-label sm:w-60"></label>
-                        <img src="{{asset('public/images/general/'.$general->favicon)}}" alt="" height="50px" width="100px">
-
-                    </div> --}}
-
-
                 </div>
 
                 <br><br>

@@ -1,11 +1,10 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | News alerts</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | News alerts</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
     @if (session()->has('success_msg'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -36,7 +35,6 @@
 
         <h2 class="text-lg font-medium mr-auto">News alerts Management</h2>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            {{-- <a class="btn btn-primary shadow-md mr-2" href="{{route('team.create')}}" id="add_banner">Add New Team</a> --}}
 
         </div>
     </div>
@@ -50,7 +48,6 @@
                         <th class="text-center">S.No.</th>
                         <th class="text-center">Email</th>
                         <th class="text-center">Created At</th>
-                        {{-- <th class="text-center">Updated At</th> --}}
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -63,20 +60,25 @@
                     @foreach ($news_alerts as $news_alert)
                         <tr class="intro-x">
                             <td>
-                                <div class="text-slate-500 font-medium mx-4">  {{++$count;}} </div>
+                                <div class="text-slate-500 font-medium mx-4">  {{++$count}} </div>
                             </td>
-                            <td class="text-center">{{$news_alert->email}}</td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($news_alert->created_at)->format('j F, Y') }}</td>
-                            {{-- <td class="text-center">{{ \Carbon\Carbon::parse($news_alert->updated_at)->format('j F, Y') }}</td> --}}
+                            <td>{{$news_alert->email}}</td>
+                            <td>{{ \Carbon\Carbon::parse($news_alert->created_at)->format('j F, Y') }}</td>
 
 
                             <td class="table-report__action">
                                 <div class="flex justify-center items-center">
-                                    <form action="{{ url('admin/news_alert/delete/'.$news_alert->id)}}" method="post">
+                                    {{-- <form action="{{ url('admin/news_alert/delete/'.$news_alert->id)}}" method="post">
                                         @csrf
 
                                             <button class="btn btn-danger show_sweetalert" type="submit" data-toggle="tooltip">  <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
-                                      </form>
+                                      </form> --}}
+
+                                      <a data-toggle="tooltip" title="Delete">
+                                        <button class="btn btn-danger confirmDelete" data-toggle="tooltip"
+                                            title="Delete" module="news_alerts" module_id={{ $news_alert->id }}>
+                                            <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
+                                    </a>
 
 
                                 </div>

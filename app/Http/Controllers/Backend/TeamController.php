@@ -89,11 +89,11 @@ class TeamController extends Controller
 
 
     public function destroy($id){
-       $team =  Team::find($id)->delete();
-       if($team){
+
+    }
+
+    public function deleteTeam($id){
+        Team::whereId($id)->delete();
         return redirect()->route('team.index')->with('success_msg', 'Team deleted successfully');
-       }else{
-        return redirect()->route('team.index')->with('error_msg', 'Something went wrong');
-       }
     }
 }

@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | About </title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | About </title>
 @endsection
 
 @section('subcontent')
@@ -32,81 +32,83 @@
         @endif
 
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-            <h2 class="font-medium text-base mr-auto">Edit about Page  </h2>
+            <h2 class="font-medium text-base mr-auto">Edit about Page </h2>
         </div>
-        <form action="{{url('admin/about_page/'.$about_page_details->id)}}" method="post" enctype="multipart/form-data">
+        {{-- <form action="{{url('admin/about_page/'.$about_page_details->id)}}" method="post" enctype="multipart/form-data"> --}}
+        <form action="{{ route('admin/about_page') }}" method="post" enctype="multipart/form-data">
 
             @csrf
             @method('PUT')
             <div id="horizontal-form" class="p-5">
                 <div class="preview  mr-5">
                     <div class="form-inline">
-                        <label for="heading" class="font-medium form-label sm:w-60">Heading <span class="text-danger">*</span></label>
-                        <input id="heading" type="text" class="form-control" placeholder="Heading" name="heading" value="{{$about_page_details->heading}}">
+                        <label for="heading" class="font-medium form-label sm:w-60">Heading <span
+                                class="text-danger">*</span></label>
+                        <input id="heading" type="text" class="form-control" placeholder="Heading" name="heading"
+                            value="{{ old('heading', $about_page_details['about_page_heading']) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="heading" class="font-medium form-label sm:w-60"></label>
-                        @error('heading')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('heading')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="form-inline">
                         <label for="sub_heading" class="font-medium form-label sm:w-60">Sub Heading </label>
-                        <input id="sub_heading" type="text" class="form-control" placeholder="Sub Heading" name="sub_heading" value="{{$about_page_details->sub_heading}}">
+                        <input id="sub_heading" type="text" class="form-control" placeholder="Sub Heading"
+                            name="sub_heading"
+                            value="{{ old('sub_heading', $about_page_details['about_page_sub_heading']) }}">
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('sub_heading')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('sub_heading')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="form-inline">
-                        <label for="content" class="font-medium form-label sm:w-60" >Content <span class="text-danger">*</span></label>
-                        <textarea name="content" id="editor"  cols="10" rows="5" class="form-control">{{$about_page_details->content}}</textarea>
+                        <label for="content" class="font-medium form-label sm:w-60">Content <span
+                                class="text-danger">*</span></label>
+                        <textarea name="content" id="editor" cols="10" rows="5" class="form-control">{{ old('content', $about_page_details['about_page_content']) }}</textarea>
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('content')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('content')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
 
                     <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
-                        <input id="image" type="file" class="form-control" placeholder="Banner Image" name="image">
+                        <label for="image" class="font-medium form-label sm:w-60">Image <span
+                                class="text-danger">*</span></label>
+                        <input id="image" type="file" class="form-control" placeholder="Banner Image"
+                            name="about_page_image">
 
                     </div>
                     <div class="form-inline mt-2">
                         <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('image')<p class="text-danger">{{$message}}</p> @enderror
+                        @error('image')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
 
-                    @if (!empty($about_page_details->images))
-                    <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60"></label>
-                        <img src="{{asset('storage/images/static_page/'.$about_page_details->images)}}" alt=""  class="img-fluid" srcset="" height="50px" width="200px">
+                    @if (!empty($about_page_details['about_page_image']))
+                        <div class="form-inline mt-5">
+                            <label for="image" class="font-medium form-label sm:w-60"></label>
+                            <img src="{{ asset('storage/images/static_page/' . $about_page_details['about_page_image']) }}"
+                                alt="" class="img-fluid" srcset="" height="50px" width="200px">
 
-                    </div>
+                        </div>
                     @else
-                            <div class="form-inline mt-5">
-                                <label for="image" class="font-medium form-label sm:w-60"></label>
-                                <img src="{{asset('dist/images/no-image.png')}}" alt="" class="img-fluid" height="50px"  width="100px">
-                            </div>
-
+                        <div class="form-inline mt-5">
+                            <label for="image" class="font-medium form-label sm:w-60"></label>
+                            <img src="{{ asset('dist/images/no-image.png') }}" alt="" class="img-fluid"
+                                height="50px" width="100px">
+                        </div>
                     @endif
-
-
-
-                    <div class="form-inline mt-5 mt-2">
-                        <label for="status" class="font-medium form-label sm:w-60">Status <span class="text-danger">*</span></label>
-                        <select class="form-control" id="status" name="status">
-
-                            <option value="active" {{$about_page_details->status == 'active' ? 'selected' : ''}}>Active</option>
-                            <option value="inactive" {{$about_page_details->status == 'inactive' ? 'selected' : ''}}>Inactive</option>
-                        </select>
-                    </div>
-                    <div class="form-inline mt-2">
-                        <label for="" class="font-medium form-label sm:w-60"></label>
-                        @error('status')<p class="text-danger">{{$message}}</p> @enderror
-                    </div>
                 </div>
 
                 <br><br>
@@ -128,13 +130,12 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
     <script>
         ClassicEditor
-                .create( document.querySelector( '#editor' ) )
-                .then( editor => {
-                        console.log( editor );
-                } )
-                .catch( error => {
-                        console.error( error );
-                } );
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
-
 @endsection

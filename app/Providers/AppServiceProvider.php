@@ -9,7 +9,7 @@ use App\Models\ColorSetting;
 use App\Models\Menu;
 use App\Models\GeneralSetting;
 
-use App\Models\StaticPage;
+// use App\Models\StaticPage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,8 +44,10 @@ class AppServiceProvider extends ServiceProvider
 
        //site setting
         $general = General::first();
-        $privacy_policy = StaticPage::where(['status' =>'active' , 'type' => 'privacy'])->first();
+        // $privacy_policy = GeneralSetting::where(['status' =>'active' , 'type' => 'privacy'])->first();
+        // $privacy_policy = StaticPage::where(['status' =>'active' , 'type' => 'privacy'])->first();
         $get_social_links = GeneralSetting::where('type', 'social_links')->get()->toArray();
+        $privacy_policy = GeneralSetting::where('type', 'privacyPage')->get()->toArray();
         $social_links = key_value('name', 'value', $get_social_links);
 
 

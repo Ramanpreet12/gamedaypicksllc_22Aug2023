@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Landing Count </title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Landing Count </title>
 @endsection
 
 @section('subcontent')
@@ -66,10 +66,6 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
-
-
-
-
                 </div>
 
                 <br><br>

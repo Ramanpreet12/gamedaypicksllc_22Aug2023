@@ -2,7 +2,7 @@
 
 @section('content')
 
-   
+
 
     <section id="personalInfoBoard"
 
@@ -82,7 +82,10 @@
 
 
 
-                                                    @if ($user)
+                                                    {{-- {{dd($user)}} --}}
+
+                                                    
+                                                    @if (isset($user) &&  $user->isNotEmpty())
 
                                                         @foreach ($user as $item)
 
@@ -124,7 +127,7 @@
 
                                                         <tr>
 
-                                                            <td colspan="5">
+                                                            <td colspan="6">
 
                                                                 <span>No Data Found</span>
 
@@ -166,7 +169,7 @@
 
                                                     <tr class="table-primary">
 
-                                                        <th scope="col">Sno.</th>
+                                                        <th scope="col">S.no.</th>
 
                                                         {{-- <th scope="col">Intended Id</th> --}}
 
@@ -181,8 +184,7 @@
                                                 </thead>
 
                                                 <tbody class="table-group-divider">
-
-                                                    @if ($payment)
+                                                    @if ($payment->isNotEmpty())
 
                                                         @foreach ($payment as $key => $item)
 
@@ -212,7 +214,7 @@
 
                                                         <tr>
 
-                                                            <td colspan="4">No Payment is Found</td>
+                                                            <td colspan="4">No Payment Found</td>
 
                                                         </tr>
 
@@ -226,22 +228,11 @@
 
                                       </div>
 
-
-
                                   </div>
 
                                   </div>
 
                                 </div>
-
-
-
-
-
-
-
-
-
                             <div class="col-md-12 col-lg-6 mb-3">
 
                                 <div class="dashboardCard">
@@ -271,10 +262,7 @@
                                                 </thead>
 
                                                 <tbody class="table-group-divider">
-
-
-
-                                                    @if ($upcoming)
+                                                    @if ( isset( $upcoming) && $upcoming->isNotEmpty())
 
                                                         @foreach ($upcoming as $k => $i)
 
@@ -297,7 +285,7 @@
                                                                             class="fixureMatch d-flex align-items-center justify-content-center">
 
                                                                             <div class="teamOne teamCard">
-
+                                                                                @if (!empty($team->first_team_id))
                                                                                 <img src="{{ asset('storage/images/team_logo/' . $team->first_team_id->logo) }}"
 
                                                                                     alt="" class="img-fluid">
@@ -307,6 +295,13 @@
                                                                                 <div style="min-width:100px">
 
                                                                                     {{ $team->first_team_id->name }}</div>
+                                                                                    @else
+
+                                                                                    <div style="min-width:100px">TBD
+
+                                                                                    </div>
+
+                                                                                    @endif
 
                                                                             </div>
 
@@ -314,28 +309,33 @@
 
                                                                                 <h5>VS</h5>
 
-                                                                                <div class="d-md-none"> 
+                                                                                <div class="d-md-none">
 
-                                                                                    <span class="matchFixtureDate" data-title="Date"> Sep 08 , 2023</span> 
+                                                                                    <span class="matchFixtureDate" data-title="Date"> Sep 08 , 2023</span>
 
-                                                
+
 
                                                                                 </div>
 
                                                                             </div>
 
                                                                             <div class="teamOne teamCard">
-
+                                                                                @if (!empty($team->second_team_id))
                                                                                 <img src="{{ asset('storage/images/team_logo/' . $team->second_team_id->logo) }}"
 
                                                                                     alt="" class="img-fluid">
-
-
 
                                                                                 <div style="min-width:100px">
 
                                                                                     {{ $team->second_team_id->name }}</div>
 
+                                                                                    @else
+
+                                                                                    <div style="min-width:100px">TBD
+
+                                                                                    </div>
+
+                                                                                    @endif
                                                                             </div>
 
                                                                         </div>
@@ -422,9 +422,10 @@
 
                                                 <tbody class="table-group-divider">
 
-                                                  
 
-                                                    @if ($get_prizes)
+
+                                                    {{-- {{ dd($get_prizes) }} --}}
+                                                    @if ($get_prizes->isNotEmpty())
 
                                                         @foreach ($get_prizes as $prize)
 
@@ -468,11 +469,16 @@
 
                                                         @endforeach
 
+                                                        <tr>
+
+                                                            <td colspan="4"><a href="{{route('prizes')}}">See More</a></td>
+
+                                                        </tr>
                                                     @else
 
                                                         <tr>
 
-                                                            <td colspan="4">No Prize is Found</td>
+                                                            <td colspan="4">No Prize Found</td>
 
                                                         </tr>
 

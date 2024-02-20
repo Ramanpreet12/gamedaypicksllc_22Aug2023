@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | News</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | News</title>
 @endsection
 
 @section('subcontent')
@@ -72,7 +72,7 @@
 
 
                     <div class="form-inline mt-5">
-                        <label for="image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
+                        <label for="image" class="font-medium form-label sm:w-60">Image (360px × 495px)<span class="text-danger">*</span></label>
                         <input id="image" type="file" class="form-control" placeholder="News Image " name="image">
 
                     </div>

@@ -29,14 +29,14 @@ class PrizeRequest extends FormRequest
            $rules = [
             'name' => 'required',
              'season_id' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|Mimes:jpeg,jpg,gif,png,webp,svg',
            ];
         }
         elseif(request()->isMethod('put')){
             $rules = [
                 'name' => 'required',
                 'season_id' => 'required',
-
+                'image' => 'image|Mimes:jpeg,jpg,gif,png,webp,svg',
                ];
         }
         return $rules;
@@ -51,7 +51,14 @@ class PrizeRequest extends FormRequest
             'image' => 'Image',
         ];
     }
+    public function messages()
+    {
+       return [
+        'image.Mimes' => 'Image with jpeg, jpg, gif, png, webp, svg extension is acceptable',
 
+       ];
+
+    }
 
 
 }

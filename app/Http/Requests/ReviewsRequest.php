@@ -25,7 +25,7 @@ class ReviewsRequest extends FormRequest
     {
         return [
             'username' => 'required',
-            'reviewemail' => 'required',
+            'email' => 'required|email',
             'rating' => 'required',
             'comment' => 'required',
         ];
@@ -34,7 +34,7 @@ class ReviewsRequest extends FormRequest
     {
         return [
             'username' => 'Name',
-            'reviewemail' => 'Email',
+            'email' => 'Email',
             'rating' => 'Rating',
             'comment' => 'Comment',
         ];

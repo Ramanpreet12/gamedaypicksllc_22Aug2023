@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Prize</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Prize</title>
 @endsection
 
 @section('subcontent')
@@ -41,7 +41,7 @@
             <div id="horizontal-form" class="p-5">
                 <div class="preview  mr-5">
                     <div class="form-inline">
-                        <label for="season" class="font-medium form-label sm:w-60">Season</label>
+                        <label for="season" class="font-medium form-label sm:w-60">Season<span class="text-danger">*</span></label>
                         <select data-placeholder="Select Season" class="form-control" id="season" name="season_id">
 
                             <option value="" >--select--</option>
@@ -53,8 +53,12 @@
                     </div>
 
                     <div class="form-inline mt-5">
-                        <label for="name" class="font-medium form-label sm:w-60">Name <span class="text-danger">*</span></label>
-                        <input id="name" type="text" class="form-control" placeholder="Enter Team name" name="name" value="{{$prize->name}}">
+                        <label for="name" class="font-medium form-label sm:w-60">Prize Name <span class="text-danger">*</span></label>
+                        <input id="name" type="text" class="form-control" placeholder="Enter prize name" name="name" value="{{old('name' , $prize->name)}}">
+                    </div>
+                    <div class="form-inline">
+                        <label for="name" class="font-medium form-label sm:w-60"></label>
+                        @error('name') <p class="text-danger">{{$message}}</p> @enderror
                     </div>
 
 
@@ -66,10 +70,21 @@
                         <label for="image" class="font-medium form-label sm:w-60">Image <span class="text-danger">*</span></label>
                         <input id="image" type="file" class="form-control" placeholder="Enter image" name="image" value="">
                     </div>
+                    <div class="form-inline">
+                        <label for="name" class="font-medium form-label sm:w-60"></label>
+                        @error('image') <p class="text-danger">{{$message}}</p> @enderror
+                    </div>
 
                     <div class="form-inline mt-5">
                         <label for="image" class="font-medium form-label sm:w-60"></label>
+                        @if (!empty($prize->image))
                         <img src="{{asset('storage/images/prize/'.$prize->image)}}" alt="" height="100px" width="250px">
+
+                        @else
+                        <img src="{{asset('dist/images/no-image.png')}}" alt="" height="100px" width="250px">
+
+
+                        @endif
                     </div>
                     <div class="form-inline mt-5">
                         <label for="content" class="font-medium form-label sm:w-60">Content <span class="text-danger">*</span></label>
@@ -88,7 +103,7 @@
                         <label for="prize_date" class="font-medium form-label sm:w-60"></label>
                         @error('prize_date') <p class="text-danger">{{$message}}</p> @enderror
                     </div>
-                    
+
                     <div class="form-inline mt-5 mt-2">
                         <label for="status" class="font-medium form-label sm:w-60">Status <span class="text-danger">*</span></label>
                         <select class="form-control" id="status" name="status">

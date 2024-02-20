@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Contact</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Contact</title>
 @endsection
 
 @section('subcontent')
@@ -65,10 +65,6 @@
                 <div
                     class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
                 </div>
-                {{-- <div class="text-right mt-5">
-                    <button type="submit" class="btn btn-primary w-24">Save</button>
-                    <button type="reset" class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                </div> --}}
             </div>
         </form>
     </div>

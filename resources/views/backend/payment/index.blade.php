@@ -1,11 +1,11 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Payments</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Subscribers Payments</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
+
     @if (session()->has('success_msg'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -34,10 +34,8 @@
     <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
 
 
-        <h2 class="text-lg font-medium mr-auto">Payments</h2>
-        <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            {{-- <a class="btn btn-primary shadow-md mr-2" href="{{route('team.create')}}" id="add_banner">Add New Team</a> --}}
-        </div>
+        <h2 class="text-lg font-medium mr-auto">Subscribers Payments</h2>
+
     </div>
 
     <div class="grid grid-cols-12 gap-6 mt-5 p-5 bg-white mb-5">
@@ -53,7 +51,6 @@
                         <th class="text-center">Amount</th>
                         <th class="text-center">Transaction ID</th>
                         <th class="text-center">Reference No.</th>
-                        {{-- <th class="text-center whitespace-nowrap"> </th> --}}
                         <th class="text-center">Status</th>
                         <th class="text-center">Created At</th>
                         {{-- <th class="text-center whitespace-nowrap"></th> --}}
@@ -71,10 +68,10 @@
                     @forelse ($get_payments as $payment)
                         <tr class="intro-x">
                             <td>
-                                <div class="text-slate-500 font-medium mx-4"> {{$count++;}} </div>
+                                <div class="text-slate-500 font-medium mx-4"> {{$count++}} </div>
                             </td>
-                            <td class="text-center">{{ $payment->season->season_name}}</td>
-                           
+                            <td class="text-center">{{ $payment->season->season_name ?? ''}}</td>
+
                             <td class="text-center">{{ $payment->user->name ?? ''}}</td>
                             <td class="text-center">{{ $payment->user->email ?? ''}}</td>
                             <td class="text-center">{{ $payment->amount}} {{ $payment->currency}}</td>
@@ -82,9 +79,6 @@
                             <td class="text-center">{{$payment->ref_num}}</td>
                             {{-- <td class="text-center">{{$payment->Action}}</td> --}}
                             <td class="">
-                                {{-- <div class="flex items-center justify-center {{ $team->status =='active' ? 'text-success' : 'text-danger' }}">
-                                    <i data-feather="check-square" class="w-4 h-4 mr-2"></i> {{ $team->status =='active' ? 'Active' : 'Inactive' }}
-                                </div> --}}
                                 @if ($payment->status == 'succeeded' )
                                 <div class="flex items-center justify-center text-success">
                                     <i data-feather="check-square" class="w-4 h-4 mr-2"></i>{{$payment->status}}
@@ -101,7 +95,7 @@
                             <td class="table-report__action w-60">
                                 <div class="flex justify-center items-center">
                                 <a class="flex items-center mr-3" href="{{ url('admin/Userdetails/'.$payment->user_id) }}">
-                                    <button class="btn btn-primary"><i data-feather="eye" class="w-4 h-4 mr-2"></i> View User </button>
+                                    <button class="btn btn-primary w-32"><i data-feather="eye" class="w-4 h-4 mr-2"></i> View User </button>
                                 </a>
                                 </div>
                             </td>
@@ -116,32 +110,7 @@
                 </tbody>
             </table>
         </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
-
-        <!-- END: Pagination -->
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="p-5 text-center">
-                        <i data-feather="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                        <div class="text-3xl mt-5">Are you sure?</div>
-                        <div class="text-slate-500 mt-2">Do you really want to delete these records? <br>This process
-                            cannot be undone.</div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-24 mr-1">Cancel</button>
-                        <button type="button" class="btn btn-danger w-24">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END: Delete Confirmation Modal -->
 
 @endsection
 
@@ -151,7 +120,7 @@
    <script>
     $(function() {
       $('#payment_table').DataTable({
-        scrollX: true,
+        // scrollX: true,
       });
     });
    </script>

@@ -84,7 +84,7 @@
                 </div>
               </div>
               @endif
-                    
+
 
 
 
@@ -242,7 +242,7 @@
             username: {
                 required: true
             },
-            reviewemail: {
+            email: {
                 required: true,
                 email: true
             },
@@ -258,7 +258,7 @@
             username: {
                 required: "Name is required",
             },
-            reviewemail: {
+            email: {
                 required: "Email is required",
             },
             comment: {
@@ -303,7 +303,7 @@
             return false;
         }
 
-       
+
         $.ajax({
             type: 'POST',
             data: $("#reviewForm").serialize(),

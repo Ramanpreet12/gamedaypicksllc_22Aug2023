@@ -1,7 +1,7 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Dashboard</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }} | Dashboard</title>
 @endsection
 
 @section('subcontent')
@@ -35,11 +35,27 @@
                         </a>
                     </div>
                     <div class="grid grid-cols-12 gap-6 mt-5">
+
                         <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
                                 <div class="box p-5">
                                     <div class="flex">
-                                        <div class="text-base text-slate-500 mt-1">Total Payments </div>
+                                        <div class="text-base text-slate-500 mt-1">Total Order Sales </div>
+                                        <div class="ml-auto">
+                                            <i data-feather="shopping-cart" class="report-box__icon text-theme-10"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text-3xl font-medium leading-8 mt-6 mb-6">{{ $get_product_amount }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                            <div class="report-box zoom-in">
+                                <div class="box p-5">
+                                    <div class="flex">
+                                        <div class="text-base text-slate-500 mt-1">Subscription Payments </div>
                                         <div class="ml-auto">
                                             <i data-feather="dollar-sign" class="report-box__icon text-pending"></i>
                                         </div>
@@ -142,8 +158,13 @@
 
                                                 </td> --}}
                                                 </tr>
-                                           
-                                        @endforeach
+                                            @endforeach
+                                        @else
+                                            <tr class="intro-x">
+                                                <td class="text-center" colspan="3">
+                                                    No user found
+                                                </td>
+                                            </tr>
                                         @endif
                                     </tbody>
                                 </table>
@@ -162,6 +183,7 @@
                     <div class="mt-5">
                         @if ($get_upcoming_matches->isNotEmpty())
                             @foreach ($get_upcoming_matches as $upcoming_match)
+                                {{-- {{ dd($upcoming_match) }} --}}
                                 <div class="intro-y">
                                     <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
                                         {{-- <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
@@ -174,32 +196,52 @@
                                     </div> --}}
 
                                         <div style="margin-right: 100px;">
-                                            <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                                <img alt=""
-                                                    src="{{ asset('storage/images/team_logo/' . $upcoming_match->first_team_id->logo) }}">
-                                            </div>
-                                            <div class="font-medium" style="word-wrap: break-word">
-                                                {{ $upcoming_match->first_team_id->name }}</div>
+                                            @if (!empty($upcoming_match->first_team_id))
+                                                <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
+                                                    <img alt=""
+                                                        src="{{ asset('storage/images/team_logo/' . $upcoming_match->first_team_id->logo) }}">
+                                                </div>
+                                                <div class="font-medium" style="word-wrap: break-word">
+                                                    {{ $upcoming_match->first_team_id->name }}</div>
+                                            @else
+                                                {{-- <div class="w-10 h-10 flex-none  overflow-hidden">
+
+                                                </div> --}}
+
+                                                <div class="font-medium" style="word-wrap: break-word">
+                                                    {{ 'TBD' }}</div>
+                                            @endif
+
+
+
                                         </div>
                                         <div class="">
                                             <div
                                                 class="text-center py-1 px-4 rounded-full text-xs bg-success text-white cursor-pointer font-medium">
                                                 Vs</div>
-                                            <p class="text-slate-500 text-xs mt-0.5">
+                                            <p class="text-center text-slate-500 text-xs mt-0.5">
                                                 {{ \Carbon\Carbon::parse($upcoming_match->date)->format('j F, Y') }}</p>
-                                            <p class="text-slate-500 text-xs mt-0.5">
+                                            <p class="text-center text-slate-500 text-xs mt-0.5">
                                                 {{ \Carbon\Carbon::createFromFormat('H:i:s', $upcoming_match->time)->format('g:i') }}
                                                 {{ ucfirst($upcoming_match->time_zone) }}</p>
                                         </div>
 
 
                                         <div style="margin-left: 100px">
-                                            <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                                <img alt=""
-                                                    src="{{ asset('storage/images/team_logo/' . $upcoming_match->second_team_id->logo) }}">
-                                            </div>
+                                            @if (!empty($upcoming_match->second_team_id))
+                                                <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
+                                                    <img alt=""
+                                                        src="{{ asset('storage/images/team_logo/' . $upcoming_match->second_team_id->logo) }}">
+                                                </div>
+                                                <div class="font-medium" style="word-wrap: break-word">
+                                                    {{ $upcoming_match->second_team_id->name }}</div>
+                                            @else
                                             <div class="font-medium" style="word-wrap: break-word">
-                                                {{ $upcoming_match->second_team_id->name }}</div>
+                                                {{ 'TBD' }}</div>
+                                            @endif
+
+
+
                                         </div>
 
                                         {{-- <div class="py-1 px-2 rounded-full text-xs bg-success text-white cursor-pointer font-medium">137 Sales</div> --}}

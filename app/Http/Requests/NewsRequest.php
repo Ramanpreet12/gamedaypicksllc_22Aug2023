@@ -26,7 +26,8 @@ class NewsRequest extends FormRequest
         if (request()->ismethod('post')) {
             $rules = [
              'title' => 'required',
-              'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp',
+             'image' => 'required|image|Mimes:jpeg,jpg,gif,png,webp,svg|dimensions:width=360,height=495',
+            //  'image' => 'required|image|Mimes:jpeg,jpg,gif,png,webp,svg|dimensions:width=360,height=495',
              'status' => 'required',
              'header' => 'required'
             ];
@@ -34,7 +35,7 @@ class NewsRequest extends FormRequest
          elseif(request()->isMethod('put')){
              $rules = [
                  'title' => 'required',
-                 'image' => 'image|mimes:jpg,png,jpeg,gif,svg,webp',
+                 'image' => 'image|Mimes:jpeg,jpg,gif,png,webp,svg|dimensions:width=360,height=495',
                  'status' => 'required',
                  'header' => 'required'
                 ];
@@ -48,8 +49,16 @@ class NewsRequest extends FormRequest
         'image' => 'Image',
         'status' => 'Status',
         'header' => 'Header'
+       ];
+    }
 
+    public function messages()
+    {
+       return [
+        'image.dimensions' => 'width and height of image should be 360 × 495',
+        'image.Mimes' => 'Image with jpeg, jpg, gif, png, webp, svg extension is acceptable',
        ];
 
     }
+
     }

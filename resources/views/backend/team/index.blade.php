@@ -1,11 +1,11 @@
 @extends('../layout/' . $layout)
 
 @section('subhead')
-    <title>NFL | Teams</title>
+    <title>{{ $general->name ? $general->name : 'NFL' }}  | Teams</title>
 @endsection
 
 @section('subcontent')
-    {{-- <h2 class="intro-y text-lg font-medium mt-10">Banners Management</h2> --}}
+
     @if (session()->has('success_msg'))
     <div class="alert alert-success show flex items-center mb-2 alert_messages" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -97,13 +97,17 @@
                                         <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit
                                     </a>
 
-                                    <form action="{{ route('team.destroy', $team->id)}}" method="post">
+                                    {{-- <form action="{{ route('team.destroy', $team->id)}}" method="post">
                                         @csrf
                                         @method('DELETE')
                                             <button class="btn btn-danger show_sweetalert" type="submit" data-toggle="tooltip">  <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
-                                      </form>
+                                      </form> --}}
 
-
+                                       <a data-toggle="tooltip" title="Delete">
+                                            <button class="btn btn-danger confirmDelete" data-toggle="tooltip"
+                                            title="Delete" module="team" module_id={{ $team->id }}>
+                                            <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete</button>
+                                        </a>
                                 </div>
                             </td>
                         </tr>
@@ -123,7 +127,15 @@
    @section('script')
    <script>
     $(function() {
-      $('#team_table').DataTable();
+      $('#team_table').DataTable({
+        columnDefs: [
+                    // Center align both header and body content of columns 1, 2 & 3
+                    {
+                        className: "dt-center",
+                        targets: [0, 1, 2 , 3 , 4 , 5 , 6 , 7]
+                    }
+                ]
+      });
     });
    </script>
    @endsection

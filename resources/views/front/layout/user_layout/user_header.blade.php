@@ -44,7 +44,7 @@
 
                 <ul class="dropdown-menu">
 
-                   
+
 
                     <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
 
@@ -127,6 +127,23 @@
                 <li class="nav-item"><a type="button" href="javascript:void(0)" class="nav-link" data-bs-toggle="modal"
 
                         data-bs-target="#addReviewModal" style="color:{{ $colorSection['header']['text_color'] }}">Reviews <span class="navHoverEffect"> </span></a></li>
+
+                     {{-- <li class="nav-item"><a @if(Auth::user())  href="{{ url('jersey/'.encrypt(Auth::user()->email)) }}"  @else href="{{ route('pre-sign-up') }}" @endif class="nav-link"
+
+                             style="color:{{ $colorSection['header']['text_color'] }}">Shop <span class="navHoverEffect"> </span></a></li> --}}
+
+                             <li class="nav-item"><a href="{{ route('shop') }}" class="nav-link"
+
+                                style="color:{{ $colorSection['header']['text_color'] }}">Shop <span class="navHoverEffect"> </span></a></li>
+
+                                <li class="nav-item"><a
+                        @if (Auth::user()) href="{{ url('cart') }}"   @else href="{{ route('login') }}" @endif
+                        class="nav-link" {{-- <li class="nav-item"><a @if (Auth::user())  href="{{ url('cart/'.encrypt(Auth::user()->email)) }}"  @else href="{{ route('pre-sign-up') }}" @endif class="nav-link" --}}
+                        style="color:{{ $colorSection['header']['text_color'] }}"> <i
+                            class="fas fa-shopping-cart fa-xs cart_icon" style="font-size:15px"></i> <span
+                            class="navHoverEffect"> </span></a></li>
+
+
 
             </ul>
 
@@ -226,11 +243,11 @@
 
                             style="color:{{ $colorSection['header']['text_color'] }}">
 
-                            {{ $mobile_menuMenu->title }}<span class="navHoverEffect"> </span></a>  
+                            {{ $mobile_menuMenu->title }}<span class="navHoverEffect"> </span></a>
 
-                            
 
-                          
+
+
 
 
 
@@ -442,7 +459,7 @@
 
                                 <input type="email" class="form-control" id="recipient-email"
 
-                                    placeholder="Email address" name="reviewemail" value="{{old('reviewemail')}}">
+                                    placeholder="Email address" name="email" value="{{old('email')}}">
 
                                 @error('email')
 
@@ -480,7 +497,7 @@
 
                             @for ($i = 1; $i <= 5; $i++)
 
-                                
+
 
                                 <i id="rating-{{ $i }}"
 
@@ -496,7 +513,7 @@
 
                             <p id="rating_empty_msg" style="color:red"></p>
 
-                            
+
 
                         </div>
 
